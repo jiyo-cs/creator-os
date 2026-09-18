@@ -1,87 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
-
     <title>Creator OS — Import</title>
-
     <style>
-
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
-
         body {
             font-family:
                 -apple-system,
                 BlinkMacSystemFont,
                 "Inter",
                 sans-serif;
-
             background: #f5f5f7;
             color: #111;
             min-height: 100vh;
         }
-
         .container {
             max-width: 760px;
             margin: auto;
             padding: 50px 20px;
         }
-
         .back {
             color: #666;
             text-decoration: none;
             font-size: 14px;
         }
-
         h1 {
             font-size: 36px;
             margin-top: 35px;
             letter-spacing: -1px;
         }
-
         .subtitle {
             color: #777;
             margin-top: 8px;
             margin-bottom: 30px;
         }
-
         .upload-box {
             background: white;
             border: 2px dashed #ccc;
             border-radius: 20px;
-            padding: 70px 30px;
+            padding: 50px 25px;
             text-align: center;
-            transition: 0.2s;
         }
-
-        .upload-box:hover {
-            border-color: #111;
-        }
-
         .upload-box h2 {
             margin-bottom: 10px;
         }
-
         .upload-box p {
             color: #777;
             margin-bottom: 25px;
         }
-
         input[type="file"] {
             display: none;
         }
-
         .button {
             display: inline-block;
             background: #111;
@@ -90,8 +68,31 @@
             border-radius: 12px;
             cursor: pointer;
             font-weight: 600;
+            border: none;
+            font-size: 15px;
         }
-
+        .button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .drop-zone {
+            margin-top: 20px;
+            border: 2px dashed #ddd;
+            border-radius: 14px;
+            padding: 35px 20px;
+            text-align: center;
+            cursor: pointer;
+            background: #fafafa;
+        }
+        .drop-zone:active {
+            background: #f0f0f0;
+        }
+        .file-name {
+            margin-top: 15px;
+            color: #333;
+            font-size: 14px;
+            display: none;
+        }
         .status {
             margin-top: 25px;
             background: white;
@@ -99,211 +100,205 @@
             padding: 20px;
             display: none;
         }
-
         .result {
             margin-top: 15px;
             line-height: 1.8;
         }
-
+        .success {
+            color: #147a3d;
+        }
+        .error {
+            color: #b42318;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .stat {
+            background: #f5f5f7;
+            border-radius: 12px;
+            padding: 15px;
+        }
+        .stat span {
+            display: block;
+            color: #777;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+        .stat strong {
+            font-size: 22px;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 16px;
+            }
+            h1 {
+                font-size: 30px;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
-
 </head>
-
-
 <body>
-
 <div class="container">
-
     <a
         href="index.html"
         class="back"
     >
         ← Dashboard
     </a>
-
-
     <h1>
         Import DM Data
     </h1>
-
     <p class="subtitle">
-        Upload a JSON export and Creator OS
+        Upload a JSON or CSV export and Creator OS
         will analyze the conversations.
     </p>
-
-
     <div class="upload-box">
-
         <h2>
             Upload your data
         </h2>
-
         <p>
             CSV or JSON files supported
         </p>
-
-        <label
-            for="file"
-            class="button"
+        <input
+            type="file"
+            id="fileInput"
+            accept=".json,.csv"
         >
-            Choose JSON File
-        </label>
-
         <div
-    id="fileDropZone"
-    style="
-        border:2px dashed #ddd;
-        border-radius:14px;
-        padding:40px 20px;
-        text-align:center;
-        cursor:pointer;
-        background:#fafafa;
-    "
->
-    <input
-        type="file"
-        id="fileInput"
-        accept=".json,.csv"
-        style="
-            display:none;
-        "
-    >
-
-    <div
-        style="
-            font-size:16px;
-            font-weight:600;
-        "
-    >
-        Choose JSON or CSV file
+            id="fileDropZone"
+            class="drop-zone"
+        >
+            <div
+                style="
+                    font-size:16px;
+                    font-weight:600;
+                "
+            >
+                Choose JSON or CSV file
+            </div>
+            <div
+                style="
+                    margin-top:8px;
+                    color:#777;
+                    font-size:14px;
+                "
+            >
+                Tap here to select a file
+            </div>
+        </div>
+        <div
+            id="fileName"
+            class="file-name"
+        ></div>
+        <button
+            id="uploadButton"
+            class="button"
+            style="margin-top:20px;"
+            disabled
+        >
+            Import & Analyze
+        </button>
     </div>
-
-    <div
-        style="
-            margin-top:8px;
-            color:#777;
-            font-size:14px;
-        "
-    >
-        Tap here to select a file
-    </div>
-
-</div>
-
-    </div>
-
-
     <div
         id="status"
         class="status"
     >
-
         <strong id="statusTitle">
             Analyzing...
         </strong>
-
         <div
             id="result"
             class="result"
         ></div>
-
     </div>
-
 </div>
-
 <script src="config.js"></script>
-    
 <script>
-
 const fileInput =
     document.getElementById("fileInput");
 const fileDropZone =
-    document.getElementById(
-        "fileDropZone"
-    );
-
-
+    document.getElementById("fileDropZone");
+const fileName =
+    document.getElementById("fileName");
+const uploadButton =
+    document.getElementById("uploadButton");
+const status =
+    document.getElementById("status");
+const statusTitle =
+    document.getElementById("statusTitle");
+const result =
+    document.getElementById("result");
+function escapeHtml(value) {
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+/* Open file picker */
 fileDropZone.addEventListener(
     "click",
     function () {
-
         fileInput.click();
-
     }
 );
-
-
+/* File selected */
 fileInput.addEventListener(
     "change",
     function () {
-
         if (!fileInput.files.length) {
+            uploadButton.disabled = true;
+            fileName.style.display = "none";
             return;
         }
-
         const file =
             fileInput.files[0];
-
-        result.innerHTML = `
-            <div class="result">
-                Selected file:
-                <strong>
-                    ${escapeHtml(file.name)}
-                </strong>
-            </div>
-        `;
-
+        fileName.style.display = "block";
+        fileName.innerHTML =
+            "📄 Selected: <strong>" +
+            escapeHtml(file.name) +
+            "</strong>";
+        uploadButton.disabled = false;
+        status.style.display = "block";
+        statusTitle.textContent =
+            "File ready";
+        result.innerHTML =
+            "Your file is ready to be analyzed.";
     }
 );
-
-const uploadButton =
-    document.getElementById("uploadButton");
-
-const result =
-    document.getElementById("result");
-
-
+/* Upload */
 uploadButton.addEventListener(
     "click",
     uploadFile
 );
-
-
 async function uploadFile() {
-
     const file =
         fileInput.files[0];
-
-
     if (!file) {
-
-        result.innerHTML = `
-            <div class="result error">
-                Please select a CSV or JSON file.
-            </div>
-        `;
-
         return;
     }
-
-
     uploadButton.disabled = true;
-
     uploadButton.textContent =
         "Analyzing...";
-
-
+    status.style.display = "block";
+    statusTitle.textContent =
+        "Uploading and analyzing...";
+    result.innerHTML =
+        "Please wait.";
     const formData =
         new FormData();
-
     formData.append(
         "file",
         file
     );
-
-
     try {
-
         const response =
             await fetch(
                 `${API_URL}/upload`,
@@ -312,148 +307,93 @@ async function uploadFile() {
                     body: formData
                 }
             );
-
-
         const data =
             await response.json();
-
-
         if (!response.ok) {
-
             throw new Error(
                 data.detail ||
                 "Upload failed"
             );
-
         }
-
-
         const analytics =
-            data.analytics;
-
-
+            data.analytics || {};
         const summary =
-            analytics.summary;
-
-
+            analytics.summary || {};
         const messages =
-            analytics.messages;
-
-
+            analytics.messages || {};
+        statusTitle.textContent =
+            "Import successful ✓";
         result.innerHTML = `
-
             <div class="result success">
-
                 <h3>
-                    Import successful
+                    DM data imported successfully
                 </h3>
-
                 <p>
-                    ${data.filename}
+                    File:
+                    <strong>
+                        ${escapeHtml(data.filename || file.name)}
+                    </strong>
                 </p>
-
             </div>
-
-
             <div class="stats-grid">
-
                 <div class="stat">
-
                     <span>
                         Conversations
                     </span>
-
                     <strong>
-                        ${data.normalized_conversations}
+                        ${data.normalized_conversations || 0}
                     </strong>
-
                 </div>
-
-
                 <div class="stat">
-
                     <span>
                         Reply Rate
                     </span>
-
                     <strong>
-                        ${summary.reply_rate_percent}%
+                        ${summary.reply_rate_percent || 0}%
                     </strong>
-
                 </div>
-
-
                 <div class="stat">
-
                     <span>
                         Creator Messages
                     </span>
-
                     <strong>
-                        ${messages.creator_messages}
+                        ${messages.creator_messages || 0}
                     </strong>
-
                 </div>
-
-
                 <div class="stat">
-
                     <span>
                         Subscriber Messages
                     </span>
-
                     <strong>
-                        ${messages.subscriber_messages}
+                        ${messages.subscriber_messages || 0}
                     </strong>
-
                 </div>
-
             </div>
-
-
             <div class="result">
-
                 <strong>
-                    ${data.skipped_rows}
+                    ${data.skipped_rows || 0}
                 </strong>
-
                 rows skipped during normalization.
-
             </div>
-
         `;
-
-
     } catch (error) {
-
+        statusTitle.textContent =
+            "Import failed";
         result.innerHTML = `
-
             <div class="result error">
-
                 <h3>
-                    Import failed
+                    Something went wrong
                 </h3>
-
                 <p>
-                    ${error.message}
+                    ${escapeHtml(error.message)}
                 </p>
-
             </div>
-
         `;
-
     }
-
-
     uploadButton.disabled = false;
-
     uploadButton.textContent =
         "Import & Analyze";
-
 }
-
 </script>
-
 </body>
-
 </html>
