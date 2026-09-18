@@ -273,9 +273,29 @@ def api_status():
         "experiments": "available",
     }
 @app.get("/api/reports/latest")
-def latest_report():
+def latest_report(
+    period: str = "all_time"
+):
 
-    conversations_data = get_conversations()
+    allowed_periods = {
+        "7d": 7,
+        "30d": 30,
+        "all_time": None,
+    }
+
+    if period not in allowed_periods:
+
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                "Invalid period. "
+                "Use 7d, 30d, or all_time."
+            ),
+        )
+
+    conversations_data = (
+        get_conversations()
+    )
 
     from models import Conversation
 
@@ -285,17 +305,25 @@ def latest_report():
         in conversations_data
     ]
 
+    days = allowed_periods[period]
+
+    from reports import filter_conversations
+
+    conversations = filter_conversations(
+        conversations,
+        days,
+    )
+
     if not conversations:
 
         return {
-            "report": None
+            "report": None,
+            "period": period,
         }
-
 
     analytics = analyze_conversations(
         conversations
     )
-
 
     analytics["sequences"] = (
         analyze_sequences(
@@ -303,21 +331,19 @@ def latest_report():
         )
     )
 
-
     insights_data = generate_insights(
         analytics
     )
-
 
     experiments_data = (
         get_experiments()
     )
 
-
     return generate_report(
         analytics,
         insights_data,
         experiments_data,
+        period,
     )
     
 @app.post("/upload")
