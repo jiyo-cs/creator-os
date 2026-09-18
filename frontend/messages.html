@@ -174,7 +174,98 @@
             }
 
         }
+/* NAVIGATION */
 
+#appNav {
+    position: relative;
+    z-index: 100;
+}
+
+.sidebar {
+    width: 240px;
+    background: #111;
+    color: white;
+    padding: 24px 16px;
+    position: fixed;
+    height: 100vh;
+    top: 0;
+    left: 0;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 40px;
+    padding-left: 12px;
+}
+
+.nav {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.nav a {
+    text-decoration: none;
+    color: #aaa;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 14px;
+}
+
+.nav a:hover,
+.nav a.active {
+    background: #222;
+    color: white;
+}
+
+.container {
+    margin-left: 240px;
+}
+
+@media (max-width: 900px) {
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        padding: 12px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        overflow-x: auto;
+    }
+
+    .logo {
+        font-size: 18px;
+        margin: 0;
+        padding: 0;
+        flex-shrink: 0;
+    }
+
+    .nav {
+        flex-direction: row;
+        gap: 6px;
+        overflow-x: auto;
+    }
+
+    .nav a {
+        white-space: nowrap;
+        padding: 9px 12px;
+    }
+
+    .container {
+        margin-left: 0;
+        padding-top: 100px;
+    }
+}
+
+@media (max-width: 600px) {
+
+    .container {
+        padding-top: 85px;
+    }
+
+}
     </style>
 
 </head>
@@ -182,16 +273,9 @@
 
 <body>
 
-
+<div id="appNav"></div>
 <div class="container">
 
-
-    <a
-        href="index.html"
-        class="back"
-    >
-        ← Dashboard
-    </a>
 
 
     <h1>
@@ -243,6 +327,7 @@
 </div>
 
 <script src="config.js"></script>
+<script src="nav.js"></script>
     
 <script>
 
