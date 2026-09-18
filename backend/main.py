@@ -6,6 +6,7 @@ from fastapi import (
 )
 
 import json
+from insights import generate_insights
 from normalizer import normalize_file
 from models import AnalyzeRequest
 from analytics import analyze_conversations
@@ -119,7 +120,40 @@ def dashboard():
 # =========================
 # UPLOAD
 # =========================
+@app.get("/api/insights")
+def insights():
 
+    conversations_data = get_conversations()
+
+    from models import Conversation
+
+    conversations = [
+        Conversation(**conversation)
+        for conversation
+        in conversations_data
+    ]
+
+    if not conversations:
+
+        return {
+            "insights": [],
+            "recommendations": [],
+        }
+
+    analytics = analyze_conversations(
+        conversations
+    )
+
+    analytics["sequences"] = (
+        analyze_sequences(
+            conversations
+        )
+    )
+
+    return generate_insights(
+        analytics
+    )
+    
 @app.post("/upload")
 async def upload_file(
     file: UploadFile = File(...)
