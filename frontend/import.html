@@ -150,7 +150,7 @@
         </label>
 
         <input
-            id="file"
+            id="fileInput"
             type="file"
             accept=".json,.csv"
         >
@@ -180,120 +180,203 @@
 <script>
 
 const fileInput =
-    document.getElementById("file");
+    document.getElementById("fileInput");
 
-const status =
-    document.getElementById("status");
-
-const statusTitle =
-    document.getElementById("statusTitle");
+const uploadButton =
+    document.getElementById("uploadButton");
 
 const result =
     document.getElementById("result");
 
 
-fileInput.addEventListener(
-    "change",
-    async function () {
+uploadButton.addEventListener(
+    "click",
+    uploadFile
+);
 
-        const file = this.files[0];
 
-        if (!file) {
-            return;
+async function uploadFile() {
+
+    const file =
+        fileInput.files[0];
+
+
+    if (!file) {
+
+        result.innerHTML = `
+            <div class="result error">
+                Please select a CSV or JSON file.
+            </div>
+        `;
+
+        return;
+    }
+
+
+    uploadButton.disabled = true;
+
+    uploadButton.textContent =
+        "Analyzing...";
+
+
+    const formData =
+        new FormData();
+
+    formData.append(
+        "file",
+        file
+    );
+
+
+    try {
+
+        const response =
+            await fetch(
+                "http://localhost:8000/upload",
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.detail ||
+                "Upload failed"
+            );
+
         }
 
-        status.style.display = "block";
 
-        statusTitle.textContent =
-            "Analyzing your data...";
-
-        result.textContent = "";
+        const analytics =
+            data.analytics;
 
 
-        const formData =
-            new FormData();
-
-        formData.append(
-            "file",
-            file
-        );
+        const summary =
+            analytics.summary;
 
 
-        try {
-
-            const response =
-                await fetch(
-                    "http://localhost:8000/upload",
-                    {
-                        method: "POST",
-                        body: formData
-                    }
-                );
+        const messages =
+            analytics.messages;
 
 
-            const data =
-                await response.json();
+        result.innerHTML = `
+
+            <div class="result success">
+
+                <h3>
+                    Import successful
+                </h3>
+
+                <p>
+                    ${data.filename}
+                </p>
+
+            </div>
 
 
-            if (!response.ok) {
+            <div class="stats-grid">
 
-                throw new Error(
-                    data.detail ||
-                    "Upload failed"
-                );
+                <div class="stat">
 
-            }
+                    <span>
+                        Conversations
+                    </span>
 
+                    <strong>
+                        ${data.normalized_conversations}
+                    </strong>
 
-            const analytics =
-                data.analytics;
-
-
-            statusTitle.textContent =
-                "Analysis complete";
+                </div>
 
 
-            result.innerHTML = `
+                <div class="stat">
+
+                    <span>
+                        Reply Rate
+                    </span>
+
+                    <strong>
+                        ${summary.reply_rate_percent}%
+                    </strong>
+
+                </div>
+
+
+                <div class="stat">
+
+                    <span>
+                        Creator Messages
+                    </span>
+
+                    <strong>
+                        ${messages.creator_messages}
+                    </strong>
+
+                </div>
+
+
+                <div class="stat">
+
+                    <span>
+                        Subscriber Messages
+                    </span>
+
+                    <strong>
+                        ${messages.subscriber_messages}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="result">
 
                 <strong>
-                    ${data.filename}
+                    ${data.skipped_rows}
                 </strong>
 
-                <br><br>
+                rows skipped during normalization.
 
-                Conversations:
-                ${analytics.summary.total_conversations}
+            </div>
 
-                <br>
-
-                Reply Rate:
-                ${analytics.summary.reply_rate_percent}%
-
-                <br>
-
-                Creator Messages:
-                ${analytics.messages.creator_messages}
-
-                <br>
-
-                Subscriber Messages:
-                ${analytics.messages.subscriber_messages}
-
-            `;
+        `;
 
 
-        } catch (error) {
+    } catch (error) {
 
-            statusTitle.textContent =
-                "Analysis failed";
+        result.innerHTML = `
 
-            result.textContent =
-                error.message;
+            <div class="result error">
 
-        }
+                <h3>
+                    Import failed
+                </h3>
+
+                <p>
+                    ${error.message}
+                </p>
+
+            </div>
+
+        `;
 
     }
-);
+
+
+    uploadButton.disabled = false;
+
+    uploadButton.textContent =
+        "Import & Analyze";
+
+}
 
 </script>
 
