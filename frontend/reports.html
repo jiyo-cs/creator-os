@@ -215,7 +215,8 @@ body {
 
 </div>
 
-
+<script src="config.js"></script>
+    
 <script>
 const periodSelect =
     document.getElementById("period");
@@ -236,7 +237,7 @@ async function loadReport() {
 
         const response =
             await fetch(
-                `http://localhost:8000/api/reports/latest?period=${period}`
+                `${API_URL}/api/reports/latest?period=${period}`
             );
 
         const data =
