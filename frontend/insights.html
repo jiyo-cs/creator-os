@@ -17,89 +17,349 @@
 
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f5f5f5;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Inter",
+        sans-serif;
+
+    background: #f5f5f7;
+
     color: #111;
+
 }
+
+
+/* NAVIGATION */
+
+#appNav {
+    position: relative;
+    z-index: 100;
+}
+
+.sidebar {
+
+    width: 240px;
+
+    background: #111;
+
+    color: white;
+
+    padding: 24px 16px;
+
+    position: fixed;
+
+    height: 100vh;
+
+    top: 0;
+
+    left: 0;
+
+}
+
+.logo {
+
+    font-size: 22px;
+
+    font-weight: 700;
+
+    margin-bottom: 40px;
+
+    padding-left: 12px;
+
+}
+
+.nav {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 6px;
+
+}
+
+.nav a {
+
+    text-decoration: none;
+
+    color: #aaa;
+
+    padding: 12px;
+
+    border-radius: 10px;
+
+    font-size: 14px;
+
+    display: block;
+
+}
+
+.nav a:hover,
+.nav a.active {
+
+    background: #222;
+
+    color: white;
+
+}
+
+
+/* MAIN */
 
 .container {
+
     max-width: 1100px;
-    margin: auto;
+
+    margin-left: 240px;
+
     padding: 40px 20px;
+
 }
 
+
+/* HEADER */
+
 .header {
+
     display: flex;
+
     justify-content: space-between;
+
     align-items: center;
+
     margin-bottom: 30px;
+
 }
 
 .header h1 {
+
     margin: 0;
+
     font-size: 30px;
+
+    letter-spacing: -0.5px;
+
 }
 
-.back {
-    text-decoration: none;
-    color: #555;
+.header p {
+
+    margin-top: 8px;
+
+    color: #777;
+
 }
+
+
+/* SECTIONS */
 
 .section {
+
     margin-bottom: 35px;
+
 }
 
 .section h2 {
+
     margin-bottom: 15px;
+
+    font-size: 20px;
+
 }
 
+
+/* CARDS */
+
 .card {
+
     background: white;
+
     border-radius: 16px;
+
     padding: 22px;
+
     margin-bottom: 14px;
+
     border: 1px solid #e8e8e8;
+
 }
 
 .card h3 {
+
     margin: 0 0 8px;
+
+    font-size: 17px;
+
 }
 
 .card p {
+
     margin: 0;
+
     color: #666;
+
     line-height: 1.5;
+
 }
 
 .positive {
+
     border-left: 5px solid #222;
+
 }
 
 .warning {
+
     border-left: 5px solid #777;
+
 }
 
 .neutral {
+
     border-left: 5px solid #aaa;
+
 }
+
+
+/* PRIORITY */
 
 .priority {
+
     display: inline-block;
+
     margin-bottom: 10px;
+
     font-size: 12px;
+
     font-weight: bold;
+
     text-transform: uppercase;
+
 }
 
+
+/* EMPTY */
+
 .empty {
+
     background: white;
+
     padding: 30px;
+
     border-radius: 16px;
+
     color: #777;
+
+    border: 1px solid #e8e8e8;
+
+}
+
+
+/* TABLET */
+
+@media (max-width: 900px) {
+
+    .sidebar {
+
+        width: 100%;
+
+        height: auto;
+
+        padding: 12px;
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 16px;
+
+        overflow-x: auto;
+
+    }
+
+    .logo {
+
+        font-size: 18px;
+
+        margin: 0;
+
+        padding: 0;
+
+        flex-shrink: 0;
+
+    }
+
+    .nav {
+
+        flex-direction: row;
+
+        gap: 6px;
+
+        overflow-x: auto;
+
+    }
+
+    .nav a {
+
+        white-space: nowrap;
+
+        padding: 9px 12px;
+
+    }
+
+    .container {
+
+        margin-left: 0;
+
+        padding: 100px 20px 30px;
+
+    }
+
+}
+
+
+/* PHONE */
+
+@media (max-width: 600px) {
+
+    .container {
+
+        padding: 85px 16px 20px;
+
+    }
+
+    .header {
+
+        align-items: flex-start;
+
+    }
+
+    .header h1 {
+
+        font-size: 27px;
+
+    }
+
+    .header p {
+
+        font-size: 14px;
+
+        line-height: 1.4;
+
+    }
+
+    .card {
+
+        padding: 18px;
+
+    }
+
 }
 
 </style>
@@ -109,7 +369,16 @@ body {
 
 <body>
 
+
+<!-- SHARED NAVIGATION -->
+
+<div id="appNav"></div>
+
+
+<!-- MAIN CONTENT -->
+
 <div class="container">
+
 
     <div class="header">
 
@@ -125,21 +394,17 @@ body {
 
         </div>
 
-        <a
-            href="index.html"
-            class="back"
-        >
-            ← Dashboard
-        </a>
-
     </div>
 
+
+    <!-- INSIGHTS -->
 
     <div class="section">
 
         <h2>
             Insights
         </h2>
+
 
         <div id="insights">
 
@@ -152,11 +417,14 @@ body {
     </div>
 
 
+    <!-- RECOMMENDATIONS -->
+
     <div class="section">
 
         <h2>
             Recommended Experiments
         </h2>
+
 
         <div id="recommendations">
 
@@ -168,10 +436,22 @@ body {
 
     </div>
 
+
 </div>
 
+
+<!-- CONFIG -->
+
 <script src="config.js"></script>
-    
+
+
+<!-- SHARED NAV -->
+
+<script src="nav.js"></script>
+
+
+<!-- PAGE SCRIPT -->
+
 <script>
 
 async function loadInsights() {
@@ -195,51 +475,156 @@ async function loadInsights() {
             );
 
 
+        if (!response.ok) {
+
+            throw new Error(
+                "API request failed"
+            );
+
+        }
+
+
         const data =
             await response.json();
 
 
-        if (!data.insights.length) {
+        const insights =
+            data.insights || [];
+
+
+        const recommendations =
+            data.recommendations || [];
+
+
+        /* INSIGHTS */
+
+        if (!insights.length) {
 
             insightsContainer.innerHTML = `
+
                 <div class="empty">
+
                     No insights available yet.
                     Import conversation data first.
+
                 </div>
+
             `;
 
         } else {
 
             insightsContainer.innerHTML = "";
 
-            data.insights.forEach(
-                insight => {
+
+            insights.forEach(insight => {
+
+                const card =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                card.className =
+                    `card ${insight.type || "neutral"}`;
+
+
+                card.innerHTML = `
+
+                    <h3>
+
+                        ${escapeHtml(
+                            insight.title
+                        )}
+
+                    </h3>
+
+
+                    <p>
+
+                        ${escapeHtml(
+                            insight.description
+                        )}
+
+                    </p>
+
+                `;
+
+
+                insightsContainer.appendChild(
+                    card
+                );
+
+            });
+
+        }
+
+
+        /* RECOMMENDATIONS */
+
+        if (!recommendations.length) {
+
+            recommendationsContainer.innerHTML = `
+
+                <div class="empty">
+
+                    No experiment recommendations
+                    available yet.
+
+                </div>
+
+            `;
+
+        } else {
+
+            recommendationsContainer.innerHTML =
+                "";
+
+
+            recommendations.forEach(
+                recommendation => {
 
                     const card =
                         document.createElement(
                             "div"
                         );
 
+
                     card.className =
-                        `card ${insight.type}`;
+                        "card";
+
 
                     card.innerHTML = `
 
-                        <h3>
+                        <span class="priority">
+
                             ${escapeHtml(
-                                insight.title
+                                recommendation.priority
                             )}
+
+                        </span>
+
+
+                        <h3>
+
+                            ${escapeHtml(
+                                recommendation.title
+                            )}
+
                         </h3>
 
+
                         <p>
+
                             ${escapeHtml(
-                                insight.description
+                                recommendation.description
                             )}
+
                         </p>
 
                     `;
 
-                    insightsContainer.appendChild(
+
+                    recommendationsContainer.appendChild(
                         card
                     );
 
@@ -249,82 +634,62 @@ async function loadInsights() {
         }
 
 
-        recommendationsContainer.innerHTML =
-            "";
+    } catch (error) {
 
-
-        data.recommendations.forEach(
-            recommendation => {
-
-                const card =
-                    document.createElement(
-                        "div"
-                    );
-
-                card.className = "card";
-
-
-                card.innerHTML = `
-
-                    <span class="priority">
-                        ${escapeHtml(
-                            recommendation.priority
-                        )}
-                    </span>
-
-                    <h3>
-                        ${escapeHtml(
-                            recommendation.title
-                        )}
-                    </h3>
-
-                    <p>
-                        ${escapeHtml(
-                            recommendation.description
-                        )}
-                    </p>
-
-                `;
-
-
-                recommendationsContainer.appendChild(
-                    card
-                );
-
-            }
+        console.error(
+            "Could not load AI insights:",
+            error
         );
 
 
-    } catch (error) {
-
         insightsContainer.innerHTML = `
+
             <div class="empty">
-                Could not connect to Creator OS API.
+
+                Could not connect to
+                Creator OS API.
+
             </div>
+
         `;
 
-        recommendationsContainer.innerHTML = "";
+
+        recommendationsContainer.innerHTML = `
+
+            <div class="empty">
+
+                Could not load recommendations.
+
+            </div>
+
+        `;
 
     }
 
 }
 
 
+/* SECURITY */
+
 function escapeHtml(value) {
 
-    return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
+    const div =
+        document.createElement("div");
+
+    div.textContent =
+        value ?? "";
+
+    return div.innerHTML;
 
 }
 
 
+/* LOAD */
+
 loadInsights();
 
 </script>
+
 
 </body>
 
