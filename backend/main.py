@@ -257,6 +257,22 @@ def experiment_details(
 
     return experiment
     
+@app.get("/api/status")
+def api_status():
+
+    conversations = get_conversations()
+
+    return {
+        "service": "Creator OS",
+        "status": "operational",
+        "stored_conversations":
+            len(conversations),
+        "analytics": "available",
+        "sequences": "available",
+        "insights": "available",
+        "experiments": "available",
+    }
+    
 @app.post("/upload")
 async def upload_file(
     file: UploadFile = File(...)
