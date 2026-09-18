@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Creator OS</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+            background: #f5f5f7;
+            color: #111;
+        }
+
+        .app {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            width: 240px;
+            background: #111;
+            color: white;
+            padding: 24px 16px;
+            position: fixed;
+            height: 100vh;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 40px;
+            padding-left: 12px;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .nav button {
+            border: none;
+            background: transparent;
+            color: #aaa;
+            text-align: left;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .nav button:hover,
+        .nav button.active {
+            background: #222;
+            color: white;
+        }
+
+        /* MAIN */
+
+        .main {
+            margin-left: 240px;
+            width: calc(100% - 240px);
+            padding: 32px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            letter-spacing: -1px;
+        }
+
+        .header p {
+            color: #777;
+            margin-top: 6px;
+        }
+
+        .creator {
+            background: white;
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+        }
+
+        /* CARDS */
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 18px;
+            padding: 22px;
+        }
+
+        .card-title {
+            color: #777;
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+
+        .card-value {
+            font-size: 30px;
+            font-weight: 700;
+        }
+
+        .card-change {
+            margin-top: 8px;
+            font-size: 12px;
+            color: #777;
+        }
+
+        /* GRID */
+
+        .grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .panel {
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 18px;
+            padding: 24px;
+        }
+
+        .panel h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        /* MESSAGES */
+
+        .message {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .message:last-child {
+            border-bottom: none;
+        }
+
+        .message-text {
+            font-size: 14px;
+        }
+
+        .message-rate {
+            font-weight: 600;
+        }
+
+        /* INSIGHTS */
+
+        .insight {
+            padding: 15px;
+            border-radius: 12px;
+            background: #f6f6f6;
+            margin-bottom: 10px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .insight strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+                width: 70px;
+                padding: 20px 8px;
+            }
+
+            .logo {
+                font-size: 0;
+                text-align: center;
+            }
+
+            .logo::after {
+                content: "C";
+                font-size: 22px;
+            }
+
+            .nav button {
+                font-size: 0;
+                text-align: center;
+            }
+
+            .nav button::first-letter {
+                font-size: 18px;
+            }
+
+            .main {
+                margin-left: 70px;
+                width: calc(100% - 70px);
+                padding: 20px;
+            }
+
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            .header {
+                align-items: flex-start;
+            }
+
+            .header h1 {
+                font-size: 26px;
+            }
+
+            .creator {
+                display: none;
+            }
+
+            .cards {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .card {
+                padding: 16px;
+            }
+
+            .card-value {
+                font-size: 23px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            Creator OS
+        </div>
+
+        <nav class="nav">
+
+            <button class="active">
+                Overview
+            </button>
+
+            <button>
+                DM Analytics
+            </button>
+
+            <button>
+                Conversations
+            </button>
+
+            <button>
+                Sequences
+            </button>
+
+            <button>
+                AI Insights
+            </button>
+
+            <button>
+                Experiments
+            </button>
+
+            <button>
+                Reports
+            </button>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+        <div class="header">
+
+            <div>
+                <h1>Overview</h1>
+                <p>Your creator performance at a glance.</p>
+            </div>
+
+            <div class="creator">
+                Creator Account
+            </div>
+
+        </div>
+
+
+        <!-- METRICS -->
+
+        <section class="cards">
+
+            <div class="card">
+
+                <div class="card-title">
+                    Conversations
+                </div>
+
+                <div class="card-value">
+                    12,482
+                </div>
+
+                <div class="card-change">
+                    Last 30 days
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-title">
+                    Reply Rate
+                </div>
+
+                <div class="card-value">
+                    67.4%
+                </div>
+
+                <div class="card-change">
+                    Subscriber replies
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-title">
+                    Avg Response
+                </div>
+
+                <div class="card-value">
+                    4m 32s
+                </div>
+
+                <div class="card-change">
+                    Subscriber response
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-title">
+                    Drop-off
+                </div>
+
+                <div class="card-value">
+                    21.8%
+                </div>
+
+                <div class="card-change">
+                    Conversation drop-off
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- CONTENT -->
+
+        <section class="grid">
+
+
+            <!-- TOP MESSAGES -->
+
+            <div class="panel">
+
+                <h2>
+                    Top Performing Messages
+                </h2>
+
+
+                <div class="message">
+
+                    <div class="message-text">
+                        Welcome ❤️
+                    </div>
+
+                    <div class="message-rate">
+                        82.4%
+                    </div>
+
+                </div>
+
+
+                <div class="message">
+
+                    <div class="message-text">
+                        What kind of content do you like?
+                    </div>
+
+                    <div class="message-rate">
+                        76.1%
+                    </div>
+
+                </div>
+
+
+                <div class="message">
+
+                    <div class="message-text">
+                        How's your day going?
+                    </div>
+
+                    <div class="message-rate">
+                        71.8%
+                    </div>
+
+                </div>
+
+
+                <div class="message">
+
+                    <div class="message-text">
+                        Check this out 👀
+                    </div>
+
+                    <div class="message-rate">
+                        69.3%
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- AI INSIGHTS -->
+
+            <div class="panel">
+
+                <h2>
+                    AI Insights
+                </h2>
+
+
+                <div class="insight">
+
+                    <strong>
+                        ⚡ Strong opener
+                    </strong>
+
+                    Your welcome message is generating
+                    significantly more replies than the
+                    average message.
+
+                </div>
+
+
+                <div class="insight">
+
+                    <strong>
+                        ⚠ Drop-off detected
+                    </strong>
+
+                    Follow-up #2 has the highest
+                    conversation drop-off.
+
+                </div>
+
+
+                <div class="insight">
+
+                    <strong>
+                        💡 Test
+                    </strong>
+
+                    Consider testing a shorter follow-up
+                    after the initial interaction.
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>
