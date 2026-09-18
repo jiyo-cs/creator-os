@@ -20,175 +20,354 @@
 }
 
 body {
+
     margin: 0;
-    font-family: Arial, sans-serif;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Inter",
+        Arial,
+        sans-serif;
+
     background: #f5f5f5;
+
     color: #111;
+
+    min-height: 100vh;
 }
 
+
 /* =========================
-   Layout
+   MAIN CONTENT
 ========================= */
 
-.container {
-    max-width: 1100px;
-    margin: auto;
-    padding: 40px 20px;
-    margin-left: 250px;
+.main {
+
+    margin-left: 230px;
+
+    min-height: 100vh;
 }
 
+.container {
+
+    max-width: 1100px;
+
+    margin: auto;
+
+    padding:
+        50px
+        30px
+        40px;
+}
+
+
 /* =========================
-   Header
+   HEADER
 ========================= */
 
 .header {
+
     display: flex;
-    justify-content: space-between;
+
+    justify-content:
+        space-between;
+
     align-items: center;
+
     margin-bottom: 30px;
+
     gap: 20px;
 }
 
 .header h1 {
+
     margin: 0;
+
+    font-size: 32px;
+
+    letter-spacing: -1px;
 }
 
 .header p {
+
     color: #777;
+
     margin-top: 8px;
 }
 
 .back {
+
     text-decoration: none;
+
     color: #555;
+
+    font-size: 14px;
 }
 
-/* =========================
-   Info
-========================= */
+.back:hover {
 
-.info {
-    background: white;
-    padding: 20px;
-    border-radius: 16px;
-    margin-bottom: 25px;
-    color: #666;
-    line-height: 1.5;
-}
-
-.info h2 {
-    margin-top: 0;
     color: #111;
 }
 
+
 /* =========================
-   Experiment
+   INFO
+========================= */
+
+.info {
+
+    background: white;
+
+    padding: 20px;
+
+    border-radius: 16px;
+
+    margin-bottom: 25px;
+
+    color: #666;
+
+    line-height: 1.5;
+
+    border:
+        1px solid #e8e8e8;
+}
+
+.info h2 {
+
+    margin-top: 0;
+
+    color: #111;
+
+    margin-bottom: 15px;
+}
+
+
+/* =========================
+   EXPERIMENT
 ========================= */
 
 .variant {
+
     background: white;
+
     border-radius: 16px;
+
     padding: 24px;
+
     margin-bottom: 15px;
-    border: 1px solid #e8e8e8;
+
+    border:
+        1px solid #e8e8e8;
 }
 
 .top {
+
     display: flex;
-    justify-content: space-between;
+
+    justify-content:
+        space-between;
+
     align-items: center;
+
     margin-bottom: 15px;
+
     gap: 20px;
 }
 
 .label {
+
     font-size: 13px;
+
     font-weight: bold;
+
     color: #777;
 }
 
 .rate {
+
     font-size: 28px;
+
     font-weight: bold;
 }
 
 .message {
+
     font-size: 17px;
+
     margin-bottom: 20px;
+
     line-height: 1.5;
+
+    word-break: break-word;
 }
 
 .stats {
+
     display: flex;
+
     gap: 30px;
+
     color: #666;
+
     font-size: 14px;
+
     flex-wrap: wrap;
 }
 
 .empty {
+
     background: white;
+
     padding: 30px;
+
     border-radius: 16px;
+
     color: #777;
+
+    border:
+        1px solid #e8e8e8;
 }
 
+
 /* =========================
-   Form
+   FORM
 ========================= */
 
 .form-input,
 .form-textarea {
+
     width: 100%;
+
     padding: 12px;
+
     margin: 10px 0;
-    border: 1px solid #ddd;
+
+    border:
+        1px solid #ddd;
+
     border-radius: 10px;
-    font-family: Arial, sans-serif;
+
+    font-family:
+        Arial,
+        sans-serif;
+
     font-size: 15px;
+
+    outline: none;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+
+    border-color: #999;
 }
 
 .form-textarea {
+
     min-height: 90px;
+
     resize: vertical;
 }
 
 .create-button {
-    padding: 12px 18px;
+
+    padding:
+        12px
+        18px;
+
     border: 0;
+
     border-radius: 10px;
+
     background: #111;
+
     color: white;
+
     cursor: pointer;
+
     font-size: 14px;
+
+    font-weight: 600;
 }
 
 .create-button:hover {
+
     opacity: 0.85;
 }
 
 .result {
+
     margin-top: 15px;
 }
 
+
 /* =========================
-   Responsive
+   MOBILE
 ========================= */
 
 @media (max-width: 800px) {
 
-    .container {
+    .main {
+
         margin-left: 0;
-        padding: 90px 15px 30px;
+
     }
+
+
+    .container {
+
+        padding:
+            30px
+            15px
+            30px;
+
+    }
+
 
     .header {
-        align-items: flex-start;
-        flex-direction: column;
+
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+
     }
 
+
+    .header h1 {
+
+        font-size: 28px;
+
+    }
+
+
     .back {
+
         display: none;
+
+    }
+
+}
+
+
+@media (max-width: 500px) {
+
+    .stats {
+
+        flex-direction:
+            column;
+
+        gap: 8px;
+
+    }
+
+
+    .variant {
+
+        padding: 18px;
+
     }
 
 }
@@ -200,12 +379,22 @@ body {
 
 <body>
 
-<!-- Shared Navigation -->
+
+<!-- =========================
+     SHARED NAVIGATION
+========================= -->
 
 <div id="appNav"></div>
 
 
+<!-- =========================
+     MAIN
+========================= -->
+
+<main class="main">
+
 <div class="container">
+
 
     <!-- Header -->
 
@@ -222,6 +411,7 @@ body {
             </p>
 
         </div>
+
 
         <a
             href="index.html"
@@ -298,20 +488,24 @@ body {
     <div id="variants">
 
         <div class="empty">
+
             Loading experiments...
+
         </div>
 
     </div>
 
+
 </div>
 
+</main>
 
-<!-- Shared API configuration -->
+
+<!-- =========================
+     CONFIG + NAV
+========================= -->
 
 <script src="config.js"></script>
-
-
-<!-- Shared Navigation -->
 
 <script src="nav.js"></script>
 
@@ -319,7 +513,7 @@ body {
 <script>
 
 /* =========================
-   Load Experiments
+   LOAD EXPERIMENTS
 ========================= */
 
 async function loadExperiments() {
@@ -328,6 +522,7 @@ async function loadExperiments() {
         document.getElementById(
             "variants"
         );
+
 
     try {
 
@@ -357,10 +552,14 @@ async function loadExperiments() {
         if (!variants.length) {
 
             container.innerHTML = `
+
                 <div class="empty">
+
                     No experiment data available yet.
                     Import conversation data first.
+
                 </div>
+
             `;
 
             return;
@@ -389,14 +588,19 @@ async function loadExperiments() {
                     <div class="top">
 
                         <div class="label">
+
                             Variant
                             ${escapeHtml(
                                 variant.variant
                             )}
+
                         </div>
 
+
                         <div class="rate">
+
                             ${variant.reply_rate_percent}%
+
                         </div>
 
                     </div>
@@ -414,20 +618,28 @@ async function loadExperiments() {
                     <div class="stats">
 
                         <span>
+
                             Sent:
                             ${variant.sent}
+
                         </span>
 
+
                         <span>
+
                             Replies:
                             ${variant.replies}
+
                         </span>
 
+
                         <span>
+
                             Avg Response:
                             ${formatTime(
                                 variant.average_response_seconds
                             )}
+
                         </span>
 
                     </div>
@@ -446,9 +658,14 @@ async function loadExperiments() {
     } catch (error) {
 
         container.innerHTML = `
+
             <div class="empty">
-                Could not connect to Creator OS API.
+
+                Could not connect to
+                Creator OS API.
+
             </div>
+
         `;
 
         console.error(error);
@@ -459,7 +676,7 @@ async function loadExperiments() {
 
 
 /* =========================
-   Format Time
+   FORMAT TIME
 ========================= */
 
 function formatTime(seconds) {
@@ -468,23 +685,32 @@ function formatTime(seconds) {
         seconds === null ||
         seconds === undefined
     ) {
+
         return "N/A";
+
     }
 
 
     if (seconds < 60) {
 
-        return Math.round(seconds) + "s";
+        return (
+            Math.round(seconds) +
+            "s"
+        );
 
     }
 
 
     const minutes =
-        Math.floor(seconds / 60);
+        Math.floor(
+            seconds / 60
+        );
 
 
     const remaining =
-        Math.round(seconds % 60);
+        Math.round(
+            seconds % 60
+        );
 
 
     return `${minutes}m ${remaining}s`;
@@ -493,7 +719,7 @@ function formatTime(seconds) {
 
 
 /* =========================
-   Escape HTML
+   ESCAPE HTML
 ========================= */
 
 function escapeHtml(value) {
@@ -529,7 +755,7 @@ function escapeHtml(value) {
 
 
 /* =========================
-   Create Experiment
+   CREATE EXPERIMENT
 ========================= */
 
 document
@@ -586,9 +812,11 @@ async function createExperiment() {
     ) {
 
         result.innerHTML = `
+
             <p>
                 Please complete all fields.
             </p>
+
         `;
 
         return;
@@ -606,8 +834,10 @@ async function createExperiment() {
                     method: "POST",
 
                     headers: {
+
                         "Content-Type":
                             "application/json"
+
                     },
 
                     body: JSON.stringify({
@@ -642,9 +872,11 @@ async function createExperiment() {
 
 
         result.innerHTML = `
+
             <p>
                 Experiment created successfully.
             </p>
+
         `;
 
 
@@ -671,7 +903,7 @@ async function createExperiment() {
             .value = "";
 
 
-        /* Refresh experiment list */
+        /* Refresh */
 
         loadExperiments();
 
@@ -679,11 +911,15 @@ async function createExperiment() {
     } catch (error) {
 
         result.innerHTML = `
+
             <p>
+
                 ${escapeHtml(
                     error.message
                 )}
+
             </p>
+
         `;
 
     }
@@ -692,12 +928,13 @@ async function createExperiment() {
 
 
 /* =========================
-   Initial Load
+   INITIAL LOAD
 ========================= */
 
 loadExperiments();
 
 </script>
+
 
 </body>
 
