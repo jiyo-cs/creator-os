@@ -1,0 +1,50 @@
+from fastapi import FastAPI
+from analytics import analyze_conversations
+from models import Conversation
+
+
+app = FastAPI(title="Creator OS Demo API")
+
+
+@app.get("/api/dashboard")
+def dashboard():
+
+    conversations = [
+        Conversation(
+            subscriber_id="user_001",
+            messages=[
+                {
+                    "sender": "creator",
+                    "text": "Hey! Thanks for subscribing ❤️",
+                    "timestamp": "2026-09-18T10:00:00"
+                },
+                {
+                    "sender": "subscriber",
+                    "text": "Hey! Glad to be here",
+                    "timestamp": "2026-09-18T10:03:00"
+                },
+                {
+                    "sender": "creator",
+                    "text": "What kind of content do you like?",
+                    "timestamp": "2026-09-18T10:05:00"
+                },
+                {
+                    "sender": "subscriber",
+                    "text": "I like your exclusive content",
+                    "timestamp": "2026-09-18T10:08:00"
+                }
+            ]
+        ),
+        Conversation(
+            subscriber_id="user_002",
+            messages=[
+                {
+                    "sender": "creator",
+                    "text": "Welcome! Thanks for subscribing.",
+                    "timestamp": "2026-09-18T11:00:00"
+                }
+            ]
+        )
+    ]
+
+    return analyze_conversations(conversations)
