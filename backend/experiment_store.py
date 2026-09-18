@@ -228,7 +228,9 @@ def assign_variant(
     ).fetchone()
 
     if not experiment:
+
         connection.close()
+
         return None
 
     existing = cursor.execute(
@@ -397,3 +399,199 @@ def record_reply(
     connection.close()
 
     return variant
+
+
+def sync_experiment_results(
+    conversations
+):
+
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    experiments = cursor.execute(
+        """
+        SELECT
+            id,
+            variant_a,
+            variant_b,
+            status
+        FROM experiments
+        WHERE status = 'running'
+        """
+    ).fetchall()
+
+    updated = 0
+
+    for experiment in experiments:
+
+        experiment_id = experiment["id"]
+
+        variant_a = (
+            experiment["variant_a"]
+            .strip()
+        )
+
+        variant_b = (
+            experiment["variant_b"]
+            .strip()
+        )
+
+        for conversation in conversations:
+
+            subscriber_id = str(
+                conversation.subscriber_id
+            )
+
+            messages = sorted(
+                conversation.messages,
+                key=lambda message:
+                    message.timestamp
+            )
+
+            for i, message in enumerate(
+                messages
+            ):
+
+                sender = (
+                    message.sender
+                    .lower()
+                    .strip()
+                )
+
+                if sender != "creator":
+
+                    continue
+
+                text = message.text.strip()
+
+                if text == variant_a:
+
+                    variant = "A"
+
+                elif text == variant_b:
+
+                    variant = "B"
+
+                else:
+
+                    continue
+
+                existing_exposure = cursor.execute(
+                    """
+                    SELECT id
+                    FROM experiment_events
+                    WHERE experiment_id = ?
+                    AND subscriber_id = ?
+                    AND event_type = 'exposure'
+                    LIMIT 1
+                    """,
+                    (
+                        experiment_id,
+                        subscriber_id,
+                    )
+                ).fetchone()
+
+                if not existing_exposure:
+
+                    cursor.execute(
+                        """
+                        INSERT INTO experiment_events
+                        (
+                            experiment_id,
+                            subscriber_id,
+                            variant,
+                            event_type
+                        )
+                        VALUES (?, ?, ?, ?)
+                        """,
+                        (
+                            experiment_id,
+                            subscriber_id,
+                            variant,
+                            "exposure",
+                        )
+                    )
+
+                    cursor.execute(
+                        """
+                        UPDATE experiment_results
+                        SET sent = sent + 1
+                        WHERE experiment_id = ?
+                        AND variant = ?
+                        """,
+                        (
+                            experiment_id,
+                            variant,
+                        )
+                    )
+
+                    updated += 1
+
+                if i + 1 < len(messages):
+
+                    next_message = (
+                        messages[i + 1]
+                    )
+
+                    next_sender = (
+                        next_message.sender
+                        .lower()
+                        .strip()
+                    )
+
+                    if next_sender == "subscriber":
+
+                        existing_reply = cursor.execute(
+                            """
+                            SELECT id
+                            FROM experiment_events
+                            WHERE experiment_id = ?
+                            AND subscriber_id = ?
+                            AND event_type = 'reply'
+                            LIMIT 1
+                            """,
+                            (
+                                experiment_id,
+                                subscriber_id,
+                            )
+                        ).fetchone()
+
+                        if not existing_reply:
+
+                            cursor.execute(
+                                """
+                                INSERT INTO experiment_events
+                                (
+                                    experiment_id,
+                                    subscriber_id,
+                                    variant,
+                                    event_type
+                                )
+                                VALUES (?, ?, ?, ?)
+                                """,
+                                (
+                                    experiment_id,
+                                    subscriber_id,
+                                    variant,
+                                    "reply",
+                                )
+                            )
+
+                            cursor.execute(
+                                """
+                                UPDATE experiment_results
+                                SET replies = replies + 1
+                                WHERE experiment_id = ?
+                                AND variant = ?
+                                """,
+                                (
+                                    experiment_id,
+                                    variant,
+                                )
+                            )
+
+    connection.commit()
+
+    connection.close()
+
+    return updated
