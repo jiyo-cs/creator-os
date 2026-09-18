@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
@@ -20,6 +19,7 @@
 }
 
 body {
+
     margin: 0;
 
     font-family:
@@ -32,19 +32,32 @@ body {
     background: #f5f5f5;
 
     color: #111;
+
+    min-height: 100vh;
 }
 
 
 /* =========================
-   MAIN
+   PAGE CONTENT
 ========================= */
 
+.main {
+
+    margin-left: 230px;
+
+    min-height: 100vh;
+}
+
 .container {
+
     max-width: 1100px;
 
     margin: auto;
 
-    padding: 100px 20px 40px;
+    padding:
+        50px
+        30px
+        40px;
 }
 
 
@@ -53,9 +66,11 @@ body {
 ========================= */
 
 .header {
+
     display: flex;
 
-    justify-content: space-between;
+    justify-content:
+        space-between;
 
     align-items: center;
 
@@ -65,6 +80,7 @@ body {
 }
 
 .header h1 {
+
     margin: 0;
 
     font-size: 32px;
@@ -73,6 +89,7 @@ body {
 }
 
 .header p {
+
     color: #777;
 
     margin-top: 6px;
@@ -84,9 +101,13 @@ body {
 ========================= */
 
 .period-select {
-    padding: 11px 14px;
 
-    border: 1px solid #ddd;
+    padding:
+        11px
+        14px;
+
+    border:
+        1px solid #ddd;
 
     border-radius: 10px;
 
@@ -100,6 +121,7 @@ body {
 }
 
 .period-select:focus {
+
     border-color: #999;
 }
 
@@ -109,6 +131,7 @@ body {
 ========================= */
 
 .stats-grid {
+
     display: grid;
 
     grid-template-columns:
@@ -125,22 +148,26 @@ body {
 ========================= */
 
 .card {
+
     background: white;
 
     padding: 22px;
 
     border-radius: 16px;
 
-    border: 1px solid #e8e8e8;
+    border:
+        1px solid #e8e8e8;
 
     margin-bottom: 15px;
 }
 
 .stats-grid .card {
+
     margin-bottom: 0;
 }
 
 .card span {
+
     display: block;
 
     color: #777;
@@ -151,10 +178,12 @@ body {
 }
 
 .card strong {
+
     font-size: 27px;
 }
 
 .card h2 {
+
     margin-top: 0;
 
     margin-bottom: 15px;
@@ -164,37 +193,11 @@ body {
 
 
 /* =========================
-   CONTENT
-========================= */
-
-.message,
-.insight,
-.recommendation {
-    background: white;
-
-    padding: 20px;
-
-    border-radius: 14px;
-
-    margin-bottom: 10px;
-
-    border: 1px solid #e8e8e8;
-}
-
-.message p,
-.insight p,
-.recommendation p {
-    color: #666;
-
-    line-height: 1.5;
-}
-
-
-/* =========================
    EMPTY
 ========================= */
 
 .empty {
+
     background: white;
 
     padding: 30px;
@@ -205,12 +208,14 @@ body {
 }
 
 .empty h2 {
+
     color: #111;
 
     margin-top: 0;
 }
 
 .empty p {
+
     line-height: 1.5;
 }
 
@@ -221,30 +226,48 @@ body {
 
 @media (max-width: 800px) {
 
+    .main {
+
+        margin-left: 0;
+
+    }
+
     .container {
+
         padding:
-            85px
+            30px
             15px
             30px;
+
     }
 
     .header {
-        align-items: flex-start;
 
-        flex-direction: column;
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+
     }
 
     .header h1 {
+
         font-size: 28px;
+
     }
 
     .period-select {
+
         width: 100%;
+
     }
 
     .stats-grid {
+
         grid-template-columns:
             repeat(2, 1fr);
+
     }
 
 }
@@ -253,8 +276,10 @@ body {
 @media (max-width: 500px) {
 
     .stats-grid {
+
         grid-template-columns:
             1fr;
+
     }
 
 }
@@ -274,80 +299,77 @@ body {
 <div id="appNav"></div>
 
 
-<div class="container">
+<!-- =========================
+     MAIN CONTENT
+========================= -->
+
+<main class="main">
+
+    <div class="container">
 
 
-    <!-- =========================
-         HEADER
-    ========================= -->
+        <!-- HEADER -->
 
-    <div class="header">
+        <div class="header">
+
+            <div>
+
+                <h1>
+                    Performance Report
+                </h1>
+
+                <p>
+                    Creator OS DM optimization report
+                </p>
+
+            </div>
 
 
-        <div>
+            <select
+                id="period"
+                class="period-select"
+            >
 
-            <h1>
-                Performance Report
-            </h1>
+                <option value="7d">
+                    Last 7 days
+                </option>
 
-            <p>
-                Creator OS DM optimization report
-            </p>
+                <option value="30d">
+                    Last 30 days
+                </option>
+
+                <option value="all_time">
+                    All time
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- REPORT -->
+
+        <div id="report">
+
+            <div class="empty">
+
+                Loading report...
+
+            </div>
 
         </div>
 
 
-        <select
-            id="period"
-            class="period-select"
-        >
-
-            <option value="7d">
-                Last 7 days
-            </option>
-
-            <option value="30d">
-                Last 30 days
-            </option>
-
-            <option value="all_time">
-                All time
-            </option>
-
-        </select>
-
-
     </div>
 
-
-    <!-- =========================
-         REPORT
-    ========================= -->
-
-    <div id="report">
-
-        <div class="empty">
-
-            Loading report...
-
-        </div>
-
-    </div>
-
-
-</div>
+</main>
 
 
 <!-- =========================
-     API CONFIG
+     SCRIPTS
 ========================= -->
 
 <script src="config.js"></script>
-
-
-<!-- =========================
-     SHARED NAV
-========================= -->
 
 <script src="nav.js"></script>
 
@@ -464,8 +486,6 @@ function renderReport(report) {
 
     reportContainer.innerHTML = `
 
-        <!-- SUMMARY -->
-
         <div class="stats-grid">
 
 
@@ -529,14 +549,11 @@ function renderReport(report) {
         </div>
 
 
-        <!-- TOP MESSAGES -->
-
         <div class="card">
 
             <h2>
                 Top Performing Messages
             </h2>
-
 
             ${renderMessages(
                 report.top_messages || []
@@ -545,14 +562,11 @@ function renderReport(report) {
         </div>
 
 
-        <!-- DROPOFFS -->
-
         <div class="card">
 
             <h2>
                 Biggest Drop-offs
             </h2>
-
 
             ${renderDropoffs(
                 report.biggest_dropoffs || []
@@ -561,14 +575,11 @@ function renderReport(report) {
         </div>
 
 
-        <!-- INSIGHTS -->
-
         <div class="card">
 
             <h2>
                 Key Insights
             </h2>
-
 
             ${renderInsights(
                 report.insights || []
@@ -577,14 +588,11 @@ function renderReport(report) {
         </div>
 
 
-        <!-- RECOMMENDATIONS -->
-
         <div class="card">
 
             <h2>
                 Recommended Actions
             </h2>
-
 
             ${renderRecommendations(
                 report.recommendations || []
@@ -606,11 +614,9 @@ function renderMessages(messages) {
     if (!messages.length) {
 
         return `
-
             <p>
                 No message data available.
             </p>
-
         `;
 
     }
@@ -627,13 +633,10 @@ function renderMessages(messages) {
             >
 
                 <strong>
-
                     ${escapeHtml(
                         message.message
                     )}
-
                 </strong>
-
 
                 <div
                     style="
@@ -670,11 +673,9 @@ function renderDropoffs(dropoffs) {
     if (!dropoffs.length) {
 
         return `
-
             <p>
                 No sequence drop-off data yet.
             </p>
-
         `;
 
     }
@@ -691,13 +692,10 @@ function renderDropoffs(dropoffs) {
             >
 
                 <strong>
-
                     ${escapeHtml(
                         item.step
                     )}
-
                 </strong>
-
 
                 <div
                     style="
@@ -733,11 +731,9 @@ function renderInsights(insights) {
     if (!insights.length) {
 
         return `
-
             <p>
                 No insights available.
             </p>
-
         `;
 
     }
@@ -754,13 +750,10 @@ function renderInsights(insights) {
             >
 
                 <strong>
-
                     ${escapeHtml(
                         insight.title
                     )}
-
                 </strong>
-
 
                 <p
                     style="
@@ -794,11 +787,9 @@ function renderRecommendations(
     if (!recommendations.length) {
 
         return `
-
             <p>
                 No recommendations yet.
             </p>
-
         `;
 
     }
@@ -815,13 +806,10 @@ function renderRecommendations(
             >
 
                 <strong>
-
                     ${escapeHtml(
                         recommendation.title
                     )}
-
                 </strong>
-
 
                 <p
                     style="
