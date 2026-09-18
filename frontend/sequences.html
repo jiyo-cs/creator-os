@@ -35,31 +35,102 @@ body {
 
 }
 
-.container {
 
-    max-width: 1000px;
+/* NAVIGATION */
 
-    margin: auto;
+#appNav {
+    position: relative;
+    z-index: 100;
+}
 
-    padding: 35px 20px;
+.sidebar {
+
+    width: 240px;
+
+    background: #111;
+
+    color: white;
+
+    padding: 24px 16px;
+
+    position: fixed;
+
+    height: 100vh;
+
+    top: 0;
+
+    left: 0;
 
 }
 
-.back {
+.logo {
 
-    color: #666;
+    font-size: 22px;
+
+    font-weight: 700;
+
+    margin-bottom: 40px;
+
+    padding-left: 12px;
+
+}
+
+.nav {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 6px;
+
+}
+
+.nav a {
 
     text-decoration: none;
+
+    color: #aaa;
+
+    padding: 12px;
+
+    border-radius: 10px;
 
     font-size: 14px;
 
 }
 
+.nav a:hover,
+.nav a.active {
+
+    background: #222;
+
+    color: white;
+
+}
+
+
+/* MAIN CONTAINER */
+
+.container {
+
+    max-width: 1000px;
+
+    margin-left: 240px;
+
+    padding: 35px 20px;
+
+}
+
+
+/* PAGE */
+
 h1 {
 
     font-size: 34px;
 
-    margin-top: 30px;
+    margin-top: 10px;
+
+    letter-spacing: -1px;
 
 }
 
@@ -72,6 +143,9 @@ h1 {
     margin-bottom: 30px;
 
 }
+
+
+/* SEQUENCE */
 
 .sequence {
 
@@ -113,6 +187,9 @@ h1 {
 
 }
 
+
+/* PROGRESS BAR */
+
 .bar {
 
     height: 8px;
@@ -135,6 +212,9 @@ h1 {
 
 }
 
+
+/* STATS */
+
 .stats {
 
     display: flex;
@@ -149,6 +229,116 @@ h1 {
 
 }
 
+
+/* TABLET */
+
+@media (max-width: 900px) {
+
+    .sidebar {
+
+        width: 100%;
+
+        height: auto;
+
+        padding: 12px;
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 16px;
+
+        overflow-x: auto;
+
+    }
+
+    .logo {
+
+        font-size: 18px;
+
+        margin: 0;
+
+        padding: 0;
+
+        flex-shrink: 0;
+
+    }
+
+    .nav {
+
+        flex-direction: row;
+
+        gap: 6px;
+
+        overflow-x: auto;
+
+    }
+
+    .nav a {
+
+        white-space: nowrap;
+
+        padding: 9px 12px;
+
+    }
+
+    .container {
+
+        margin-left: 0;
+
+        padding: 100px 20px 30px;
+
+    }
+
+}
+
+
+/* PHONE */
+
+@media (max-width: 600px) {
+
+    .container {
+
+        padding: 85px 16px 20px;
+
+    }
+
+    h1 {
+
+        font-size: 28px;
+
+    }
+
+    .subtitle {
+
+        font-size: 14px;
+
+    }
+
+    .sequence {
+
+        padding: 18px;
+
+    }
+
+    .rate {
+
+        font-size: 21px;
+
+    }
+
+    .stats {
+
+        gap: 12px;
+
+        flex-wrap: wrap;
+
+        font-size: 12px;
+
+    }
+
+}
+
 </style>
 
 </head>
@@ -157,41 +347,50 @@ h1 {
 <body>
 
 
+<!-- SHARED NAVIGATION -->
+
+<div id="appNav"></div>
+
+
+<!-- MAIN CONTENT -->
+
 <div class="container">
 
 
-<a
-    href="index.html"
-    class="back"
->
-    ← Dashboard
-</a>
+    <h1>
+        Sequence Analytics
+    </h1>
 
 
-<h1>
-    Sequence Analytics
-</h1>
+    <p class="subtitle">
+        Understand where subscribers continue
+        or drop out of your DM flows.
+    </p>
 
 
-<p class="subtitle">
-    Understand where subscribers continue
-    or drop out of your DM flows.
-</p>
+    <div id="sequences">
 
+        Loading...
 
-<div id="sequences">
-
-    Loading...
-
-</div>
+    </div>
 
 
 </div>
+
+
+<!-- CONFIG -->
 
 <script src="config.js"></script>
-    
-<script>
 
+
+<!-- SHARED NAV -->
+
+<script src="nav.js"></script>
+
+
+<!-- PAGE SCRIPT -->
+
+<script>
 
 async function loadSequences() {
 
@@ -204,52 +403,93 @@ async function loadSequences() {
             `${API_URL}/sequences`
         );
 
-        const result = await response.json();
 
-        const sequences = result.sequences || [];
+        if (!response.ok) {
+
+            throw new Error(
+                "API request failed"
+            );
+
+        }
+
+
+        const result =
+            await response.json();
+
+
+        const sequences =
+            result.sequences || [];
+
 
         if (!sequences.length) {
 
             container.innerHTML = `
+
                 <div class="sequence">
 
                     <strong>
                         No sequence data yet.
                     </strong>
 
-                    <p style="margin-top:8px;color:#777;">
+                    <p
+                        style="
+                            margin-top:8px;
+                            color:#777;
+                        "
+                    >
                         Import conversation data
                         to analyze your flows.
                     </p>
 
                 </div>
+
             `;
 
             return;
+
         }
 
+
         container.innerHTML = "";
+
 
         sequences.forEach(sequence => {
 
             const element =
                 document.createElement("div");
 
-            element.className = "sequence";
+
+            element.className =
+                "sequence";
+
+
+            const continuationRate =
+                Number(
+                    sequence.continuation_rate_percent
+                ) || 0;
+
 
             element.innerHTML = `
 
                 <div class="top">
 
                     <div class="step">
-                        ${sequence.step}
+
+                        ${escapeHtml(
+                            sequence.step
+                        )}
+
                     </div>
 
+
                     <div class="rate">
-                        ${sequence.continuation_rate_percent}%
+
+                        ${continuationRate}%
+
                     </div>
 
                 </div>
+
 
                 <div class="bar">
 
@@ -258,7 +498,10 @@ async function loadSequences() {
                         style="
                             width:
                             ${Math.min(
-                                sequence.continuation_rate_percent,
+                                Math.max(
+                                    continuationRate,
+                                    0
+                                ),
                                 100
                             )}%;
                         "
@@ -266,32 +509,43 @@ async function loadSequences() {
 
                 </div>
 
+
                 <div class="stats">
 
                     <span>
                         Entered:
-                        ${sequence.entered}
+                        ${sequence.entered || 0}
                     </span>
+
 
                     <span>
                         Continued:
-                        ${sequence.continued}
+                        ${sequence.continued || 0}
                     </span>
+
 
                     <span>
                         Dropped:
-                        ${sequence.dropped}
+                        ${sequence.dropped || 0}
                     </span>
 
                 </div>
 
             `;
 
+
             container.appendChild(element);
 
         });
 
+
     } catch (error) {
+
+        console.error(
+            "Could not load sequence analytics:",
+            error
+        );
+
 
         container.innerHTML = `
 
@@ -301,9 +555,14 @@ async function loadSequences() {
                     API connection failed.
                 </strong>
 
-                <p style="margin-top:8px;color:#777;">
-                    Make sure the Creator OS
-                    backend is running.
+                <p
+                    style="
+                        margin-top:8px;
+                        color:#777;
+                    "
+                >
+                    Could not connect to the
+                    Creator OS backend.
                 </p>
 
             </div>
@@ -311,8 +570,26 @@ async function loadSequences() {
         `;
 
     }
+
 }
 
+
+/* SECURITY */
+
+function escapeHtml(text) {
+
+    const div =
+        document.createElement("div");
+
+    div.textContent =
+        text ?? "";
+
+    return div.innerHTML;
+
+}
+
+
+/* LOAD */
 
 loadSequences();
 
