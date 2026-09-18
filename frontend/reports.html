@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>Creator OS — Report</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    color: #111;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 40px 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.header h1 {
+    margin: 0;
+}
+
+.back {
+    text-decoration: none;
+    color: #555;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns:
+        repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.card {
+    background: white;
+    padding: 22px;
+    border-radius: 16px;
+    border: 1px solid #e8e8e8;
+}
+
+.label {
+    color: #777;
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+.value {
+    font-size: 27px;
+    font-weight: bold;
+}
+
+.section {
+    margin-bottom: 30px;
+}
+
+.section h2 {
+    margin-bottom: 15px;
+}
+
+.message,
+.insight,
+.recommendation {
+    background: white;
+    padding: 20px;
+    border-radius: 14px;
+    margin-bottom: 10px;
+    border: 1px solid #e8e8e8;
+}
+
+.message p,
+.insight p,
+.recommendation p {
+    color: #666;
+    line-height: 1.5;
+}
+
+.empty {
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    color: #777;
+}
+
+@media (max-width: 800px) {
+
+    .grid {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 500px) {
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <div>
+
+            <h1>
+                Performance Report
+            </h1>
+
+            <p>
+                Creator OS DM optimization report
+            </p>
+
+        </div>
+
+        <a
+            href="index.html"
+            class="back"
+        >
+            ← Dashboard
+        </a>
+
+    </div>
+
+
+    <div id="report">
+
+        <div class="empty">
+            Loading report...
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+async function loadReport() {
+
+    const container =
+        document.getElementById(
+            "report"
+        );
+
+
+    try {
+
+        const response =
+            await fetch(
+                "http://localhost:8000/api/reports/latest"
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!data.report) {
+
+            container.innerHTML = `
+                <div class="empty">
+                    No report data available.
+                    Import conversation data first.
+                </div>
+            `;
+
+            return;
+        }
+
+
+        const report =
+            data.report;
+
+
+        const summary =
+            report.summary;
+
+
+        container.innerHTML = `
+
+            <div class="grid">
+
+                <div class="card">
+
+                    <div class="label">
+                        Conversations
+                    </div>
+
+                    <div class="value">
+                        ${summary.total_conversations}
+                    </div>
+
+                </div>
+
+
+                <div class="card">
+
+                    <div class="label">
+                        Reply Rate
+                    </div>
+
+                    <div class="value">
+                        ${summary.reply_rate_percent}%
+                    </div>
+
+                </div>
+
+
+                <div class="card">
+
+                    <div class="label">
+                        Avg Response
+                    </div>
+
+                    <div class="value">
+                        ${summary.average_response_time}
+                    </div>
+
+                </div>
+
+
+                <div class="card">
+
+                    <div class="label">
+                        Creator Messages
+                    </div>
+
+                    <div class="value">
+                        ${summary.creator_messages}
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="section">
+
+                <h2>
+                    Top Messages
+                </h2>
+
+                <div id="messages"></div>
+
+            </div>
+
+
+            <div class="section">
+
+                <h2>
+                    Key Insights
+                </h2>
+
+                <div id="insights"></div>
+
+            </div>
+
+
+            <div class="section">
+
+                <h2>
+                    Recommended Actions
+                </h2>
+
+                <div id="recommendations"></div>
+
+            </div>
+
+        `;
+
+
+        renderMessages(
+            report.top_messages
+        );
+
+
+        renderInsights(
+            report.insights
+        );
+
+
+        renderRecommendations(
+            report.recommendations
+        );
+
+
+    } catch (error) {
+
+        container.innerHTML = `
+            <div class="empty">
+                Could not connect to Creator OS API.
+            </div>
+        `;
+
+    }
+
+}
+
+
+function renderMessages(messages) {
+
+    const container =
+        document.getElementById(
+            "messages"
+        );
+
+
+    container.innerHTML = "";
+
+
+    messages.forEach(
+        message => {
+
+            const element =
+                document.createElement(
+                    "div"
+                );
+
+            element.className =
+                "message";
+
+
+            element.innerHTML = `
+
+                <strong>
+                    ${escapeHtml(
+                        message.message
+                    )}
+                </strong>
+
+                <p>
+                    Sent:
+                    ${message.times_sent}
+                    &nbsp; • &nbsp;
+                    Reply Rate:
+                    ${message.reply_rate_percent}%
+                </p>
+
+            `;
+
+
+            container.appendChild(
+                element
+            );
+
+        }
+    );
+
+}
+
+
+function renderInsights(insights) {
+
+    const container =
+        document.getElementById(
+            "insights"
+        );
+
+
+    container.innerHTML = "";
+
+
+    insights.forEach(
+        insight => {
+
+            const element =
+                document.createElement(
+                    "div"
+                );
+
+            element.className =
+                "insight";
+
+
+            element.innerHTML = `
+
+                <strong>
+                    ${escapeHtml(
+                        insight.title
+                    )}
+                </strong>
+
+                <p>
+                    ${escapeHtml(
+                        insight.description
+                    )}
+                </p>
+
+            `;
+
+
+            container.appendChild(
+                element
+            );
+
+        }
+    );
+
+}
+
+
+function renderRecommendations(
+    recommendations
+) {
+
+    const container =
+        document.getElementById(
+            "recommendations"
+        );
+
+
+    container.innerHTML = "";
+
+
+    recommendations.forEach(
+        recommendation => {
+
+            const element =
+                document.createElement(
+                    "div"
+                );
+
+            element.className =
+                "recommendation";
+
+
+            element.innerHTML = `
+
+                <strong>
+                    ${escapeHtml(
+                        recommendation.title
+                    )}
+                </strong>
+
+                <p>
+                    ${escapeHtml(
+                        recommendation.description
+                    )}
+                </p>
+
+            `;
+
+
+            container.appendChild(
+                element
+            );
+
+        }
+    );
+
+}
+
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+
+}
+
+
+loadReport();
+
+</script>
+
+</body>
+
+</html>
