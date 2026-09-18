@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>Creator OS — Experiments</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    color: #111;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 40px 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.header h1 {
+    margin: 0;
+}
+
+.back {
+    text-decoration: none;
+    color: #555;
+}
+
+.info {
+    background: white;
+    padding: 20px;
+    border-radius: 16px;
+    margin-bottom: 25px;
+    color: #666;
+    line-height: 1.5;
+}
+
+.variant {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 15px;
+    border: 1px solid #e8e8e8;
+}
+
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.label {
+    font-size: 13px;
+    font-weight: bold;
+    color: #777;
+}
+
+.rate {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.message {
+    font-size: 17px;
+    margin-bottom: 20px;
+}
+
+.stats {
+    display: flex;
+    gap: 30px;
+    color: #666;
+    font-size: 14px;
+    flex-wrap: wrap;
+}
+
+.empty {
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    color: #777;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <div>
+
+            <h1>
+                Experiments
+            </h1>
+
+            <p>
+                Compare DM message performance
+            </p>
+
+        </div>
+
+        <a
+            href="index.html"
+            class="back"
+        >
+            ← Dashboard
+        </a>
+
+    </div>
+
+
+    <div class="info">
+
+        Creator OS compares message variants
+        using actual conversation performance.
+
+        Use this page to identify messages
+        worth testing and improving.
+
+    </div>
+
+
+    <div id="variants">
+
+        <div class="empty">
+            Loading experiments...
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+async function loadExperiments() {
+
+    const container =
+        document.getElementById(
+            "variants"
+        );
+
+    try {
+
+        const response =
+            await fetch(
+                "http://localhost:8000/api/experiments"
+            );
+
+        const data =
+            await response.json();
+
+        const variants =
+            data.variants || [];
+
+
+        if (!variants.length) {
+
+            container.innerHTML = `
+                <div class="empty">
+                    No experiment data available yet.
+                    Import conversation data first.
+                </div>
+            `;
+
+            return;
+        }
+
+
+        container.innerHTML = "";
+
+
+        variants.forEach(
+            variant => {
+
+                const element =
+                    document.createElement(
+                        "div"
+                    );
+
+                element.className =
+                    "variant";
+
+
+                element.innerHTML = `
+
+                    <div class="top">
+
+                        <div class="label">
+                            Variant
+                            ${escapeHtml(
+                                variant.variant
+                            )}
+                        </div>
+
+                        <div class="rate">
+                            ${variant.reply_rate_percent}%
+                        </div>
+
+                    </div>
+
+
+                    <div class="message">
+
+                        "${escapeHtml(
+                            variant.message
+                        )}"
+
+                    </div>
+
+
+                    <div class="stats">
+
+                        <span>
+                            Sent:
+                            ${variant.sent}
+                        </span>
+
+                        <span>
+                            Replies:
+                            ${variant.replies}
+                        </span>
+
+                        <span>
+                            Avg Response:
+                            ${formatTime(
+                                variant.average_response_seconds
+                            )}
+                        </span>
+
+                    </div>
+
+                `;
+
+
+                container.appendChild(
+                    element
+                );
+
+            }
+        );
+
+
+    } catch (error) {
+
+        container.innerHTML = `
+            <div class="empty">
+                Could not connect to Creator OS API.
+            </div>
+        `;
+
+    }
+
+}
+
+
+function formatTime(seconds) {
+
+    if (seconds === null) {
+        return "N/A";
+    }
+
+    if (seconds < 60) {
+        return Math.round(seconds) + "s";
+    }
+
+    const minutes =
+        Math.floor(seconds / 60);
+
+    const remaining =
+        Math.round(seconds % 60);
+
+    return `${minutes}m ${remaining}s`;
+}
+
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+
+}
+
+
+loadExperiments();
+
+</script>
+
+</body>
+
+</html>
