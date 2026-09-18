@@ -7,6 +7,12 @@ from fastapi import (
 
 import json
 from experiments import compare_variants
+from experiment_store import (
+    initialize_experiments,
+    create_experiment,
+    get_experiments,
+    get_experiment,
+)
 from insights import generate_insights
 from normalizer import normalize_file
 from models import AnalyzeRequest
@@ -15,6 +21,7 @@ from sequences import analyze_sequences
 
 from database import (
     initialize_database,
+    initialize_experiments()
     save_conversations,
     get_conversations,
     clear_database,
@@ -180,6 +187,59 @@ def experiments():
     return compare_variants(
         analytics
     )
+@app.post("/api/experiments")
+async def create_experiment_api(data: dict):
+
+    name = data.get("name")
+    variant_a = data.get("variant_a")
+    variant_b = data.get("variant_b")
+
+    if not name:
+        raise HTTPException(
+            status_code=400,
+            detail="Experiment name is required",
+        )
+
+    if not variant_a or not variant_b:
+        raise HTTPException(
+            status_code=400,
+            detail="Both variants are required",
+        )
+
+    experiment_id = create_experiment(
+        name,
+        variant_a,
+        variant_b,
+    )
+
+    return {
+        "id": experiment_id,
+        "status": "created",
+    }    
+@app.get("/api/experiments/list")
+def experiments_list():
+
+    return {
+        "experiments":
+            get_experiments()
+    }
+@app.get("/api/experiments/{experiment_id}")
+def experiment_details(
+    experiment_id: int
+):
+
+    experiment = get_experiment(
+        experiment_id
+    )
+
+    if not experiment:
+
+        raise HTTPException(
+            status_code=404,
+            detail="Experiment not found",
+        )
+
+    return experiment
     
 @app.post("/upload")
 async def upload_file(
