@@ -521,6 +521,82 @@
     </main>
 
 </div>
+<script>
 
+async function loadDashboard() {
+
+    try {
+
+        const response = await fetch(
+            "http://localhost:8000/api/dashboard"
+        );
+
+        const data = await response.json();
+
+        console.log("Creator OS analytics:", data);
+
+        updateDashboard(data);
+
+    } catch (error) {
+
+        console.error(
+            "Could not connect to Creator OS API:",
+            error
+        );
+
+    }
+}
+
+
+function updateDashboard(data) {
+
+    const summary = data.summary;
+    const messages = data.messages;
+    const responseTime = data.response_time;
+
+    const cards =
+        document.querySelectorAll(".card-value");
+
+    if (cards.length >= 4) {
+
+        cards[0].textContent =
+            summary.total_conversations;
+
+        cards[1].textContent =
+            summary.reply_rate_percent + "%";
+
+        if (responseTime.average_seconds !== null) {
+
+            cards[2].textContent =
+                formatTime(responseTime.average_seconds);
+
+        } else {
+
+            cards[2].textContent = "N/A";
+
+        }
+
+        cards[3].textContent = "—";
+    }
+}
+
+
+function formatTime(seconds) {
+
+    if (seconds < 60) {
+        return Math.round(seconds) + "s";
+    }
+
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds =
+        Math.round(seconds % 60);
+
+    return `${minutes}m ${remainingSeconds}s`;
+}
+
+
+loadDashboard();
+
+</script>
 </body>
 </html>
