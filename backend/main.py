@@ -203,6 +203,13 @@ def experiments():
     return compare_variants(
         analytics
     )
+@app.get("/api/conversations")
+def list_conversations():
+    conversations = get_conversations()
+
+    return {
+        "conversations": conversations
+    }
 @app.post("/api/experiments")
 async def create_experiment_api(data: dict):
 
