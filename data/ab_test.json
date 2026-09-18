@@ -1,0 +1,32 @@
+[
+  {
+    "subscriber_id": "user_001",
+    "sender": "creator",
+    "text": "Hey! How are you?",
+    "timestamp": "2026-09-18T10:00:00"
+  },
+  {
+    "subscriber_id": "user_001",
+    "sender": "subscriber",
+    "text": "I'm good!",
+    "timestamp": "2026-09-18T10:01:30"
+  },
+  {
+    "subscriber_id": "user_002",
+    "sender": "creator",
+    "text": "Hey! What are you up to?",
+    "timestamp": "2026-09-18T10:05:00"
+  },
+  {
+    "subscriber_id": "user_002",
+    "sender": "subscriber",
+    "text": "Just relaxing.",
+    "timestamp": "2026-09-18T10:07:00"
+  },
+  {
+    "subscriber_id": "user_003",
+    "sender": "creator",
+    "text": "Hey! How are you?",
+    "timestamp": "2026-09-18T10:10:00"
+  }
+]
