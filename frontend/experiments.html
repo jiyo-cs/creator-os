@@ -26,27 +26,46 @@ body {
     color: #111;
 }
 
+/* =========================
+   Layout
+========================= */
+
 .container {
     max-width: 1100px;
     margin: auto;
     padding: 40px 20px;
+    margin-left: 250px;
 }
+
+/* =========================
+   Header
+========================= */
 
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 30px;
+    gap: 20px;
 }
 
 .header h1 {
     margin: 0;
 }
 
+.header p {
+    color: #777;
+    margin-top: 8px;
+}
+
 .back {
     text-decoration: none;
     color: #555;
 }
+
+/* =========================
+   Info
+========================= */
 
 .info {
     background: white;
@@ -56,6 +75,15 @@ body {
     color: #666;
     line-height: 1.5;
 }
+
+.info h2 {
+    margin-top: 0;
+    color: #111;
+}
+
+/* =========================
+   Experiment
+========================= */
 
 .variant {
     background: white;
@@ -70,6 +98,7 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 15px;
+    gap: 20px;
 }
 
 .label {
@@ -86,6 +115,7 @@ body {
 .message {
     font-size: 17px;
     margin-bottom: 20px;
+    line-height: 1.5;
 }
 
 .stats {
@@ -103,6 +133,66 @@ body {
     color: #777;
 }
 
+/* =========================
+   Form
+========================= */
+
+.form-input,
+.form-textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+}
+
+.form-textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+
+.create-button {
+    padding: 12px 18px;
+    border: 0;
+    border-radius: 10px;
+    background: #111;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.create-button:hover {
+    opacity: 0.85;
+}
+
+.result {
+    margin-top: 15px;
+}
+
+/* =========================
+   Responsive
+========================= */
+
+@media (max-width: 800px) {
+
+    .container {
+        margin-left: 0;
+        padding: 90px 15px 30px;
+    }
+
+    .header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .back {
+        display: none;
+    }
+
+}
+
 </style>
 
 </head>
@@ -110,7 +200,14 @@ body {
 
 <body>
 
+<!-- Shared Navigation -->
+
+<div id="appNav"></div>
+
+
 <div class="container">
+
+    <!-- Header -->
 
     <div class="header">
 
@@ -136,6 +233,8 @@ body {
     </div>
 
 
+    <!-- Explanation -->
+
     <div class="info">
 
         Creator OS compares message variants
@@ -146,73 +245,56 @@ body {
 
     </div>
 
+
+    <!-- Create Experiment -->
+
     <div class="info">
 
-    <h2>Create Experiment</h2>
+        <h2>
+            Create Experiment
+        </h2>
 
-    <input
-        id="experimentName"
-        type="text"
-        placeholder="Experiment name"
-        style="
-            width:100%;
-            padding:12px;
-            margin:10px 0;
-            border:1px solid #ddd;
-            border-radius:10px;
-        "
-    >
 
-    <textarea
-        id="variantA"
-        placeholder="Variant A message"
-        style="
-            width:100%;
-            min-height:90px;
-            padding:12px;
-            margin:10px 0;
-            border:1px solid #ddd;
-            border-radius:10px;
-            resize:vertical;
-        "
-    ></textarea>
+        <input
+            id="experimentName"
+            class="form-input"
+            type="text"
+            placeholder="Experiment name"
+        >
 
-    <textarea
-        id="variantB"
-        placeholder="Variant B message"
-        style="
-            width:100%;
-            min-height:90px;
-            padding:12px;
-            margin:10px 0;
-            border:1px solid #ddd;
-            border-radius:10px;
-            resize:vertical;
-        "
-    ></textarea>
 
-    <button
-        id="createExperiment"
-        style="
-            padding:12px 18px;
-            border:0;
-            border-radius:10px;
-            background:#111;
-            color:white;
-            cursor:pointer;
-        "
-    >
-        Create Experiment
-    </button>
+        <textarea
+            id="variantA"
+            class="form-textarea"
+            placeholder="Variant A message"
+        ></textarea>
 
-    <div
-        id="experimentResult"
-        style="margin-top:15px;"
-    >
-        
+
+        <textarea
+            id="variantB"
+            class="form-textarea"
+            placeholder="Variant B message"
+        ></textarea>
+
+
+        <button
+            id="createExperiment"
+            class="create-button"
+        >
+            Create Experiment
+        </button>
+
+
+        <div
+            id="experimentResult"
+            class="result"
+        ></div>
+
     </div>
 
-</div>
+
+    <!-- Experiment Results -->
+
     <div id="variants">
 
         <div class="empty">
@@ -223,9 +305,22 @@ body {
 
 </div>
 
+
+<!-- Shared API configuration -->
+
 <script src="config.js"></script>
-    
+
+
+<!-- Shared Navigation -->
+
+<script src="nav.js"></script>
+
+
 <script>
+
+/* =========================
+   Load Experiments
+========================= */
 
 async function loadExperiments() {
 
@@ -241,8 +336,19 @@ async function loadExperiments() {
                 `${API_URL}/api/experiments/list`
             );
 
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Failed to load experiments"
+            );
+
+        }
+
+
         const data =
             await response.json();
+
 
         const variants =
             data.variants || [];
@@ -258,6 +364,7 @@ async function loadExperiments() {
             `;
 
             return;
+
         }
 
 
@@ -271,6 +378,7 @@ async function loadExperiments() {
                     document.createElement(
                         "div"
                     );
+
 
                 element.className =
                     "variant";
@@ -343,44 +451,91 @@ async function loadExperiments() {
             </div>
         `;
 
+        console.error(error);
+
     }
 
 }
 
 
+/* =========================
+   Format Time
+========================= */
+
 function formatTime(seconds) {
 
-    if (seconds === null) {
+    if (
+        seconds === null ||
+        seconds === undefined
+    ) {
         return "N/A";
     }
 
+
     if (seconds < 60) {
+
         return Math.round(seconds) + "s";
+
     }
+
 
     const minutes =
         Math.floor(seconds / 60);
 
+
     const remaining =
         Math.round(seconds % 60);
 
+
     return `${minutes}m ${remaining}s`;
+
 }
 
+
+/* =========================
+   Escape HTML
+========================= */
 
 function escapeHtml(value) {
 
     return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
+
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
+
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
+
+        .replaceAll(
+            ">",
+            "&gt;"
+        )
+
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
+
+        .replaceAll(
+            "'",
+            "&#039;"
+        );
 
 }
 
+
+/* =========================
+   Create Experiment
+========================= */
+
 document
-    .getElementById("createExperiment")
+    .getElementById(
+        "createExperiment"
+    )
     .addEventListener(
         "click",
         createExperiment
@@ -390,19 +545,31 @@ document
 async function createExperiment() {
 
     const name =
-        document.getElementById(
-            "experimentName"
-        ).value.trim();
+        document
+            .getElementById(
+                "experimentName"
+            )
+            .value
+            .trim();
+
 
     const variantA =
-        document.getElementById(
-            "variantA"
-        ).value.trim();
+        document
+            .getElementById(
+                "variantA"
+            )
+            .value
+            .trim();
+
 
     const variantB =
-        document.getElementById(
-            "variantB"
-        ).value.trim();
+        document
+            .getElementById(
+                "variantB"
+            )
+            .value
+            .trim();
+
 
     const result =
         document.getElementById(
@@ -410,7 +577,13 @@ async function createExperiment() {
         );
 
 
-    if (!name || !variantA || !variantB) {
+    /* Validation */
+
+    if (
+        !name ||
+        !variantA ||
+        !variantB
+    ) {
 
         result.innerHTML = `
             <p>
@@ -419,6 +592,7 @@ async function createExperiment() {
         `;
 
         return;
+
     }
 
 
@@ -428,6 +602,7 @@ async function createExperiment() {
             await fetch(
                 `${API_URL}/api/experiments`,
                 {
+
                     method: "POST",
 
                     headers: {
@@ -437,7 +612,8 @@ async function createExperiment() {
 
                     body: JSON.stringify({
 
-                        name: name,
+                        name:
+                            name,
 
                         variant_a:
                             variantA,
@@ -446,6 +622,7 @@ async function createExperiment() {
                             variantB
 
                     })
+
                 }
             );
 
@@ -471,17 +648,32 @@ async function createExperiment() {
         `;
 
 
-        document.getElementById(
-            "experimentName"
-        ).value = "";
+        /* Clear form */
 
-        document.getElementById(
-            "variantA"
-        ).value = "";
+        document
+            .getElementById(
+                "experimentName"
+            )
+            .value = "";
 
-        document.getElementById(
-            "variantB"
-        ).value = "";
+
+        document
+            .getElementById(
+                "variantA"
+            )
+            .value = "";
+
+
+        document
+            .getElementById(
+                "variantB"
+            )
+            .value = "";
+
+
+        /* Refresh experiment list */
+
+        loadExperiments();
 
 
     } catch (error) {
@@ -497,7 +689,12 @@ async function createExperiment() {
     }
 
 }
-    
+
+
+/* =========================
+   Initial Load
+========================= */
+
 loadExperiments();
 
 </script>
