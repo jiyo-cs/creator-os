@@ -6,7 +6,7 @@ from fastapi import (
 )
 
 import json
-
+from normalizer import normalize_file
 from models import AnalyzeRequest
 from analytics import analyze_conversations
 from sequences import analyze_sequences
@@ -132,61 +132,68 @@ async def upload_file(
             detail="No file provided",
         )
 
-
     if not file.filename.lower().endswith(
-        ".json"
+        (".json", ".csv")
     ):
 
         raise HTTPException(
             status_code=400,
-            detail="Only JSON files are supported",
+            detail="Only CSV and JSON files are supported",
         )
-
 
     try:
 
         contents = await file.read()
 
-        data = json.loads(
-            contents.decode("utf-8")
+        normalized_data, skipped_rows = (
+            normalize_file(
+                file.filename,
+                contents
+            )
         )
 
-        payload = AnalyzeRequest(
-            **data
-        )
+        from models import Conversation
 
+        conversations = [
+            Conversation(
+                **conversation
+            )
+            for conversation
+            in normalized_data
+        ]
 
-        # Store imported conversations
+        if not conversations:
+
+            raise HTTPException(
+                status_code=400,
+                detail="No valid conversations found in file",
+            )
 
         save_conversations(
-            payload.conversations
+            conversations
         )
-
-
-        # Analyze everything currently stored
 
         all_conversations_data = (
             get_conversations()
         )
 
-
-        all_conversations = []
-
-        for conversation in all_conversations_data:
-
-            from models import Conversation
-
-            all_conversations.append(
-                Conversation(
-                    **conversation
-                )
+        all_conversations = [
+            Conversation(
+                **conversation
             )
-
+            for conversation
+            in all_conversations_data
+        ]
 
         analytics = analyze_conversations(
             all_conversations
         )
 
+        analytics["sequences"] = (
+            analyze_sequences(
+                all_conversations
+            )
+        )
 
         return {
 
@@ -196,15 +203,22 @@ async def upload_file(
             "status":
                 "analyzed",
 
-            "stored_conversations":
-                len(
-                    all_conversations
-                ),
+            "normalized_conversations":
+                len(conversations),
+
+            "skipped_rows":
+                skipped_rows,
+
+            "total_stored_conversations":
+                len(all_conversations),
 
             "analytics":
                 analytics,
         }
 
+    except HTTPException:
+
+        raise
 
     except Exception as error:
 
@@ -212,12 +226,6 @@ async def upload_file(
             status_code=400,
             detail=f"Invalid data: {str(error)}",
         )
-
-
-# =========================
-# SEQUENCES
-# =========================
-
 @app.get("/sequences")
 def sequences():
 
