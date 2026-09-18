@@ -36,15 +36,15 @@
            MAIN
         ========================= */
 
-        .app {
+        .main {
+            margin-left: 230px;
             min-height: 100vh;
         }
 
-        .main {
+        .container {
             max-width: 1200px;
             margin: auto;
-
-            padding: 100px 20px 40px;
+            padding: 50px 30px 40px;
         }
 
 
@@ -184,7 +184,8 @@
 
             cursor: pointer;
 
-            transition: 0.15s;
+            transition:
+                background 0.15s;
         }
 
         .conversation-row:hover {
@@ -467,13 +468,45 @@
 
 
         /* =========================
+           TABLET
+        ========================= */
+
+        @media (max-width: 900px) {
+
+            .table-header,
+            .conversation-row {
+
+                grid-template-columns:
+                    1.2fr
+                    0.6fr
+                    1.5fr
+                    1fr
+                    0.8fr;
+
+                gap: 10px;
+
+                padding-left: 14px;
+                padding-right: 14px;
+            }
+
+        }
+
+
+        /* =========================
            MOBILE
         ========================= */
 
-        @media (max-width: 700px) {
+        @media (max-width: 800px) {
 
             .main {
-                padding: 85px 14px 30px;
+                margin-left: 0;
+            }
+
+            .container {
+                padding:
+                    30px
+                    15px
+                    30px;
             }
 
             .header {
@@ -566,17 +599,16 @@
 <body>
 
 
-<div class="app">
+<!-- SHARED NAVIGATION -->
+
+<div id="appNav"></div>
 
 
-    <!-- SHARED NAVIGATION -->
+<!-- MAIN -->
 
-    <div id="appNav"></div>
+<main class="main">
 
-
-    <!-- MAIN -->
-
-    <main class="main">
+    <div class="container">
 
 
         <!-- HEADER -->
@@ -701,9 +733,9 @@
         </section>
 
 
-    </main>
+    </div>
 
-</div>
+</main>
 
 
 <!-- API CONFIG -->
