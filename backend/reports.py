@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 def format_duration(seconds):
@@ -20,10 +20,54 @@ def format_duration(seconds):
     return f"{minutes}m {remaining}s"
 
 
+def filter_conversations(
+    conversations,
+    days=None
+):
+
+    if days is None:
+        return conversations
+
+    cutoff = (
+        datetime.utcnow()
+        - timedelta(days=days)
+    )
+
+    filtered = []
+
+    for conversation in conversations:
+
+        recent_messages = []
+
+        for message in conversation.messages:
+
+            timestamp = message.timestamp
+
+            if timestamp >= cutoff:
+                recent_messages.append(
+                    message
+                )
+
+        if recent_messages:
+
+            from models import Conversation
+
+            filtered.append(
+                Conversation(
+                    subscriber_id=
+                        conversation.subscriber_id,
+                    messages=recent_messages,
+                )
+            )
+
+    return filtered
+
+
 def generate_report(
     analytics,
     insights_data,
     experiments_data,
+    period="all_time",
 ):
 
     summary = analytics.get(
@@ -51,17 +95,11 @@ def generate_report(
         []
     )
 
-
-    # Top messages
-
     top_messages = (
         message_performance[:5]
         if message_performance
         else []
     )
-
-
-    # Biggest drop-offs
 
     biggest_dropoffs = sorted(
         sequences,
@@ -73,15 +111,11 @@ def generate_report(
         reverse=True
     )[:5]
 
-
-    # Experiment information
-
     experiments = (
         experiments_data
         if experiments_data
         else []
     )
-
 
     return {
 
@@ -89,6 +123,9 @@ def generate_report(
 
             "generated_at":
                 datetime.utcnow().isoformat(),
+
+            "period":
+                period,
 
             "summary": {
 
@@ -124,14 +161,11 @@ def generate_report(
                     ),
             },
 
-
             "top_messages":
                 top_messages,
 
-
             "biggest_dropoffs":
                 biggest_dropoffs,
-
 
             "insights":
                 insights_data.get(
@@ -139,17 +173,13 @@ def generate_report(
                     []
                 ),
 
-
             "recommendations":
                 insights_data.get(
                     "recommendations",
                     []
                 ),
 
-
             "experiments":
                 experiments,
-
         }
-
     }
