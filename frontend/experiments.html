@@ -237,7 +237,7 @@ async function loadExperiments() {
 
         const response =
             await fetch(
-                "http://localhost:8000/api/experiments"
+                `${API_URL}/api/experiments/list`
             );
 
         const data =
@@ -425,7 +425,7 @@ async function createExperiment() {
 
         const response =
             await fetch(
-                "http://localhost:8000/api/experiments",
+                `${API_URL}/api/experiments`,
                 {
                     method: "POST",
 
