@@ -146,7 +146,73 @@ body {
 
     </div>
 
+    <div class="info">
 
+    <h2>Create Experiment</h2>
+
+    <input
+        id="experimentName"
+        type="text"
+        placeholder="Experiment name"
+        style="
+            width:100%;
+            padding:12px;
+            margin:10px 0;
+            border:1px solid #ddd;
+            border-radius:10px;
+        "
+    >
+
+    <textarea
+        id="variantA"
+        placeholder="Variant A message"
+        style="
+            width:100%;
+            min-height:90px;
+            padding:12px;
+            margin:10px 0;
+            border:1px solid #ddd;
+            border-radius:10px;
+            resize:vertical;
+        "
+    ></textarea>
+
+    <textarea
+        id="variantB"
+        placeholder="Variant B message"
+        style="
+            width:100%;
+            min-height:90px;
+            padding:12px;
+            margin:10px 0;
+            border:1px solid #ddd;
+            border-radius:10px;
+            resize:vertical;
+        "
+    ></textarea>
+
+    <button
+        id="createExperiment"
+        style="
+            padding:12px 18px;
+            border:0;
+            border-radius:10px;
+            background:#111;
+            color:white;
+            cursor:pointer;
+        "
+    >
+        Create Experiment
+    </button>
+
+    <div
+        id="experimentResult"
+        style="margin-top:15px;"
+    >
+        
+    </div>
+
+</div>
     <div id="variants">
 
         <div class="empty">
@@ -312,7 +378,125 @@ function escapeHtml(value) {
 
 }
 
+document
+    .getElementById("createExperiment")
+    .addEventListener(
+        "click",
+        createExperiment
+    );
 
+
+async function createExperiment() {
+
+    const name =
+        document.getElementById(
+            "experimentName"
+        ).value.trim();
+
+    const variantA =
+        document.getElementById(
+            "variantA"
+        ).value.trim();
+
+    const variantB =
+        document.getElementById(
+            "variantB"
+        ).value.trim();
+
+    const result =
+        document.getElementById(
+            "experimentResult"
+        );
+
+
+    if (!name || !variantA || !variantB) {
+
+        result.innerHTML = `
+            <p>
+                Please complete all fields.
+            </p>
+        `;
+
+        return;
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                "http://localhost:8000/api/experiments",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        name: name,
+
+                        variant_a:
+                            variantA,
+
+                        variant_b:
+                            variantB
+
+                    })
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.detail ||
+                "Could not create experiment"
+            );
+
+        }
+
+
+        result.innerHTML = `
+            <p>
+                Experiment created successfully.
+            </p>
+        `;
+
+
+        document.getElementById(
+            "experimentName"
+        ).value = "";
+
+        document.getElementById(
+            "variantA"
+        ).value = "";
+
+        document.getElementById(
+            "variantB"
+        ).value = "";
+
+
+    } catch (error) {
+
+        result.innerHTML = `
+            <p>
+                ${escapeHtml(
+                    error.message
+                )}
+            </p>
+        `;
+
+    }
+
+}
+    
 loadExperiments();
 
 </script>
