@@ -20,7 +20,7 @@ from experiment_store import (
 
 from insights import generate_insights
 from normalizer import normalize_file
-
+from reports import generate_report
 from models import AnalyzeRequest
 from analytics import analyze_conversations
 from sequences import analyze_sequences
@@ -272,6 +272,53 @@ def api_status():
         "insights": "available",
         "experiments": "available",
     }
+@app.get("/api/reports/latest")
+def latest_report():
+
+    conversations_data = get_conversations()
+
+    from models import Conversation
+
+    conversations = [
+        Conversation(**conversation)
+        for conversation
+        in conversations_data
+    ]
+
+    if not conversations:
+
+        return {
+            "report": None
+        }
+
+
+    analytics = analyze_conversations(
+        conversations
+    )
+
+
+    analytics["sequences"] = (
+        analyze_sequences(
+            conversations
+        )
+    )
+
+
+    insights_data = generate_insights(
+        analytics
+    )
+
+
+    experiments_data = (
+        get_experiments()
+    )
+
+
+    return generate_report(
+        analytics,
+        insights_data,
+        experiments_data,
+    )
     
 @app.post("/upload")
 async def upload_file(
