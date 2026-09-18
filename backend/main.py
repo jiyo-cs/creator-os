@@ -16,6 +16,8 @@ from experiment_store import (
     create_experiment,
     get_experiments,
     get_experiment,
+    assign_variant,
+    record_reply,
 )
 
 from insights import generate_insights
@@ -263,6 +265,80 @@ def experiment_details(
         )
 
     return experiment
+@app.post("/api/experiments/{experiment_id}/assign")
+def assign_experiment_variant(
+    experiment_id: int,
+    data: dict
+):
+
+    subscriber_id = data.get("subscriber_id")
+
+    if not subscriber_id:
+        raise HTTPException(
+            status_code=400,
+            detail="subscriber_id is required",
+        )
+
+    variant = assign_variant(
+        experiment_id,
+        str(subscriber_id),
+    )
+
+    if not variant:
+        raise HTTPException(
+            status_code=404,
+            detail="Experiment not found",
+        )
+
+    experiment = get_experiment(
+        experiment_id
+    )
+
+    message = (
+        experiment["variant_a"]
+        if variant == "A"
+        else experiment["variant_b"]
+    )
+
+    return {
+        "experiment_id": experiment_id,
+        "subscriber_id": subscriber_id,
+        "variant": variant,
+        "message": message,
+    }
+
+
+@app.post("/api/experiments/{experiment_id}/reply")
+def record_experiment_reply(
+    experiment_id: int,
+    data: dict
+):
+
+    subscriber_id = data.get("subscriber_id")
+
+    if not subscriber_id:
+        raise HTTPException(
+            status_code=400,
+            detail="subscriber_id is required",
+        )
+
+    variant = record_reply(
+        experiment_id,
+        str(subscriber_id),
+    )
+
+    if not variant:
+        raise HTTPException(
+            status_code=404,
+            detail="No experiment exposure found for this subscriber",
+        )
+
+    return {
+        "status": "recorded",
+        "experiment_id": experiment_id,
+        "subscriber_id": subscriber_id,
+        "variant": variant,
+    }
     
 @app.get("/api/status")
 def api_status():
