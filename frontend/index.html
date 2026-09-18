@@ -579,6 +579,7 @@
     </main>
 
 </div>
+<script src="config.js"></script>
 <script>
 
 async function loadDashboard() {
@@ -586,7 +587,7 @@ async function loadDashboard() {
     try {
 
         const response = await fetch(
-            "http://localhost:8000/api/dashboard"
+            `${API_URL}/api/dashboard`
         );
 
         const data = await response.json();
