@@ -1,12 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Creator OS</title>
 
     <style>
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -14,15 +21,24 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Inter",
+                sans-serif;
+
             background: #f5f5f7;
             color: #111;
         }
+
+
+        /* APP */
 
         .app {
             display: flex;
             min-height: 100vh;
         }
+
 
         /* SIDEBAR */
 
@@ -33,7 +49,9 @@
             padding: 24px 16px;
             position: fixed;
             height: 100vh;
+            z-index: 10;
         }
+
 
         .logo {
             font-size: 22px;
@@ -42,13 +60,21 @@
             padding-left: 12px;
         }
 
+
         .nav {
             display: flex;
             flex-direction: column;
             gap: 6px;
         }
 
+
+        .nav a {
+            text-decoration: none;
+        }
+
+
         .nav button {
+            width: 100%;
             border: none;
             background: transparent;
             color: #aaa;
@@ -57,13 +83,16 @@
             border-radius: 10px;
             cursor: pointer;
             font-size: 14px;
+            font-family: inherit;
         }
+
 
         .nav button:hover,
         .nav button.active {
             background: #222;
             color: white;
         }
+
 
         /* MAIN */
 
@@ -73,6 +102,7 @@
             padding: 32px;
         }
 
+
         .header {
             display: flex;
             justify-content: space-between;
@@ -80,15 +110,18 @@
             margin-bottom: 32px;
         }
 
+
         .header h1 {
             font-size: 32px;
             letter-spacing: -1px;
         }
 
+
         .header p {
             color: #777;
             margin-top: 6px;
         }
+
 
         .creator {
             background: white;
@@ -97,6 +130,7 @@
             font-size: 14px;
             border: 1px solid #ddd;
         }
+
 
         /* CARDS */
 
@@ -107,6 +141,7 @@
             margin-bottom: 24px;
         }
 
+
         .card {
             background: white;
             border: 1px solid #e5e5e5;
@@ -114,22 +149,26 @@
             padding: 22px;
         }
 
+
         .card-title {
             color: #777;
             font-size: 13px;
             margin-bottom: 12px;
         }
 
+
         .card-value {
             font-size: 30px;
             font-weight: 700;
         }
+
 
         .card-change {
             margin-top: 8px;
             font-size: 12px;
             color: #777;
         }
+
 
         /* GRID */
 
@@ -139,6 +178,7 @@
             gap: 20px;
         }
 
+
         .panel {
             background: white;
             border: 1px solid #e5e5e5;
@@ -146,10 +186,12 @@
             padding: 24px;
         }
 
+
         .panel h2 {
             font-size: 18px;
             margin-bottom: 20px;
         }
+
 
         /* MESSAGES */
 
@@ -161,17 +203,21 @@
             border-bottom: 1px solid #eee;
         }
 
+
         .message:last-child {
             border-bottom: none;
         }
+
 
         .message-text {
             font-size: 14px;
         }
 
+
         .message-rate {
             font-weight: 600;
         }
+
 
         /* INSIGHTS */
 
@@ -184,164 +230,221 @@
             line-height: 1.5;
         }
 
+
         .insight strong {
             display: block;
             margin-bottom: 5px;
         }
 
-        /* MOBILE */
+
+        /* TABLET */
 
         @media (max-width: 900px) {
 
             .sidebar {
-                width: 70px;
-                padding: 20px 8px;
+                width: 100%;
+                height: auto;
+                position: fixed;
+                top: 0;
+                left: 0;
+
+                padding: 12px;
+
+                display: flex;
+                align-items: center;
+                gap: 16px;
+
+                overflow-x: auto;
             }
+
 
             .logo {
-                font-size: 0;
-                text-align: center;
+                font-size: 18px;
+                margin: 0;
+                padding: 0;
+                flex-shrink: 0;
             }
 
-            .logo::after {
-                content: "C";
-                font-size: 22px;
+
+            .nav {
+                flex-direction: row;
+                gap: 6px;
+                overflow-x: auto;
+                flex-shrink: 0;
             }
+
 
             .nav button {
-                font-size: 0;
-                text-align: center;
+                width: auto;
+                white-space: nowrap;
+                padding: 9px 12px;
             }
 
-            .nav button::first-letter {
-                font-size: 18px;
-            }
 
             .main {
-                margin-left: 70px;
-                width: calc(100% - 70px);
-                padding: 20px;
+                margin-left: 0;
+                width: 100%;
+                padding: 90px 20px 20px;
             }
+
 
             .cards {
                 grid-template-columns: repeat(2, 1fr);
             }
 
+
             .grid {
                 grid-template-columns: 1fr;
             }
+
         }
 
+
+        /* PHONE */
+
         @media (max-width: 600px) {
+
+            .sidebar {
+                padding: 10px;
+                gap: 12px;
+            }
+
+
+            .logo {
+                font-size: 17px;
+            }
+
+
+            .nav button {
+                font-size: 13px;
+                padding: 8px 10px;
+            }
+
+
+            .main {
+                padding: 82px 16px 20px;
+            }
+
 
             .header {
                 align-items: flex-start;
             }
 
+
             .header h1 {
                 font-size: 26px;
             }
+
+
+            .header p {
+                font-size: 14px;
+            }
+
 
             .creator {
                 display: none;
             }
 
+
             .cards {
                 grid-template-columns: 1fr 1fr;
+                gap: 10px;
             }
+
 
             .card {
                 padding: 16px;
             }
 
+
             .card-value {
                 font-size: 23px;
             }
+
+
+            .card-title {
+                font-size: 12px;
+            }
+
+
+            .grid {
+                gap: 14px;
+            }
+
+
+            .panel {
+                padding: 18px;
+            }
+
         }
+
     </style>
+
 </head>
+
 
 <body>
 
 <div class="app">
 
+
     <!-- SIDEBAR -->
 
     <aside class="sidebar">
+
 
         <div class="logo">
             Creator OS
         </div>
 
+
         <nav class="nav">
+
 
             <button class="active">
                 Overview
             </button>
 
-            <a
-    href="messages.html"
-    style="
-        text-decoration:none;
-        color:#aaa;
-    "
->
-    <button style="width:100%;">
-        DM Analytics
-    </button>
-</a>
+
+            <a href="messages.html">
+                <button>
+                    DM Analytics
+                </button>
+            </a>
+
 
             <button>
                 Conversations
             </button>
 
-            <a
-    href="sequences.html"
-    style="
-        text-decoration:none;
-        color:#aaa;
-    "
->
-    <button style="width:100%;">
-        Sequences
-    </button>
-</a>
 
-            <a
-    href="insights.html"
-    style="
-        text-decoration:none;
-        color:#aaa;
-    "
->
-    <button style="width:100%;">
-        AI Insights
-    </button>
-</a>
+            <a href="sequences.html">
+                <button>
+                    Sequences
+                </button>
+            </a>
 
-            <a
-    href="experiments.html"
-    style="
-        text-decoration:none;
-        color:#aaa;
-    "
->
-    <button style="width:100%;">
-        Experiments
-    </button>
-</a>
 
-            <a
-    href="reports.html"
-    style="
-        text-decoration:none;
-        color:#aaa;
-    "
->
-    <button style="width:100%;">
-        Reports
-    </button>
-</a>
+            <a href="insights.html">
+                <button>
+                    AI Insights
+                </button>
+            </a>
+
+
+            <a href="experiments.html">
+                <button>
+                    Experiments
+                </button>
+            </a>
+
+
+            <a href="reports.html">
+                <button>
+                    Reports
+                </button>
+            </a>
+
 
         </nav>
 
@@ -352,34 +455,54 @@
 
     <main class="main">
 
+
         <div class="header">
 
+
             <div>
-                <h1>Overview</h1>
-                <p>Your creator performance at a glance.</p>
+
+                <h1>
+                    Overview
+                </h1>
+
+                <p>
+                    Your creator performance at a glance.
+                </p>
+
             </div>
 
-            <div style="display:flex; gap:10px; align-items:center;">
 
-    <a
-        href="import.html"
-        style="
-            background:#111;
-            color:white;
-            padding:10px 16px;
-            border-radius:10px;
-            text-decoration:none;
-            font-size:14px;
-        "
-    >
-        + Import Data
-    </a>
+            <div
+                style="
+                    display:flex;
+                    gap:10px;
+                    align-items:center;
+                "
+            >
 
-    <div class="creator">
-        Creator Account
-    </div>
 
-</div>
+                <a
+                    href="import.html"
+                    style="
+                        background:#111;
+                        color:white;
+                        padding:10px 16px;
+                        border-radius:10px;
+                        text-decoration:none;
+                        font-size:14px;
+                    "
+                >
+                    + Import Data
+                </a>
+
+
+                <div class="creator">
+                    Creator Account
+                </div>
+
+
+            </div>
+
 
         </div>
 
@@ -388,6 +511,7 @@
 
         <section class="cards">
 
+
             <div class="card">
 
                 <div class="card-title">
@@ -395,11 +519,11 @@
                 </div>
 
                 <div class="card-value">
-                    12,482
+                    0
                 </div>
 
                 <div class="card-change">
-                    Last 30 days
+                    Current data
                 </div>
 
             </div>
@@ -412,7 +536,7 @@
                 </div>
 
                 <div class="card-value">
-                    67.4%
+                    0%
                 </div>
 
                 <div class="card-change">
@@ -429,7 +553,7 @@
                 </div>
 
                 <div class="card-value">
-                    4m 32s
+                    N/A
                 </div>
 
                 <div class="card-change">
@@ -446,7 +570,7 @@
                 </div>
 
                 <div class="card-value">
-                    21.8%
+                    —
                 </div>
 
                 <div class="card-change">
@@ -455,6 +579,7 @@
 
             </div>
 
+
         </section>
 
 
@@ -462,8 +587,6 @@
 
         <section class="grid">
 
-
-            <!-- TOP MESSAGES -->
 
             <div class="panel">
 
@@ -475,11 +598,11 @@
                 <div class="message">
 
                     <div class="message-text">
-                        Welcome ❤️
+                        View DM Analytics
                     </div>
 
                     <div class="message-rate">
-                        82.4%
+                        →
                     </div>
 
                 </div>
@@ -488,45 +611,18 @@
                 <div class="message">
 
                     <div class="message-text">
-                        What kind of content do you like?
+                        Analyze your imported conversations
                     </div>
 
                     <div class="message-rate">
-                        76.1%
+                        →
                     </div>
 
                 </div>
 
-
-                <div class="message">
-
-                    <div class="message-text">
-                        How's your day going?
-                    </div>
-
-                    <div class="message-rate">
-                        71.8%
-                    </div>
-
-                </div>
-
-
-                <div class="message">
-
-                    <div class="message-text">
-                        Check this out 👀
-                    </div>
-
-                    <div class="message-rate">
-                        69.3%
-                    </div>
-
-                </div>
 
             </div>
 
-
-            <!-- AI INSIGHTS -->
 
             <div class="panel">
 
@@ -538,12 +634,11 @@
                 <div class="insight">
 
                     <strong>
-                        ⚡ Strong opener
+                        ⚡ Ready for analysis
                     </strong>
 
-                    Your welcome message is generating
-                    significantly more replies than the
-                    average message.
+                    Import DM data to generate
+                    performance insights.
 
                 </div>
 
@@ -551,35 +646,30 @@
                 <div class="insight">
 
                     <strong>
-                        ⚠ Drop-off detected
+                        💡 Optimization
                     </strong>
 
-                    Follow-up #2 has the highest
-                    conversation drop-off.
+                    Creator OS will identify
+                    high-performing messages and
+                    conversation drop-offs.
 
                 </div>
 
-
-                <div class="insight">
-
-                    <strong>
-                        💡 Test
-                    </strong>
-
-                    Consider testing a shorter follow-up
-                    after the initial interaction.
-
-                </div>
 
             </div>
 
 
         </section>
 
+
     </main>
 
 </div>
+
+
 <script src="config.js"></script>
+
+
 <script>
 
 async function loadDashboard() {
@@ -590,11 +680,28 @@ async function loadDashboard() {
             `${API_URL}/api/dashboard`
         );
 
-        const data = await response.json();
 
-        console.log("Creator OS analytics:", data);
+        if (!response.ok) {
+
+            throw new Error(
+                "API request failed"
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        console.log(
+            "Creator OS analytics:",
+            data
+        );
+
 
         updateDashboard(data);
+
 
     } catch (error) {
 
@@ -604,58 +711,89 @@ async function loadDashboard() {
         );
 
     }
+
 }
 
 
 function updateDashboard(data) {
 
-    const summary = data.summary;
-    const messages = data.messages;
-    const responseTime = data.response_time;
+    const summary =
+        data.summary || {};
+
+    const responseTime =
+        data.response_time || {};
+
 
     const cards =
-        document.querySelectorAll(".card-value");
+        document.querySelectorAll(
+            ".card-value"
+        );
+
 
     if (cards.length >= 4) {
 
+
         cards[0].textContent =
-            summary.total_conversations;
+            summary.total_conversations || 0;
+
 
         cards[1].textContent =
-            summary.reply_rate_percent + "%";
+            (summary.reply_rate_percent || 0) + "%";
 
-        if (responseTime.average_seconds !== null) {
+
+        if (
+            responseTime.average_seconds !== null &&
+            responseTime.average_seconds !== undefined
+        ) {
 
             cards[2].textContent =
-                formatTime(responseTime.average_seconds);
+                formatTime(
+                    responseTime.average_seconds
+                );
 
         } else {
 
-            cards[2].textContent = "N/A";
+            cards[2].textContent =
+                "N/A";
 
         }
 
-        cards[3].textContent = "—";
+
+        cards[3].textContent =
+            "—";
+
     }
+
 }
 
 
 function formatTime(seconds) {
 
     if (seconds < 60) {
+
         return Math.round(seconds) + "s";
+
     }
 
-    const minutes = Math.floor(seconds / 60);
+
+    const minutes =
+        Math.floor(seconds / 60);
+
+
     const remainingSeconds =
         Math.round(seconds % 60);
 
+
     return `${minutes}m ${remainingSeconds}s`;
+
 }
 
 
 loadDashboard();
 
 </script>
+
+
 </body>
+
 </html>
