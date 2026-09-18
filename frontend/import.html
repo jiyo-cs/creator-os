@@ -176,7 +176,8 @@
 
 </div>
 
-
+<script src="config.js"></script>
+    
 <script>
 
 const fileInput =
@@ -232,7 +233,7 @@ async function uploadFile() {
 
         const response =
             await fetch(
-                "http://localhost:8000/upload",
+                `${API_URL}/upload`,
                 {
                     method: "POST",
                     body: formData
