@@ -6,6 +6,7 @@ from fastapi import (
 )
 
 import json
+from experiments import compare_variants
 from insights import generate_insights
 from normalizer import normalize_file
 from models import AnalyzeRequest
@@ -151,6 +152,32 @@ def insights():
     )
 
     return generate_insights(
+        analytics
+    )
+@app.get("/api/experiments")
+def experiments():
+
+    conversations_data = get_conversations()
+
+    from models import Conversation
+
+    conversations = [
+        Conversation(**conversation)
+        for conversation
+        in conversations_data
+    ]
+
+    if not conversations:
+
+        return {
+            "variants": []
+        }
+
+    analytics = analyze_conversations(
+        conversations
+    )
+
+    return compare_variants(
         analytics
     )
     
