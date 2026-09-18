@@ -309,6 +309,208 @@
             margin-bottom: 7px;
         }
 
+        .modal-overlay {
+    position: fixed;
+    inset: 0;
+
+    background: rgba(0, 0, 0, 0.55);
+
+    z-index: 500;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+}
+
+
+.conversation-modal {
+    width: 100%;
+    max-width: 760px;
+    max-height: 90vh;
+
+    background: white;
+
+    border-radius: 20px;
+
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+}
+
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 20px;
+
+    border-bottom: 1px solid #eee;
+}
+
+
+.modal-header h2 {
+    font-size: 20px;
+}
+
+
+.modal-header p {
+    color: #777;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+
+.close-button {
+    border: none;
+    background: #f1f1f1;
+
+    width: 36px;
+    height: 36px;
+
+    border-radius: 50%;
+
+    font-size: 24px;
+
+    cursor: pointer;
+}
+
+
+.conversation-meta {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 10px;
+
+    padding: 15px 20px;
+
+    background: #fafafa;
+
+    border-bottom: 1px solid #eee;
+}
+
+
+.conversation-meta div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+
+.conversation-meta span {
+    color: #777;
+    font-size: 11px;
+}
+
+
+.conversation-meta strong {
+    font-size: 13px;
+}
+
+
+.messages-container {
+    padding: 20px;
+
+    overflow-y: auto;
+
+    flex: 1;
+
+    background: #f5f5f7;
+}
+
+
+.dm-message {
+    margin-bottom: 18px;
+
+    max-width: 78%;
+}
+
+
+.creator-message {
+    margin-left: auto;
+    text-align: right;
+}
+
+
+.subscriber-message {
+    margin-right: auto;
+}
+
+
+.message-sender {
+    font-size: 11px;
+
+    color: #777;
+
+    margin-bottom: 5px;
+}
+
+
+.message-bubble {
+    display: inline-block;
+
+    padding: 11px 14px;
+
+    border-radius: 15px;
+
+    background: white;
+
+    border: 1px solid #e5e5e5;
+
+    font-size: 14px;
+
+    line-height: 1.5;
+
+    text-align: left;
+}
+
+
+.creator-message .message-bubble {
+    background: #111;
+    color: white;
+    border-color: #111;
+}
+
+
+.message-time {
+    margin-top: 4px;
+
+    color: #999;
+
+    font-size: 10px;
+}
+
+
+@media (max-width: 600px) {
+
+    .modal-overlay {
+        padding: 0;
+        align-items: flex-end;
+    }
+
+    .conversation-modal {
+        max-height: 94vh;
+        border-radius: 20px 20px 0 0;
+    }
+
+    .conversation-meta {
+        grid-template-columns: 1fr 1fr 1fr;
+        padding: 12px 15px;
+    }
+
+    .messages-container {
+        padding: 15px;
+    }
+
+    .dm-message {
+        max-width: 88%;
+    }
+
+}
+
 
         /* MOBILE */
 
@@ -602,17 +804,11 @@
 
 let conversations = [];
 
-
 const list =
-    document.getElementById(
-        "conversationList"
-    );
-
+    document.getElementById("conversationList");
 
 const search =
-    document.getElementById(
-        "search"
-    );
+    document.getElementById("search");
 
 
 function escapeHtml(value) {
@@ -645,6 +841,10 @@ function formatDate(timestamp) {
 }
 
 
+/* -----------------------------
+   RENDER CONVERSATIONS
+----------------------------- */
+
 function renderConversations() {
 
     const query =
@@ -656,9 +856,11 @@ function renderConversations() {
     const filtered =
         conversations.filter(
             conversation =>
-                conversation.subscriber_id
-                    .toLowerCase()
-                    .includes(query)
+                String(
+                    conversation.subscriber_id
+                )
+                .toLowerCase()
+                .includes(query)
         );
 
 
@@ -701,7 +903,7 @@ function renderConversations() {
                         : null;
 
 
-                const hasReply =
+                const hasSubscriberMessage =
                     messages.some(
                         message =>
                             message.sender ===
@@ -710,13 +912,13 @@ function renderConversations() {
 
 
                 const statusClass =
-                    hasReply
+                    hasSubscriberMessage
                         ? "replied"
                         : "no-reply";
 
 
                 const statusText =
-                    hasReply
+                    hasSubscriberMessage
                         ? "Replied"
                         : "No reply";
 
@@ -789,8 +991,276 @@ function renderConversations() {
             }
         ).join("");
 
+
+    /* Add click events */
+
+    document
+        .querySelectorAll(
+            ".conversation-row"
+        )
+        .forEach(row => {
+
+            row.addEventListener(
+                "click",
+                function () {
+
+                    const id =
+                        row.dataset.id;
+
+                    openConversation(id);
+
+                }
+            );
+
+        });
+
 }
 
+
+/* -----------------------------
+   OPEN CONVERSATION
+----------------------------- */
+
+function openConversation(subscriberId) {
+
+    const conversation =
+        conversations.find(
+            item =>
+                String(
+                    item.subscriber_id
+                ) === String(subscriberId)
+        );
+
+
+    if (!conversation) {
+        return;
+    }
+
+
+    const messages =
+        conversation.messages || [];
+
+
+    const replied =
+        messages.some(
+            message =>
+                message.sender ===
+                "subscriber"
+        );
+
+
+    const panel =
+        document.createElement("div");
+
+
+    panel.id =
+        "conversationModal";
+
+
+    panel.innerHTML = `
+
+        <div class="modal-overlay">
+
+            <div class="conversation-modal">
+
+
+                <div class="modal-header">
+
+                    <div>
+
+                        <h2>
+                            ${escapeHtml(
+                                conversation.subscriber_id
+                            )}
+                        </h2>
+
+                        <p>
+                            ${messages.length}
+                            messages
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        id="closeConversation"
+                        class="close-button"
+                    >
+                        ×
+                    </button>
+
+                </div>
+
+
+                <div class="conversation-meta">
+
+                    <div>
+
+                        <span>
+                            Status
+                        </span>
+
+                        <strong>
+                            ${
+                                replied
+                                    ? "Replied"
+                                    : "No reply"
+                            }
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Messages
+                        </span>
+
+                        <strong>
+                            ${messages.length}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Last activity
+                        </span>
+
+                        <strong>
+                            ${
+                                messages.length
+                                    ? formatDate(
+                                        messages[
+                                            messages.length - 1
+                                        ].timestamp
+                                    )
+                                    : "N/A"
+                            }
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="messages-container">
+
+                    ${
+                        messages.length
+                            ? messages.map(
+                                message => `
+
+                                    <div
+                                        class="
+                                            dm-message
+                                            ${
+                                                message.sender ===
+                                                "creator"
+                                                    ? "creator-message"
+                                                    : "subscriber-message"
+                                            }
+                                        "
+                                    >
+
+                                        <div class="message-sender">
+
+                                            ${
+                                                message.sender ===
+                                                "creator"
+                                                    ? "Creator"
+                                                    : "Subscriber"
+                                            }
+
+                                        </div>
+
+
+                                        <div class="message-bubble">
+
+                                            ${escapeHtml(
+                                                message.text
+                                            )}
+
+                                        </div>
+
+
+                                        <div class="message-time">
+
+                                            ${formatDate(
+                                                message.timestamp
+                                            )}
+
+                                        </div>
+
+                                    </div>
+
+                                `
+                            ).join("")
+                            : `
+
+                                <div class="empty">
+                                    No messages.
+                                </div>
+
+                            `
+                    }
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    document.body.appendChild(panel);
+
+
+    document
+        .getElementById(
+            "closeConversation"
+        )
+        .addEventListener(
+            "click",
+            function () {
+
+                panel.remove();
+
+            }
+        );
+
+
+    panel
+        .querySelector(
+            ".modal-overlay"
+        )
+        .addEventListener(
+            "click",
+            function (event) {
+
+                if (
+                    event.target ===
+                    event.currentTarget
+                ) {
+
+                    panel.remove();
+
+                }
+
+            }
+        );
+
+}
+
+
+/* -----------------------------
+   LOAD DATA
+----------------------------- */
 
 async function loadConversations() {
 
@@ -846,7 +1316,8 @@ async function loadConversations() {
         document.getElementById(
             "noReplyConversations"
         ).textContent =
-            conversations.length - replied;
+            conversations.length -
+            replied;
 
 
         renderConversations();
@@ -863,7 +1334,9 @@ async function loadConversations() {
                 </strong>
 
                 <p>
-                    ${escapeHtml(error.message)}
+                    ${escapeHtml(
+                        error.message
+                    )}
                 </p>
 
             </div>
