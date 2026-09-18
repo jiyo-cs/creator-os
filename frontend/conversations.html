@@ -31,74 +31,14 @@
             color: #111;
         }
 
+
+        /* =========================
+           MAIN
+        ========================= */
+
         .app {
             min-height: 100vh;
         }
-
-
-        /* NAVIGATION */
-
-        .sidebar {
-            width: 100%;
-            background: #111;
-            color: white;
-
-            position: fixed;
-            top: 0;
-            left: 0;
-
-            z-index: 100;
-
-            padding: 12px 16px;
-
-            display: flex;
-            align-items: center;
-            gap: 18px;
-
-            overflow-x: auto;
-        }
-
-        .logo {
-            font-size: 18px;
-            font-weight: 700;
-            flex-shrink: 0;
-        }
-
-        .nav {
-            display: flex;
-            gap: 6px;
-            flex-shrink: 0;
-        }
-
-        .nav a {
-            text-decoration: none;
-        }
-
-        .nav button {
-            border: none;
-            background: transparent;
-            color: #aaa;
-
-            padding: 9px 12px;
-
-            border-radius: 9px;
-
-            cursor: pointer;
-
-            font-family: inherit;
-            font-size: 13px;
-
-            white-space: nowrap;
-        }
-
-        .nav button:hover,
-        .nav button.active {
-            background: #222;
-            color: white;
-        }
-
-
-        /* MAIN */
 
         .main {
             max-width: 1200px;
@@ -106,6 +46,11 @@
 
             padding: 100px 20px 40px;
         }
+
+
+        /* =========================
+           HEADER
+        ========================= */
 
         .header {
             display: flex;
@@ -128,7 +73,9 @@
         }
 
 
-        /* SEARCH */
+        /* =========================
+           SEARCH
+        ========================= */
 
         .search {
             width: 280px;
@@ -149,11 +96,14 @@
         }
 
 
-        /* SUMMARY */
+        /* =========================
+           SUMMARY
+        ========================= */
 
         .summary {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
+
             gap: 14px;
 
             margin-bottom: 20px;
@@ -161,6 +111,7 @@
 
         .summary-card {
             background: white;
+
             border: 1px solid #e5e5e5;
 
             border-radius: 16px;
@@ -170,8 +121,11 @@
 
         .summary-card span {
             display: block;
+
             color: #777;
+
             font-size: 13px;
+
             margin-bottom: 7px;
         }
 
@@ -180,7 +134,9 @@
         }
 
 
-        /* TABLE */
+        /* =========================
+           TABLE
+        ========================= */
 
         .panel {
             background: white;
@@ -246,10 +202,13 @@
 
         .message-preview {
             color: #666;
+
             font-size: 13px;
 
             white-space: nowrap;
+
             overflow: hidden;
+
             text-overflow: ellipsis;
         }
 
@@ -261,6 +220,11 @@
             color: #777;
             font-size: 13px;
         }
+
+
+        /* =========================
+           STATUS
+        ========================= */
 
         .status {
             display: inline-block;
@@ -289,7 +253,9 @@
         }
 
 
-        /* EMPTY */
+        /* =========================
+           EMPTY
+        ========================= */
 
         .empty {
             padding: 60px 20px;
@@ -309,226 +275,202 @@
             margin-bottom: 7px;
         }
 
+
+        /* =========================
+           MODAL
+        ========================= */
+
         .modal-overlay {
-    position: fixed;
-    inset: 0;
+            position: fixed;
 
-    background: rgba(0, 0, 0, 0.55);
+            inset: 0;
 
-    z-index: 500;
+            background: rgba(0, 0, 0, 0.55);
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+            z-index: 500;
 
-    padding: 20px;
-}
+            display: flex;
 
+            justify-content: center;
 
-.conversation-modal {
-    width: 100%;
-    max-width: 760px;
-    max-height: 90vh;
+            align-items: center;
 
-    background: white;
+            padding: 20px;
+        }
 
-    border-radius: 20px;
+        .conversation-modal {
+            width: 100%;
 
-    overflow: hidden;
+            max-width: 760px;
 
-    display: flex;
-    flex-direction: column;
-}
+            max-height: 90vh;
 
+            background: white;
 
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+            border-radius: 20px;
 
-    padding: 20px;
+            overflow: hidden;
 
-    border-bottom: 1px solid #eee;
-}
+            display: flex;
 
+            flex-direction: column;
+        }
 
-.modal-header h2 {
-    font-size: 20px;
-}
+        .modal-header {
+            display: flex;
 
+            justify-content: space-between;
 
-.modal-header p {
-    color: #777;
-    font-size: 13px;
-    margin-top: 4px;
-}
+            align-items: center;
 
+            padding: 20px;
 
-.close-button {
-    border: none;
-    background: #f1f1f1;
+            border-bottom: 1px solid #eee;
+        }
 
-    width: 36px;
-    height: 36px;
+        .modal-header h2 {
+            font-size: 20px;
+        }
 
-    border-radius: 50%;
+        .modal-header p {
+            color: #777;
 
-    font-size: 24px;
+            font-size: 13px;
 
-    cursor: pointer;
-}
+            margin-top: 4px;
+        }
 
+        .close-button {
+            border: none;
 
-.conversation-meta {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+            background: #f1f1f1;
 
-    gap: 10px;
+            width: 36px;
+            height: 36px;
 
-    padding: 15px 20px;
+            border-radius: 50%;
 
-    background: #fafafa;
+            font-size: 24px;
 
-    border-bottom: 1px solid #eee;
-}
+            cursor: pointer;
+        }
 
 
-.conversation-meta div {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
+        /* =========================
+           CONVERSATION META
+        ========================= */
 
+        .conversation-meta {
+            display: grid;
 
-.conversation-meta span {
-    color: #777;
-    font-size: 11px;
-}
+            grid-template-columns: repeat(3, 1fr);
 
+            gap: 10px;
 
-.conversation-meta strong {
-    font-size: 13px;
-}
+            padding: 15px 20px;
 
+            background: #fafafa;
 
-.messages-container {
-    padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
 
-    overflow-y: auto;
+        .conversation-meta div {
+            display: flex;
 
-    flex: 1;
+            flex-direction: column;
 
-    background: #f5f5f7;
-}
+            gap: 4px;
+        }
 
+        .conversation-meta span {
+            color: #777;
 
-.dm-message {
-    margin-bottom: 18px;
+            font-size: 11px;
+        }
 
-    max-width: 78%;
-}
+        .conversation-meta strong {
+            font-size: 13px;
+        }
 
 
-.creator-message {
-    margin-left: auto;
-    text-align: right;
-}
+        /* =========================
+           MESSAGES
+        ========================= */
 
+        .messages-container {
+            padding: 20px;
 
-.subscriber-message {
-    margin-right: auto;
-}
+            overflow-y: auto;
 
+            flex: 1;
 
-.message-sender {
-    font-size: 11px;
+            background: #f5f5f7;
+        }
 
-    color: #777;
+        .dm-message {
+            margin-bottom: 18px;
 
-    margin-bottom: 5px;
-}
+            max-width: 78%;
+        }
 
+        .creator-message {
+            margin-left: auto;
 
-.message-bubble {
-    display: inline-block;
+            text-align: right;
+        }
 
-    padding: 11px 14px;
+        .subscriber-message {
+            margin-right: auto;
+        }
 
-    border-radius: 15px;
+        .message-sender {
+            font-size: 11px;
 
-    background: white;
+            color: #777;
 
-    border: 1px solid #e5e5e5;
+            margin-bottom: 5px;
+        }
 
-    font-size: 14px;
+        .message-bubble {
+            display: inline-block;
 
-    line-height: 1.5;
+            padding: 11px 14px;
 
-    text-align: left;
-}
+            border-radius: 15px;
 
+            background: white;
 
-.creator-message .message-bubble {
-    background: #111;
-    color: white;
-    border-color: #111;
-}
+            border: 1px solid #e5e5e5;
 
+            font-size: 14px;
 
-.message-time {
-    margin-top: 4px;
+            line-height: 1.5;
 
-    color: #999;
+            text-align: left;
+        }
 
-    font-size: 10px;
-}
+        .creator-message .message-bubble {
+            background: #111;
 
+            color: white;
 
-@media (max-width: 600px) {
+            border-color: #111;
+        }
 
-    .modal-overlay {
-        padding: 0;
-        align-items: flex-end;
-    }
+        .message-time {
+            margin-top: 4px;
 
-    .conversation-modal {
-        max-height: 94vh;
-        border-radius: 20px 20px 0 0;
-    }
+            color: #999;
 
-    .conversation-meta {
-        grid-template-columns: 1fr 1fr 1fr;
-        padding: 12px 15px;
-    }
+            font-size: 10px;
+        }
 
-    .messages-container {
-        padding: 15px;
-    }
 
-    .dm-message {
-        max-width: 88%;
-    }
-
-}
-
-
-        /* MOBILE */
+        /* =========================
+           MOBILE
+        ========================= */
 
         @media (max-width: 700px) {
-
-            .sidebar {
-                gap: 10px;
-                padding: 10px;
-            }
-
-            .logo {
-                font-size: 16px;
-            }
-
-            .nav button {
-                padding: 8px 9px;
-                font-size: 12px;
-            }
 
             .main {
                 padding: 85px 14px 30px;
@@ -559,7 +501,6 @@
             }
 
             .conversation-row {
-
                 display: block;
 
                 padding: 18px;
@@ -575,6 +516,48 @@
 
         }
 
+
+        /* =========================
+           MODAL MOBILE
+        ========================= */
+
+        @media (max-width: 600px) {
+
+            .modal-overlay {
+                padding: 0;
+
+                align-items: flex-end;
+            }
+
+            .conversation-modal {
+                max-height: 94vh;
+
+                border-radius:
+                    20px
+                    20px
+                    0
+                    0;
+            }
+
+            .conversation-meta {
+                grid-template-columns:
+                    1fr
+                    1fr
+                    1fr;
+
+                padding: 12px 15px;
+            }
+
+            .messages-container {
+                padding: 15px;
+            }
+
+            .dm-message {
+                max-width: 88%;
+            }
+
+        }
+
     </style>
 
 </head>
@@ -582,87 +565,13 @@
 
 <body>
 
+
 <div class="app">
 
 
-    <!-- NAVIGATION -->
+    <!-- SHARED NAVIGATION -->
 
-    <aside class="sidebar">
-
-        <div class="logo">
-            Creator OS
-        </div>
-
-
-        <nav class="nav">
-
-
-            <a href="index.html">
-
-                <button>
-                    Overview
-                </button>
-
-            </a>
-
-
-            <a href="conversations.html">
-
-                <button class="active">
-                    Conversations
-                </button>
-
-            </a>
-
-
-            <a href="messages.html">
-
-                <button>
-                    DM Analytics
-                </button>
-
-            </a>
-
-
-            <a href="sequences.html">
-
-                <button>
-                    Sequences
-                </button>
-
-            </a>
-
-
-            <a href="insights.html">
-
-                <button>
-                    AI Insights
-                </button>
-
-            </a>
-
-
-            <a href="experiments.html">
-
-                <button>
-                    Experiments
-                </button>
-
-            </a>
-
-
-            <a href="reports.html">
-
-                <button>
-                    Reports
-                </button>
-
-            </a>
-
-
-        </nav>
-
-    </aside>
+    <div id="appNav"></div>
 
 
     <!-- MAIN -->
@@ -670,8 +579,9 @@
     <main class="main">
 
 
-        <div class="header">
+        <!-- HEADER -->
 
+        <div class="header">
 
             <div>
 
@@ -692,7 +602,6 @@
                 type="search"
                 placeholder="Search subscriber..."
             >
-
 
         </div>
 
@@ -797,31 +706,72 @@
 </div>
 
 
+<!-- API CONFIG -->
+
 <script src="config.js"></script>
+
+
+<!-- SHARED NAV -->
+
+<script src="nav.js"></script>
 
 
 <script>
 
 let conversations = [];
 
+
 const list =
-    document.getElementById("conversationList");
+    document.getElementById(
+        "conversationList"
+    );
+
 
 const search =
-    document.getElementById("search");
+    document.getElementById(
+        "search"
+    );
 
+
+/* =========================
+   ESCAPE HTML
+========================= */
 
 function escapeHtml(value) {
 
     return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
 
 }
 
+
+/* =========================
+   FORMAT DATE
+========================= */
 
 function formatDate(timestamp) {
 
@@ -829,21 +779,30 @@ function formatDate(timestamp) {
         return "N/A";
     }
 
+
     const date =
         new Date(timestamp);
 
-    if (isNaN(date.getTime())) {
+
+    if (
+        isNaN(
+            date.getTime()
+        )
+    ) {
+
         return "N/A";
+
     }
+
 
     return date.toLocaleString();
 
 }
 
 
-/* -----------------------------
+/* =========================
    RENDER CONVERSATIONS
------------------------------ */
+========================= */
 
 function renderConversations() {
 
@@ -856,11 +815,13 @@ function renderConversations() {
     const filtered =
         conversations.filter(
             conversation =>
+
                 String(
                     conversation.subscriber_id
                 )
                 .toLowerCase()
                 .includes(query)
+
         );
 
 
@@ -890,6 +851,7 @@ function renderConversations() {
 
 
     list.innerHTML =
+
         filtered.map(
             conversation => {
 
@@ -899,7 +861,9 @@ function renderConversations() {
 
                 const lastMessage =
                     messages.length
-                        ? messages[messages.length - 1]
+                        ? messages[
+                            messages.length - 1
+                        ]
                         : null;
 
 
@@ -979,7 +943,9 @@ function renderConversations() {
                             <span
                                 class="status ${statusClass}"
                             >
+
                                 ${statusText}
+
                             </span>
 
                         </div>
@@ -989,46 +955,56 @@ function renderConversations() {
                 `;
 
             }
+
         ).join("");
 
 
-    /* Add click events */
+    /* CLICK EVENTS */
 
     document
         .querySelectorAll(
             ".conversation-row"
         )
-        .forEach(row => {
+        .forEach(
+            row => {
 
-            row.addEventListener(
-                "click",
-                function () {
+                row.addEventListener(
+                    "click",
+                    function () {
 
-                    const id =
-                        row.dataset.id;
+                        const id =
+                            row.dataset.id;
 
-                    openConversation(id);
 
-                }
-            );
+                        openConversation(id);
 
-        });
+                    }
+                );
+
+            }
+        );
 
 }
 
 
-/* -----------------------------
+/* =========================
    OPEN CONVERSATION
------------------------------ */
+========================= */
 
-function openConversation(subscriberId) {
+function openConversation(
+    subscriberId
+) {
 
     const conversation =
         conversations.find(
             item =>
+
                 String(
                     item.subscriber_id
-                ) === String(subscriberId)
+                ) ===
+                String(
+                    subscriberId
+                )
         );
 
 
@@ -1050,7 +1026,9 @@ function openConversation(subscriberId) {
 
 
     const panel =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
 
     panel.id =
@@ -1064,19 +1042,25 @@ function openConversation(subscriberId) {
             <div class="conversation-modal">
 
 
+                <!-- MODAL HEADER -->
+
                 <div class="modal-header">
 
                     <div>
 
                         <h2>
+
                             ${escapeHtml(
                                 conversation.subscriber_id
                             )}
+
                         </h2>
 
                         <p>
+
                             ${messages.length}
                             messages
+
                         </p>
 
                     </div>
@@ -1086,13 +1070,18 @@ function openConversation(subscriberId) {
                         id="closeConversation"
                         class="close-button"
                     >
+
                         ×
+
                     </button>
 
                 </div>
 
 
+                <!-- META -->
+
                 <div class="conversation-meta">
+
 
                     <div>
 
@@ -1101,11 +1090,13 @@ function openConversation(subscriberId) {
                         </span>
 
                         <strong>
+
                             ${
                                 replied
                                     ? "Replied"
                                     : "No reply"
                             }
+
                         </strong>
 
                     </div>
@@ -1118,7 +1109,9 @@ function openConversation(subscriberId) {
                         </span>
 
                         <strong>
+
                             ${messages.length}
+
                         </strong>
 
                     </div>
@@ -1131,6 +1124,7 @@ function openConversation(subscriberId) {
                         </span>
 
                         <strong>
+
                             ${
                                 messages.length
                                     ? formatDate(
@@ -1140,17 +1134,22 @@ function openConversation(subscriberId) {
                                     )
                                     : "N/A"
                             }
+
                         </strong>
 
                     </div>
 
+
                 </div>
 
+
+                <!-- MESSAGES -->
 
                 <div class="messages-container">
 
                     ${
                         messages.length
+
                             ? messages.map(
                                 message => `
 
@@ -1199,13 +1198,17 @@ function openConversation(subscriberId) {
 
                                 `
                             ).join("")
+
                             : `
 
                                 <div class="empty">
+
                                     No messages.
+
                                 </div>
 
                             `
+
                     }
 
                 </div>
@@ -1218,8 +1221,12 @@ function openConversation(subscriberId) {
     `;
 
 
-    document.body.appendChild(panel);
+    document.body.appendChild(
+        panel
+    );
 
+
+    /* CLOSE BUTTON */
 
     document
         .getElementById(
@@ -1234,6 +1241,8 @@ function openConversation(subscriberId) {
             }
         );
 
+
+    /* CLOSE WHEN CLICKING OUTSIDE */
 
     panel
         .querySelector(
@@ -1258,9 +1267,9 @@ function openConversation(subscriberId) {
 }
 
 
-/* -----------------------------
+/* =========================
    LOAD DATA
------------------------------ */
+========================= */
 
 async function loadConversations() {
 
@@ -1289,21 +1298,30 @@ async function loadConversations() {
             data.conversations || [];
 
 
+        /* TOTAL */
+
         document.getElementById(
             "totalConversations"
         ).textContent =
             conversations.length;
 
 
+        /* REPLIED */
+
         const replied =
             conversations.filter(
                 conversation =>
-                    (conversation.messages || [])
-                        .some(
-                            message =>
-                                message.sender ===
-                                "subscriber"
-                        )
+
+                    (
+                        conversation.messages ||
+                        []
+                    )
+                    .some(
+                        message =>
+                            message.sender ===
+                            "subscriber"
+                    )
+
             ).length;
 
 
@@ -1312,6 +1330,8 @@ async function loadConversations() {
         ).textContent =
             replied;
 
+
+        /* NO REPLY */
 
         document.getElementById(
             "noReplyConversations"
@@ -1334,25 +1354,37 @@ async function loadConversations() {
                 </strong>
 
                 <p>
+
                     ${escapeHtml(
                         error.message
                     )}
+
                 </p>
 
             </div>
 
         `;
 
+        console.error(error);
+
     }
 
 }
 
+
+/* =========================
+   SEARCH
+========================= */
 
 search.addEventListener(
     "input",
     renderConversations
 );
 
+
+/* =========================
+   INITIAL LOAD
+========================= */
 
 loadConversations();
 
