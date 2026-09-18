@@ -1,8 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Experiments — Creator OS</title>
 
@@ -10,15 +16,19 @@
     <script src="nav.js"></script>
 
     <style>
+
         * {
             box-sizing: border-box;
         }
 
         body {
             margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Inter",
-                "Segoe UI", sans-serif;
-            background: #f7f7f8;
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+            background: #f6f6f4;
             color: #111;
         }
 
@@ -28,25 +38,25 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1250px;
             margin: auto;
-            padding: 50px 30px;
+            padding: 48px 32px 60px;
         }
 
         .header {
             display: flex;
             justify-content: space-between;
-            align-items: flex-end;
+            align-items: flex-start;
             gap: 20px;
-            margin-bottom: 35px;
+            margin-bottom: 32px;
         }
 
         .eyebrow {
             font-size: 12px;
             font-weight: 700;
+            letter-spacing: 1.2px;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #777;
+            color: #888;
             margin-bottom: 8px;
         }
 
@@ -59,40 +69,49 @@
         .subtitle {
             margin-top: 8px;
             color: #777;
-            font-size: 14px;
+            font-size: 15px;
         }
 
-        .create-button {
+        button {
             border: 0;
+            cursor: pointer;
+            font: inherit;
+        }
+
+        .primary-button {
             background: #111;
             color: white;
             padding: 12px 18px;
             border-radius: 10px;
-            cursor: pointer;
             font-size: 14px;
             font-weight: 600;
         }
 
-        .create-button:hover {
-            background: #222;
+        .primary-button:hover {
+            background: #2a2a2a;
         }
+
+        /* =========================
+           STATS
+        ========================= */
 
         .stats {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            margin-bottom: 30px;
+            grid-template-columns:
+                repeat(4, 1fr);
+            gap: 14px;
+            margin-bottom: 28px;
         }
 
-        .stat {
+        .stat-card {
             background: white;
-            border: 1px solid #e7e7e7;
+            border: 1px solid #e5e5e2;
             border-radius: 14px;
             padding: 20px;
         }
 
         .stat-label {
-            color: #777;
+            color: #888;
             font-size: 13px;
             margin-bottom: 10px;
         }
@@ -100,26 +119,31 @@
         .stat-value {
             font-size: 27px;
             font-weight: 700;
+            letter-spacing: -0.5px;
         }
 
-        .card {
+        /* =========================
+           TABLE
+        ========================= */
+
+        .panel {
             background: white;
-            border: 1px solid #e7e7e7;
+            border: 1px solid #e5e5e2;
             border-radius: 16px;
             overflow: hidden;
         }
 
-        .card-header {
-            padding: 20px;
-            border-bottom: 1px solid #eee;
+        .panel-header {
+            padding: 20px 22px;
+            border-bottom: 1px solid #e9e9e7;
         }
 
-        .card-header h2 {
-            margin: 0;
-            font-size: 17px;
+        .panel-title {
+            font-size: 16px;
+            font-weight: 700;
         }
 
-        .table-wrapper {
+        .table-wrap {
             overflow-x: auto;
         }
 
@@ -131,93 +155,76 @@
 
         th {
             text-align: left;
-            padding: 14px 18px;
-            font-size: 12px;
-            color: #777;
-            font-weight: 600;
-            border-bottom: 1px solid #eee;
+            padding: 13px 20px;
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: .7px;
+            background: #fafafa;
         }
 
         td {
-            padding: 17px 18px;
-            border-bottom: 1px solid #f0f0f0;
+            padding: 17px 20px;
+            border-top: 1px solid #eeeeec;
             font-size: 14px;
         }
 
-        tr:last-child td {
-            border-bottom: none;
-        }
-
         .experiment-name {
-            font-weight: 600;
+            font-weight: 650;
         }
 
-        .variant {
-            max-width: 180px;
+        .variant-text {
+            max-width: 210px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            color: #555;
         }
 
-        .badge {
-            display: inline-block;
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
             padding: 5px 9px;
             border-radius: 999px;
-            font-size: 11px;
-            font-weight: 700;
+            background: #f0f0ee;
+            font-size: 12px;
+            font-weight: 600;
         }
 
-        .running {
-            background: #eaf7ee;
-            color: #20733b;
-        }
-
-        .draft {
-            background: #f1f1f1;
-            color: #666;
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #111;
         }
 
         .view-button {
-            border: 1px solid #ddd;
-            background: white;
-            padding: 7px 11px;
+            background: #f1f1ef;
+            padding: 8px 12px;
             border-radius: 8px;
-            cursor: pointer;
             font-size: 12px;
+            font-weight: 600;
         }
 
         .view-button:hover {
-            background: #f5f5f5;
+            background: #e5e5e2;
         }
 
         .empty {
             padding: 60px 20px;
             text-align: center;
-            color: #777;
+            color: #888;
         }
 
-        .loading {
-            padding: 40px;
-            text-align: center;
-            color: #777;
-        }
+        /* =========================
+           MODAL
+        ========================= */
 
-        .error {
-            margin-bottom: 20px;
-            padding: 14px;
-            background: #fff0f0;
-            border: 1px solid #ffd5d5;
-            color: #a33;
-            border-radius: 10px;
-            display: none;
-        }
-
-        /* Modal */
-
-        .modal-overlay {
+        .modal {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.45);
+            background: rgba(0,0,0,.48);
             display: none;
             align-items: center;
             justify-content: center;
@@ -225,10 +232,13 @@
             z-index: 2000;
         }
 
-        .modal {
-            width: 100%;
-            max-width: 700px;
-            max-height: 90vh;
+        .modal.open {
+            display: flex;
+        }
+
+        .modal-card {
+            width: min(950px, 100%);
+            max-height: 92vh;
             overflow-y: auto;
             background: white;
             border-radius: 18px;
@@ -239,112 +249,302 @@
             display: flex;
             justify-content: space-between;
             gap: 20px;
-            margin-bottom: 25px;
+            margin-bottom: 24px;
         }
 
-        .modal-header h2 {
-            margin: 0;
-            font-size: 22px;
+        .modal-title {
+            font-size: 24px;
+            font-weight: 750;
+            letter-spacing: -.5px;
         }
 
-        .close {
-            border: 0;
-            background: #f2f2f2;
+        .close-button {
             width: 34px;
             height: 34px;
             border-radius: 50%;
-            cursor: pointer;
-            font-size: 18px;
+            background: #f0f0ee;
+            font-size: 20px;
         }
 
-        .variants {
+        /* =========================
+           INTELLIGENCE
+        ========================= */
+
+        .intelligence {
+            border: 1px solid #e5e5e2;
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .section-label {
+            font-size: 11px;
+            font-weight: 750;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #888;
+            margin-bottom: 15px;
+        }
+
+        .intelligence-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 25px;
+            grid-template-columns:
+                repeat(4, 1fr);
+            gap: 12px;
         }
 
-        .variant-card {
-            border: 1px solid #e5e5e5;
-            border-radius: 13px;
-            padding: 18px;
+        .intel-card {
+            background: #f7f7f5;
+            border-radius: 11px;
+            padding: 15px;
         }
 
-        .variant-title {
+        .intel-label {
+            font-size: 12px;
+            color: #777;
+            margin-bottom: 7px;
+        }
+
+        .intel-value {
+            font-size: 19px;
             font-weight: 700;
-            margin-bottom: 12px;
         }
 
-        .variant-text {
-            color: #555;
+        .quality {
+            margin-top: 18px;
+        }
+
+        .quality-top {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            margin-bottom: 7px;
+        }
+
+        .quality-bar {
+            height: 8px;
+            background: #e8e8e5;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .quality-fill {
+            height: 100%;
+            width: 0;
+            background: #111;
+            border-radius: inherit;
+            transition: width .4s ease;
+        }
+
+        .recommendation {
+            margin-top: 18px;
+            padding: 16px;
+            border-radius: 11px;
+            background: #f4f4f2;
             font-size: 14px;
             line-height: 1.5;
         }
 
-        .result-grid {
+        /* =========================
+           VARIANT CARDS
+        ========================= */
+
+        .variants {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            grid-template-columns:
+                repeat(2, 1fr);
+            gap: 14px;
+            margin-bottom: 24px;
         }
 
-        .result {
-            border: 1px solid #e7e7e7;
-            border-radius: 13px;
-            padding: 18px;
+        .variant-card {
+            border: 1px solid #e5e5e2;
+            border-radius: 14px;
+            padding: 20px;
         }
 
-        .result h3 {
-            margin: 0 0 15px;
+        .variant-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .variant-name {
+            font-size: 13px;
+            font-weight: 750;
+        }
+
+        .variant-badge {
+            background: #f0f0ee;
+            padding: 5px 8px;
+            border-radius: 7px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .message-box {
+            background: #f7f7f5;
+            padding: 14px;
+            border-radius: 10px;
+            line-height: 1.5;
             font-size: 14px;
+            margin-bottom: 16px;
+            min-height: 65px;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns:
+                repeat(2, 1fr);
+            gap: 10px;
         }
 
         .metric {
-            display: flex;
-            justify-content: space-between;
-            margin: 10px 0;
-            font-size: 13px;
+            border-top: 1px solid #ececea;
+            padding-top: 10px;
         }
 
-        .metric strong {
-            font-size: 14px;
+        .metric-label {
+            font-size: 11px;
+            color: #888;
+            margin-bottom: 4px;
         }
+
+        .metric-value {
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        /* =========================
+           CREATE
+        ========================= */
+
+        .form-group {
+            margin-bottom: 17px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 650;
+            margin-bottom: 7px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 9px;
+            padding: 11px 12px;
+            font: inherit;
+            outline: none;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: #999;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .secondary-button {
+            background: #f0f0ee;
+            padding: 11px 16px;
+            border-radius: 9px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .loading {
+            padding: 40px;
+            text-align: center;
+            color: #888;
+        }
+
+        .error {
+            padding: 20px;
+            color: #a00;
+            background: #fff2f2;
+            border-radius: 10px;
+            margin: 20px;
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
 
         @media (max-width: 900px) {
+
             .stats {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns:
+                    repeat(2, 1fr);
             }
+
+            .intelligence-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
         }
 
         @media (max-width: 800px) {
+
             .main {
                 margin-left: 0;
             }
 
             .container {
-                padding: 30px 15px;
+                padding: 30px 15px 45px;
             }
 
             .header {
-                align-items: flex-start;
                 flex-direction: column;
             }
 
             h1 {
-                font-size: 28px;
+                font-size: 29px;
             }
+
+            .variants {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-card {
+                padding: 20px;
+                border-radius: 14px;
+            }
+
         }
 
-        @media (max-width: 550px) {
+        @media (max-width: 500px) {
+
             .stats {
                 grid-template-columns: 1fr;
             }
 
-            .variants,
-            .result-grid {
-                grid-template-columns: 1fr;
+            .intelligence-grid {
+                grid-template-columns: 1fr 1fr;
             }
+
+            .stat-value {
+                font-size: 24px;
+            }
+
         }
+
     </style>
+
 </head>
 
 <body>
@@ -355,32 +555,40 @@
 
         <div class="container">
 
-            <div class="header">
+            <header class="header">
 
                 <div>
-                    <div class="eyebrow">Optimization</div>
 
-                    <h1>Experiments</h1>
+                    <div class="eyebrow">
+                        Experiment Intelligence
+                    </div>
+
+                    <h1>A/B Experiments</h1>
 
                     <div class="subtitle">
-                        Compare message variants and measure subscriber responses.
+                        Measure message performance and optimize DM sequences.
                     </div>
+
                 </div>
 
                 <button
-                    class="create-button"
+                    class="primary-button"
                     onclick="openCreateModal()"
                 >
                     + New Experiment
                 </button>
 
-            </div>
+            </header>
 
-            <div id="error" class="error"></div>
+
+            <!-- =========================
+                 STATS
+            ========================= -->
 
             <section class="stats">
 
-                <div class="stat">
+                <div class="stat-card">
+
                     <div class="stat-label">
                         Total Experiments
                     </div>
@@ -389,11 +597,13 @@
                         class="stat-value"
                         id="totalExperiments"
                     >
-                        0
+                        —
                     </div>
+
                 </div>
 
-                <div class="stat">
+                <div class="stat-card">
+
                     <div class="stat-label">
                         Running
                     </div>
@@ -402,11 +612,13 @@
                         class="stat-value"
                         id="runningExperiments"
                     >
-                        0
+                        —
                     </div>
+
                 </div>
 
-                <div class="stat">
+                <div class="stat-card">
+
                     <div class="stat-label">
                         Total Exposures
                     </div>
@@ -415,11 +627,13 @@
                         class="stat-value"
                         id="totalExposures"
                     >
-                        0
+                        —
                     </div>
+
                 </div>
 
-                <div class="stat">
+                <div class="stat-card">
+
                     <div class="stat-label">
                         Total Replies
                     </div>
@@ -428,57 +642,33 @@
                         class="stat-value"
                         id="totalReplies"
                     >
-                        0
+                        —
                     </div>
+
                 </div>
 
             </section>
 
-            <section class="card">
 
-                <div class="card-header">
-                    <h2>All Experiments</h2>
+            <!-- =========================
+                 EXPERIMENT LIST
+            ========================= -->
+
+            <section class="panel">
+
+                <div class="panel-header">
+
+                    <div class="panel-title">
+                        Experiments
+                    </div>
+
                 </div>
 
-                <div
-                    id="loading"
-                    class="loading"
-                >
-                    Loading experiments...
-                </div>
+                <div id="experimentContent">
 
-                <div
-                    id="empty"
-                    class="empty"
-                    style="display:none;"
-                >
-                    No experiments created yet.
-                </div>
-
-                <div
-                    class="table-wrapper"
-                    id="tableWrapper"
-                    style="display:none;"
-                >
-
-                    <table>
-
-                        <thead>
-
-                            <tr>
-                                <th>Experiment</th>
-                                <th>Variant A</th>
-                                <th>Variant B</th>
-                                <th>Status</th>
-                                <th>Created</th>
-                                <th></th>
-                            </tr>
-
-                        </thead>
-
-                        <tbody id="experimentsTable"></tbody>
-
-                    </table>
+                    <div class="loading">
+                        Loading experiments...
+                    </div>
 
                 </div>
 
@@ -489,143 +679,142 @@
     </main>
 
 
-    <!-- Details Modal -->
+    <!-- =========================
+         VIEW MODAL
+    ========================= -->
 
     <div
-        id="detailsModal"
-        class="modal-overlay"
-        onclick="closeDetails(event)"
+        class="modal"
+        id="viewModal"
     >
 
-        <div
-            class="modal"
-            onclick="event.stopPropagation()"
-        >
+        <div class="modal-card">
 
             <div class="modal-header">
 
-                <h2 id="detailsTitle">
-                    Experiment
-                </h2>
+                <div>
+                    <div class="eyebrow">
+                        Experiment Analysis
+                    </div>
+
+                    <div
+                        class="modal-title"
+                        id="viewTitle"
+                    >
+                        Experiment
+                    </div>
+                </div>
 
                 <button
-                    class="close"
-                    onclick="closeDetails()"
+                    class="close-button"
+                    onclick="closeModal('viewModal')"
                 >
                     ×
                 </button>
 
             </div>
 
-            <div
-                class="variants"
-                id="detailsVariants"
-            ></div>
-
-            <div
-                class="result-grid"
-                id="detailsResults"
-            ></div>
+            <div id="viewContent"></div>
 
         </div>
 
     </div>
 
 
-    <!-- Create Modal -->
+    <!-- =========================
+         CREATE MODAL
+    ========================= -->
 
     <div
+        class="modal"
         id="createModal"
-        class="modal-overlay"
-        onclick="closeCreateModal(event)"
     >
 
-        <div
-            class="modal"
-            onclick="event.stopPropagation()"
-        >
+        <div class="modal-card">
 
             <div class="modal-header">
 
-                <h2>New Experiment</h2>
+                <div>
+
+                    <div class="eyebrow">
+                        New Experiment
+                    </div>
+
+                    <div class="modal-title">
+                        Create A/B Test
+                    </div>
+
+                </div>
 
                 <button
-                    class="close"
-                    onclick="closeCreateModal()"
+                    class="close-button"
+                    onclick="closeModal('createModal')"
                 >
                     ×
                 </button>
 
             </div>
 
-            <form id="createForm">
 
-                <label>
+            <div class="form-group">
+
+                <label class="form-label">
                     Experiment name
                 </label>
 
                 <input
                     id="experimentName"
-                    required
                     placeholder="Welcome Message Test"
-                    style="
-                        width:100%;
-                        margin:8px 0 18px;
-                        padding:12px;
-                        border:1px solid #ddd;
-                        border-radius:9px;
-                    "
                 >
 
-                <label>
+            </div>
+
+
+            <div class="form-group">
+
+                <label class="form-label">
                     Variant A
                 </label>
 
                 <textarea
                     id="variantA"
-                    required
-                    placeholder="Message version A"
-                    style="
-                        width:100%;
-                        min-height:100px;
-                        margin:8px 0 18px;
-                        padding:12px;
-                        border:1px solid #ddd;
-                        border-radius:9px;
-                        resize:vertical;
-                        font-family:inherit;
-                    "
+                    placeholder="Enter message A..."
                 ></textarea>
 
-                <label>
+            </div>
+
+
+            <div class="form-group">
+
+                <label class="form-label">
                     Variant B
                 </label>
 
                 <textarea
                     id="variantB"
-                    required
-                    placeholder="Message version B"
-                    style="
-                        width:100%;
-                        min-height:100px;
-                        margin:8px 0 20px;
-                        padding:12px;
-                        border:1px solid #ddd;
-                        border-radius:9px;
-                        resize:vertical;
-                        font-family:inherit;
-                    "
+                    placeholder="Enter message B..."
                 ></textarea>
 
+            </div>
+
+
+            <div class="form-actions">
+
                 <button
-                    type="submit"
-                    class="create-button"
-                    style="width:100%;"
+                    class="secondary-button"
+                    onclick="closeModal('createModal')"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    class="primary-button"
+                    onclick="createExperiment()"
                 >
                     Create Experiment
                 </button>
 
-            </form>
+            </div>
 
         </div>
 
@@ -634,135 +823,213 @@
 
 <script>
 
-let experiments = [];
+    const API =
+        typeof API_URL !== "undefined"
+            ? API_URL
+            : "";
 
 
-async function loadExperiments() {
+    // =====================================================
+    // LOAD EXPERIMENTS
+    // =====================================================
 
-    const loading =
-        document.getElementById("loading");
+    async function loadExperiments() {
 
-    const empty =
-        document.getElementById("empty");
-
-    const tableWrapper =
-        document.getElementById("tableWrapper");
-
-    const error =
-        document.getElementById("error");
-
-    try {
-
-        loading.style.display = "block";
-        empty.style.display = "none";
-        tableWrapper.style.display = "none";
-        error.style.display = "none";
-
-        const response =
-            await fetch(
-                `${API_URL}/api/experiments/list`
+        const container =
+            document.getElementById(
+                "experimentContent"
             );
 
-        if (!response.ok) {
-            throw new Error(
-                "Failed to load experiments"
+        try {
+
+            const response =
+                await fetch(
+                    `${API}/api/experiments/list`
+                );
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Failed to load experiments"
+                );
+
+            }
+
+            const data =
+                await response.json();
+
+            const experiments =
+                data.experiments || [];
+
+            updateStats(
+                experiments
             );
+
+            if (!experiments.length) {
+
+                container.innerHTML = `
+                    <div class="empty">
+                        No experiments yet.
+                        Create your first A/B test.
+                    </div>
+                `;
+
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="table-wrap">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Experiment
+                                </th>
+
+                                <th>
+                                    Variant A
+                                </th>
+
+                                <th>
+                                    Variant B
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th>
+                                    Created
+                                </th>
+
+                                <th>
+                                    Action
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            ${experiments
+                                .map(experimentRow)
+                                .join("")}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            `;
+
+        } catch (error) {
+
+            container.innerHTML = `
+                <div class="error">
+                    ${escapeHtml(
+                        error.message
+                    )}
+                </div>
+            `;
+
         }
-
-        const data =
-            await response.json();
-
-        experiments =
-            data.experiments || [];
-
-        updateStats();
-
-        loading.style.display = "none";
-
-        if (experiments.length === 0) {
-
-            empty.style.display = "block";
-
-            return;
-        }
-
-        renderExperiments();
-
-        tableWrapper.style.display = "block";
-
-    } catch (err) {
-
-        loading.style.display = "none";
-
-        error.style.display = "block";
-
-        error.textContent =
-            err.message;
 
     }
-}
 
 
-function updateStats() {
+    // =====================================================
+    // STATS
+    // =====================================================
 
-    document.getElementById(
-        "totalExperiments"
-    ).textContent =
-        experiments.length;
+    async function updateStats(
+        experiments
+    ) {
 
-    document.getElementById(
-        "runningExperiments"
-    ).textContent =
-        experiments.filter(
-            e => e.status === "running"
-        ).length;
+        document.getElementById(
+            "totalExperiments"
+        ).textContent =
+            experiments.length;
 
-    let exposures = 0;
-    let replies = 0;
+        document.getElementById(
+            "runningExperiments"
+        ).textContent =
+            experiments.filter(
+                item =>
+                    item.status === "running"
+            ).length;
 
-    experiments.forEach(e => {
+        let exposures = 0;
+        let replies = 0;
 
-        if (e.results) {
+        for (
+            const experiment
+            of experiments
+        ) {
 
-            e.results.forEach(r => {
+            try {
 
-                exposures +=
-                    Number(r.sent || 0);
+                const response =
+                    await fetch(
+                        `${API}/api/experiments/${experiment.id}`
+                    );
 
-                replies +=
-                    Number(r.replies || 0);
+                if (!response.ok) {
+                    continue;
+                }
 
-            });
+                const data =
+                    await response.json();
+
+                for (
+                    const result
+                    of (data.results || [])
+                ) {
+
+                    exposures +=
+                        Number(
+                            result.sent || 0
+                        );
+
+                    replies +=
+                        Number(
+                            result.replies || 0
+                        );
+
+                }
+
+            } catch {
+
+                continue;
+
+            }
 
         }
 
-    });
-
-    document.getElementById(
-        "totalExposures"
-    ).textContent =
-        exposures;
-
-    document.getElementById(
-        "totalReplies"
-    ).textContent =
-        replies;
-}
-
-
-function renderExperiments() {
-
-    const tbody =
         document.getElementById(
-            "experimentsTable"
-        );
+            "totalExposures"
+        ).textContent =
+            exposures;
 
-    tbody.innerHTML = "";
+        document.getElementById(
+            "totalReplies"
+        ).textContent =
+            replies;
 
-    experiments.forEach(experiment => {
+    }
 
-        const row =
-            document.createElement("tr");
+
+    // =====================================================
+    // TABLE ROW
+    // =====================================================
+
+    function experimentRow(
+        experiment
+    ) {
 
         const created =
             experiment.created_at
@@ -771,247 +1038,496 @@ function renderExperiments() {
                 ).toLocaleDateString()
                 : "—";
 
-        row.innerHTML = `
+        return `
+            <tr>
 
-            <td>
-                <div class="experiment-name">
-                    ${escapeHtml(
-                        experiment.name
-                    )}
-                </div>
-            </td>
+                <td>
+                    <div class="experiment-name">
+                        ${escapeHtml(
+                            experiment.name
+                        )}
+                    </div>
+                </td>
 
-            <td>
-                <div class="variant">
-                    ${escapeHtml(
-                        experiment.variant_a
-                    )}
-                </div>
-            </td>
+                <td>
 
-            <td>
-                <div class="variant">
-                    ${escapeHtml(
-                        experiment.variant_b
-                    )}
-                </div>
-            </td>
+                    <div class="variant-text">
+                        ${escapeHtml(
+                            experiment.variant_a
+                        )}
+                    </div>
 
-            <td>
-                <span class="badge ${experiment.status}">
-                    ${escapeHtml(
-                        experiment.status
-                    )}
-                </span>
-            </td>
+                </td>
 
-            <td>
-                ${created}
-            </td>
+                <td>
 
-            <td>
-                <button
-                    class="view-button"
-                    onclick="viewExperiment(
-                        ${experiment.id}
-                    )"
-                >
-                    View
-                </button>
-            </td>
+                    <div class="variant-text">
+                        ${escapeHtml(
+                            experiment.variant_b
+                        )}
+                    </div>
 
+                </td>
+
+                <td>
+
+                    <span class="status">
+
+                        <span class="status-dot"></span>
+
+                        ${escapeHtml(
+                            experiment.status
+                        )}
+
+                    </span>
+
+                </td>
+
+                <td>
+                    ${created}
+                </td>
+
+                <td>
+
+                    <button
+                        class="view-button"
+                        onclick="viewExperiment(${experiment.id})"
+                    >
+                        View
+                    </button>
+
+                </td>
+
+            </tr>
         `;
 
-        tbody.appendChild(row);
-
-    });
-}
+    }
 
 
-async function viewExperiment(id) {
+    // =====================================================
+    // VIEW EXPERIMENT
+    // =====================================================
 
-    try {
+    async function viewExperiment(
+        id
+    ) {
 
-        const response =
-            await fetch(
-                `${API_URL}/api/experiments/${id}`
+        const modal =
+            document.getElementById(
+                "viewModal"
             );
 
-        if (!response.ok) {
-            throw new Error(
-                "Failed to load experiment"
+        const content =
+            document.getElementById(
+                "viewContent"
             );
-        }
 
-        const experiment =
-            await response.json();
-
-        document.getElementById(
-            "detailsTitle"
-        ).textContent =
-            experiment.name;
-
-        document.getElementById(
-            "detailsVariants"
-        ).innerHTML = `
-
-            <div class="variant-card">
-
-                <div class="variant-title">
-                    Variant A
-                </div>
-
-                <div class="variant-text">
-                    ${escapeHtml(
-                        experiment.variant_a
-                    )}
-                </div>
-
+        content.innerHTML = `
+            <div class="loading">
+                Loading analysis...
             </div>
-
-            <div class="variant-card">
-
-                <div class="variant-title">
-                    Variant B
-                </div>
-
-                <div class="variant-text">
-                    ${escapeHtml(
-                        experiment.variant_b
-                    )}
-                </div>
-
-            </div>
-
         `;
 
-        const results =
-            experiment.results || [];
-
-        document.getElementById(
-            "detailsResults"
-        ).innerHTML =
-            results.map(result => `
-
-                <div class="result">
-
-                    <h3>
-                        Variant ${result.variant}
-                    </h3>
-
-                    <div class="metric">
-                        <span>Exposures</span>
-                        <strong>
-                            ${result.sent || 0}
-                        </strong>
-                    </div>
-
-                    <div class="metric">
-                        <span>Replies</span>
-                        <strong>
-                            ${result.replies || 0}
-                        </strong>
-                    </div>
-
-                    <div class="metric">
-                        <span>Reply Rate</span>
-                        <strong>
-                            ${result.reply_rate_percent || 0}%
-                        </strong>
-                    </div>
-
-                </div>
-
-            `).join("");
-
-        document.getElementById(
-            "detailsModal"
-        ).style.display =
-            "flex";
-
-    } catch (err) {
-
-        alert(err.message);
-
-    }
-
-}
-
-
-function openCreateModal() {
-
-    document.getElementById(
-        "createModal"
-    ).style.display =
-        "flex";
-
-}
-
-
-function closeCreateModal(event) {
-
-    if (
-        event &&
-        event.target !==
-        document.getElementById("createModal")
-    ) {
-        return;
-    }
-
-    document.getElementById(
-        "createModal"
-    ).style.display =
-        "none";
-
-}
-
-
-function closeDetails(event) {
-
-    if (
-        event &&
-        event.target !==
-        document.getElementById("detailsModal")
-    ) {
-        return;
-    }
-
-    document.getElementById(
-        "detailsModal"
-    ).style.display =
-        "none";
-
-}
-
-
-document.getElementById(
-    "createForm"
-).addEventListener(
-    "submit",
-    async function(event) {
-
-        event.preventDefault();
-
-        const name =
-            document.getElementById(
-                "experimentName"
-            ).value.trim();
-
-        const variantA =
-            document.getElementById(
-                "variantA"
-            ).value.trim();
-
-        const variantB =
-            document.getElementById(
-                "variantB"
-            ).value.trim();
+        modal.classList.add("open");
 
         try {
 
             const response =
                 await fetch(
-                    `${API_URL}/api/experiments`,
+                    `${API}/api/experiments/${id}`
+                );
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Failed to load experiment"
+                );
+
+            }
+
+            const data =
+                await response.json();
+
+            document.getElementById(
+                "viewTitle"
+            ).textContent =
+                data.name;
+
+            renderExperiment(
+                data
+            );
+
+        } catch (error) {
+
+            content.innerHTML = `
+                <div class="error">
+                    ${escapeHtml(
+                        error.message
+                    )}
+                </div>
+            `;
+
+        }
+
+    }
+
+
+    // =====================================================
+    // RENDER EXPERIMENT
+    // =====================================================
+
+    function renderExperiment(
+        data
+    ) {
+
+        const results =
+            data.results || [];
+
+        const intelligence =
+            data.intelligence || {};
+
+        const variantA =
+            results.find(
+                item =>
+                    item.variant === "A"
+            ) || {};
+
+        const variantB =
+            results.find(
+                item =>
+                    item.variant === "B"
+            ) || {};
+
+        const quality =
+            Number(
+                intelligence.data_quality_percent || 0
+            );
+
+        const difference =
+            Number(
+                intelligence.reply_rate_difference || 0
+            );
+
+        const differenceText =
+            difference > 0
+                ? `+${difference} pp`
+                : `${difference} pp`;
+
+        document.getElementById(
+            "viewContent"
+        ).innerHTML = `
+
+            <!-- INTELLIGENCE -->
+
+            <section class="intelligence">
+
+                <div class="section-label">
+                    Experiment Intelligence
+                </div>
+
+                <div class="intelligence-grid">
+
+                    <div class="intel-card">
+
+                        <div class="intel-label">
+                            Total Exposures
+                        </div>
+
+                        <div class="intel-value">
+                            ${intelligence.total_exposures ?? 0}
+                        </div>
+
+                    </div>
+
+                    <div class="intel-card">
+
+                        <div class="intel-label">
+                            Total Replies
+                        </div>
+
+                        <div class="intel-value">
+                            ${intelligence.total_replies ?? 0}
+                        </div>
+
+                    </div>
+
+                    <div class="intel-card">
+
+                        <div class="intel-label">
+                            Rate Difference
+                        </div>
+
+                        <div class="intel-value">
+                            ${differenceText}
+                        </div>
+
+                    </div>
+
+                    <div class="intel-card">
+
+                        <div class="intel-label">
+                            Minimum Sample
+                        </div>
+
+                        <div class="intel-value">
+                            ${intelligence.minimum_recommended_sample ?? 30}
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="quality">
+
+                    <div class="quality-top">
+
+                        <span>
+                            Data Quality
+                        </span>
+
+                        <strong>
+                            ${quality}%
+                        </strong>
+
+                    </div>
+
+                    <div class="quality-bar">
+
+                        <div
+                            class="quality-fill"
+                            style="width:${Math.min(
+                                quality,
+                                100
+                            )}%"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="recommendation">
+
+                    <strong>
+                        Recommendation
+                    </strong>
+
+                    <br>
+
+                    ${escapeHtml(
+                        intelligence.recommendation ||
+                        "Collect more data."
+                    )}
+
+                </div>
+
+            </section>
+
+
+            <!-- VARIANTS -->
+
+            <div class="section-label">
+                Variant Performance
+            </div>
+
+            <section class="variants">
+
+                ${renderVariant(
+                    "A",
+                    data.variant_a,
+                    variantA
+                )}
+
+                ${renderVariant(
+                    "B",
+                    data.variant_b,
+                    variantB
+                )}
+
+            </section>
+
+        `;
+
+    }
+
+
+    // =====================================================
+    // VARIANT
+    // =====================================================
+
+    function renderVariant(
+        name,
+        message,
+        result
+    ) {
+
+        return `
+
+            <div class="variant-card">
+
+                <div class="variant-heading">
+
+                    <div class="variant-name">
+                        Variant ${name}
+                    </div>
+
+                    <div class="variant-badge">
+                        ${result.reply_rate_percent ?? 0}% reply rate
+                    </div>
+
+                </div>
+
+
+                <div class="message-box">
+
+                    ${escapeHtml(
+                        message || ""
+                    )}
+
+                </div>
+
+
+                <div class="metrics">
+
+                    <div class="metric">
+
+                        <div class="metric-label">
+                            Exposures
+                        </div>
+
+                        <div class="metric-value">
+                            ${result.sent ?? 0}
+                        </div>
+
+                    </div>
+
+
+                    <div class="metric">
+
+                        <div class="metric-label">
+                            Replies
+                        </div>
+
+                        <div class="metric-value">
+                            ${result.replies ?? 0}
+                        </div>
+
+                    </div>
+
+
+                    <div class="metric">
+
+                        <div class="metric-label">
+                            Drop-off
+                        </div>
+
+                        <div class="metric-value">
+                            ${result.dropoff_rate_percent ?? 0}%
+                        </div>
+
+                    </div>
+
+
+                    <div class="metric">
+
+                        <div class="metric-label">
+                            Avg Response
+                        </div>
+
+                        <div class="metric-value">
+                            ${
+                                result.average_response_time
+                                || "N/A"
+                            }
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+    // =====================================================
+    // CREATE MODAL
+    // =====================================================
+
+    function openCreateModal() {
+
+        document
+            .getElementById(
+                "createModal"
+            )
+            .classList.add("open");
+
+    }
+
+
+    function closeModal(
+        id
+    ) {
+
+        document
+            .getElementById(id)
+            .classList.remove("open");
+
+    }
+
+
+    // =====================================================
+    // CREATE EXPERIMENT
+    // =====================================================
+
+    async function createExperiment() {
+
+        const name =
+            document
+                .getElementById(
+                    "experimentName"
+                )
+                .value
+                .trim();
+
+        const variantA =
+            document
+                .getElementById(
+                    "variantA"
+                )
+                .value
+                .trim();
+
+        const variantB =
+            document
+                .getElementById(
+                    "variantB"
+                )
+                .value
+                .trim();
+
+        if (
+            !name ||
+            !variantA ||
+            !variantB
+        ) {
+
+            alert(
+                "Please complete all fields."
+            );
+
+            return;
+
+        }
+
+        try {
+
+            const response =
+                await fetch(
+                    `${API}/api/experiments`,
                     {
                         method: "POST",
 
@@ -1021,58 +1537,142 @@ document.getElementById(
                         },
 
                         body: JSON.stringify({
-                            name: name,
-                            variant_a: variantA,
-                            variant_b: variantB
+                            name:
+                                name,
+
+                            variant_a:
+                                variantA,
+
+                            variant_b:
+                                variantB
                         })
                     }
                 );
 
             if (!response.ok) {
 
-                const data =
-                    await response.json();
+                const error =
+                    await response.json()
+                        .catch(
+                            () => ({})
+                        );
 
                 throw new Error(
-                    data.detail ||
+                    error.detail ||
                     "Failed to create experiment"
                 );
 
             }
 
-            document.getElementById(
-                "createForm"
-            ).reset();
+            document
+                .getElementById(
+                    "experimentName"
+                )
+                .value = "";
 
-            closeCreateModal();
+            document
+                .getElementById(
+                    "variantA"
+                )
+                .value = "";
+
+            document
+                .getElementById(
+                    "variantB"
+                )
+                .value = "";
+
+            closeModal(
+                "createModal"
+            );
 
             await loadExperiments();
 
-        } catch (err) {
+        } catch (error) {
 
-            alert(err.message);
+            alert(
+                error.message
+            );
 
         }
 
     }
-);
 
 
-function escapeHtml(value) {
+    // =====================================================
+    // ESCAPE HTML
+    // =====================================================
 
-    return String(value ?? "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
+    function escapeHtml(
+        value
+    ) {
 
-}
+        return String(
+            value ?? ""
+        )
+            .replace(
+                /&/g,
+                "&amp;"
+            )
+            .replace(
+                /</g,
+                "&lt;"
+            )
+            .replace(
+                />/g,
+                "&gt;"
+            )
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+            .replace(
+                /'/g,
+                "&#039;"
+            );
+
+    }
 
 
-loadExperiments();
+    // =====================================================
+    // MODAL CLICK OUTSIDE
+    // =====================================================
+
+    document
+        .querySelectorAll(".modal")
+        .forEach(
+            modal => {
+
+                modal.addEventListener(
+                    "click",
+                    event => {
+
+                        if (
+                            event.target ===
+                            modal
+                        ) {
+
+                            modal.classList.remove(
+                                "open"
+                            );
+
+                        }
+
+                    }
+                );
+
+            }
+        );
+
+
+    // =====================================================
+    // INITIAL LOAD
+    // =====================================================
+
+    loadExperiments();
 
 </script>
 
 </body>
+
 </html>
