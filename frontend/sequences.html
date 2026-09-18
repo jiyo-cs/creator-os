@@ -195,87 +195,46 @@ h1 {
 async function loadSequences() {
 
     const container =
-        document.getElementById(
-            "sequences"
-        );
-
+        document.getElementById("sequences");
 
     try {
 
-        const dashboard =
-            await fetch(
-                "http://localhost:8000/api/dashboard"
-            );
+        const response = await fetch(
+            "http://localhost:8000/sequences"
+        );
 
+        const result = await response.json();
 
-        const data =
-            await dashboard.json();
-
-
-        /*
-         * Demo endpoint currently returns
-         * message analytics.
-         *
-         * Sequence API will be connected
-         * when real imported data is stored.
-         */
-
-
-        const response =
-            await fetch(
-                "http://localhost:8000/sequences",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
-                    body: JSON.stringify({
-                        conversations: []
-                    })
-                }
-            );
-
-
-        const result =
-            await response.json();
-
-
-        const sequences =
-            result.sequences || [];
-
+        const sequences = result.sequences || [];
 
         if (!sequences.length) {
 
             container.innerHTML = `
                 <div class="sequence">
+
                     <strong>
                         No sequence data yet.
                     </strong>
 
                     <p style="margin-top:8px;color:#777;">
-                        Import conversation data to
-                        analyze your automation flows.
+                        Import conversation data
+                        to analyze your flows.
                     </p>
+
                 </div>
             `;
 
             return;
-
         }
 
-
         container.innerHTML = "";
-
 
         sequences.forEach(sequence => {
 
             const element =
                 document.createElement("div");
 
-            element.className =
-                "sequence";
-
+            element.className = "sequence";
 
             element.innerHTML = `
 
@@ -291,19 +250,20 @@ async function loadSequences() {
 
                 </div>
 
-
                 <div class="bar">
 
                     <div
                         class="fill"
                         style="
                             width:
-                            ${sequence.continuation_rate_percent}%;
+                            ${Math.min(
+                                sequence.continuation_rate_percent,
+                                100
+                            )}%;
                         "
                     ></div>
 
                 </div>
-
 
                 <div class="stats">
 
@@ -326,22 +286,30 @@ async function loadSequences() {
 
             `;
 
-
             container.appendChild(element);
 
         });
 
-
     } catch (error) {
 
         container.innerHTML = `
+
             <div class="sequence">
-                Unable to connect to API.
+
+                <strong>
+                    API connection failed.
+                </strong>
+
+                <p style="margin-top:8px;color:#777;">
+                    Make sure the Creator OS
+                    backend is running.
+                </p>
+
             </div>
+
         `;
 
     }
-
 }
 
 
