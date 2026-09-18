@@ -5,23 +5,28 @@ from fastapi import (
     HTTPException,
 )
 
+from fastapi.middleware.cors import CORSMiddleware
+
 import json
+
 from experiments import compare_variants
+
 from experiment_store import (
     initialize_experiments,
     create_experiment,
     get_experiments,
     get_experiment,
 )
+
 from insights import generate_insights
 from normalizer import normalize_file
+
 from models import AnalyzeRequest
 from analytics import analyze_conversations
 from sequences import analyze_sequences
 
 from database import (
     initialize_database,
-    initialize_experiments()
     save_conversations,
     get_conversations,
     clear_database,
@@ -34,12 +39,23 @@ app = FastAPI(
     version="0.3.0",
 )
 
+app.add_middleware(
 
-# =========================
-# DATABASE
-# =========================
+    CORSMiddleware,
+
+    allow_origins=["*"],
+
+    allow_credentials=True,
+
+    allow_methods=["*"],
+
+    allow_headers=["*"],
+
+)
 
 initialize_database()
+
+initialize_experiments()
 
 
 # =========================
