@@ -18,6 +18,7 @@ from experiment_store import (
     get_experiment,
     assign_variant,
     record_reply,
+    record_conversion,
     sync_experiment_results,
 )
 
@@ -332,6 +333,44 @@ def record_experiment_reply(
         raise HTTPException(
             status_code=404,
             detail="No experiment exposure found for this subscriber",
+        )
+
+    return {
+        "status": "recorded",
+        "experiment_id": experiment_id,
+        "subscriber_id": subscriber_id,
+        "variant": variant,
+    }
+@app.post("/api/experiments/{experiment_id}/conversion")
+def record_experiment_conversion(
+    experiment_id: int,
+    data: dict
+):
+
+    subscriber_id = data.get(
+        "subscriber_id"
+    )
+
+    if not subscriber_id:
+
+        raise HTTPException(
+            status_code=400,
+            detail="subscriber_id is required",
+        )
+
+    variant = record_conversion(
+        experiment_id,
+        str(subscriber_id),
+    )
+
+    if not variant:
+
+        raise HTTPException(
+            status_code=404,
+            detail=(
+                "No experiment exposure "
+                "found for this subscriber"
+            ),
         )
 
     return {
