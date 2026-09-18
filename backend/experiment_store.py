@@ -8,9 +8,7 @@ DATABASE = "creator_os.db"
 
 def get_connection():
 
-    connection = sqlite3.connect(
-        DATABASE
-    )
+    connection = sqlite3.connect(DATABASE)
 
     connection.row_factory = sqlite3.Row
 
@@ -44,6 +42,7 @@ def initialize_experiments():
             variant TEXT NOT NULL,
             sent INTEGER DEFAULT 0,
             replies INTEGER DEFAULT 0,
+            conversions INTEGER DEFAULT 0,
             FOREIGN KEY (experiment_id)
                 REFERENCES experiments(id)
         )
@@ -61,6 +60,30 @@ def initialize_experiments():
                 REFERENCES experiments(id)
         )
     """)
+
+    # -----------------------------------------------------
+    # Upgrade existing databases
+    # -----------------------------------------------------
+
+    columns = cursor.execute(
+        """
+        PRAGMA table_info(experiment_results)
+        """
+    ).fetchall()
+
+    column_names = {
+        column["name"]
+        for column in columns
+    }
+
+    if "conversions" not in column_names:
+
+        cursor.execute(
+            """
+            ALTER TABLE experiment_results
+            ADD COLUMN conversions INTEGER DEFAULT 0
+            """
+        )
 
     connection.commit()
     connection.close()
@@ -82,7 +105,12 @@ def create_experiment(
     cursor.execute(
         """
         INSERT INTO experiments
-        (name, variant_a, variant_b, status)
+        (
+            name,
+            variant_a,
+            variant_b,
+            status
+        )
         VALUES (?, ?, ?, ?)
         """,
         (
@@ -98,8 +126,14 @@ def create_experiment(
     cursor.execute(
         """
         INSERT INTO experiment_results
-        (experiment_id, variant)
-        VALUES (?, ?)
+        (
+            experiment_id,
+            variant,
+            sent,
+            replies,
+            conversions
+        )
+        VALUES (?, ?, 0, 0, 0)
         """,
         (
             experiment_id,
@@ -110,8 +144,14 @@ def create_experiment(
     cursor.execute(
         """
         INSERT INTO experiment_results
-        (experiment_id, variant)
-        VALUES (?, ?)
+        (
+            experiment_id,
+            variant,
+            sent,
+            replies,
+            conversions
+        )
+        VALUES (?, ?, 0, 0, 0)
         """,
         (
             experiment_id,
@@ -157,7 +197,7 @@ def get_experiments():
 
 
 # =========================================================
-# FORMAT SECONDS
+# FORMAT DURATION
 # =========================================================
 
 def format_duration(seconds):
@@ -180,7 +220,7 @@ def format_duration(seconds):
 
 
 # =========================================================
-# GET EXPERIMENT DETAILS
+# GET EXPERIMENT
 # =========================================================
 
 def get_experiment(
@@ -216,7 +256,8 @@ def get_experiment(
         SELECT
             variant,
             sent,
-            replies
+            replies,
+            conversions
         FROM experiment_results
         WHERE experiment_id = ?
         ORDER BY variant
@@ -234,6 +275,7 @@ def get_experiment(
 
         sent = result["sent"]
         replies = result["replies"]
+        conversions = result["conversions"]
 
         reply_rate = (
             replies / sent * 100
@@ -241,15 +283,24 @@ def get_experiment(
             else 0
         )
 
-        # -------------------------------------------------
-        # Response times
-        # -------------------------------------------------
+        conversion_rate = (
+            conversions / sent * 100
+            if sent
+            else 0
+        )
+
+        reply_to_conversion_rate = (
+            conversions / replies * 100
+            if replies
+            else 0
+        )
 
         response_rows = cursor.execute(
             """
             SELECT
                 exposure.created_at AS exposure_time,
                 reply.created_at AS reply_time
+
             FROM experiment_events exposure
 
             INNER JOIN experiment_events reply
@@ -263,11 +314,15 @@ def get_experiment(
                 AND reply.variant =
                     exposure.variant
 
-                AND reply.event_type = 'reply'
+                AND reply.event_type =
+                    'reply'
 
             WHERE exposure.experiment_id = ?
+
             AND exposure.variant = ?
-            AND exposure.event_type = 'exposure'
+
+            AND exposure.event_type =
+                'exposure'
             """,
             (
                 experiment_id,
@@ -296,7 +351,8 @@ def get_experiment(
                 )
 
                 difference = (
-                    reply_time - exposure_time
+                    reply_time -
+                    exposure_time
                 ).total_seconds()
 
                 if difference >= 0:
@@ -331,6 +387,16 @@ def get_experiment(
             2
         )
 
+        result["conversion_rate_percent"] = round(
+            conversion_rate,
+            2
+        )
+
+        result["reply_to_conversion_rate_percent"] = round(
+            reply_to_conversion_rate,
+            2
+        )
+
         result["average_response_seconds"] = (
             round(
                 average_response,
@@ -357,7 +423,7 @@ def get_experiment(
         )
 
     # =====================================================
-    # EXPERIMENT INTELLIGENCE
+    # INTELLIGENCE
     # =====================================================
 
     variants = {
@@ -365,8 +431,15 @@ def get_experiment(
         for item in experiment["results"]
     }
 
-    variant_a = variants.get("A", {})
-    variant_b = variants.get("B", {})
+    variant_a = variants.get(
+        "A",
+        {}
+    )
+
+    variant_b = variants.get(
+        "B",
+        {}
+    )
 
     a_sent = variant_a.get(
         "sent",
@@ -388,8 +461,31 @@ def get_experiment(
         0
     )
 
+    a_conversion = variant_a.get(
+        "conversion_rate_percent",
+        0
+    )
+
+    b_conversion = variant_b.get(
+        "conversion_rate_percent",
+        0
+    )
+
     total_exposures = (
-        a_sent + b_sent
+        a_sent +
+        b_sent
+    )
+
+    total_replies = (
+        variant_a.get("replies", 0)
+        +
+        variant_b.get("replies", 0)
+    )
+
+    total_conversions = (
+        variant_a.get("conversions", 0)
+        +
+        variant_b.get("conversions", 0)
     )
 
     minimum_sample = 30
@@ -398,24 +494,25 @@ def get_experiment(
 
         data_quality = 0
 
-    elif total_exposures >= 100:
-
-        data_quality = 100
-
     else:
 
         data_quality = round(
             min(
-                total_exposures
-                / minimum_sample
-                * 100,
+                total_exposures /
+                minimum_sample *
+                100,
                 100
             ),
             2
         )
 
-    difference = round(
+    reply_difference = round(
         b_rate - a_rate,
+        2
+    )
+
+    conversion_difference = round(
+        b_conversion - a_conversion,
         2
     )
 
@@ -423,43 +520,67 @@ def get_experiment(
 
         recommendation = (
             "Continue collecting data. "
-            "The current sample size is "
-            "too small for a reliable comparison."
+            "The current sample is too small "
+            "for a reliable comparison."
         )
 
         status = "insufficient_data"
 
-    else:
+    elif abs(conversion_difference) >= 3:
 
-        if abs(difference) < 3:
-
-            recommendation = (
-                "The variants are currently "
-                "performing similarly. "
-                "Continue monitoring the experiment."
-            )
-
-            status = "similar"
-
-        elif difference > 0:
+        if conversion_difference > 0:
 
             recommendation = (
-                "Variant B currently has a higher "
-                "reply rate. Continue collecting "
-                "data before making a final decision."
+                "Variant B currently shows a "
+                "higher conversion rate. "
+                "Continue collecting data "
+                "before making a final decision."
             )
 
-            status = "variant_b_higher"
+            status = "variant_b_higher_conversion"
 
         else:
 
             recommendation = (
-                "Variant A currently has a higher "
-                "reply rate. Continue collecting "
-                "data before making a final decision."
+                "Variant A currently shows a "
+                "higher conversion rate. "
+                "Continue collecting data "
+                "before making a final decision."
             )
 
-            status = "variant_a_higher"
+            status = "variant_a_higher_conversion"
+
+    elif abs(reply_difference) >= 3:
+
+        if reply_difference > 0:
+
+            recommendation = (
+                "Variant B currently generates "
+                "more replies. Continue monitoring "
+                "downstream conversion."
+            )
+
+            status = "variant_b_higher_reply"
+
+        else:
+
+            recommendation = (
+                "Variant A currently generates "
+                "more replies. Continue monitoring "
+                "downstream conversion."
+            )
+
+            status = "variant_a_higher_reply"
+
+    else:
+
+        recommendation = (
+            "The variants are currently "
+            "performing similarly. "
+            "Continue monitoring."
+        )
+
+        status = "similar"
 
     experiment["intelligence"] = {
 
@@ -467,14 +588,16 @@ def get_experiment(
             total_exposures,
 
         "total_replies":
-            (
-                variant_a.get("replies", 0)
-                +
-                variant_b.get("replies", 0)
-            ),
+            total_replies,
+
+        "total_conversions":
+            total_conversions,
 
         "reply_rate_difference":
-            difference,
+            reply_difference,
+
+        "conversion_rate_difference":
+            conversion_difference,
 
         "data_quality_percent":
             data_quality,
@@ -655,6 +778,8 @@ def record_reply(
 
         return variant
 
+    from datetime import datetime
+
     cursor.execute(
         """
         INSERT INTO experiment_events
@@ -662,15 +787,17 @@ def record_reply(
             experiment_id,
             subscriber_id,
             variant,
-            event_type
+            event_type,
+            created_at
         )
-        VALUES (?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?)
         """,
         (
             experiment_id,
             subscriber_id,
             variant,
             "reply",
+            datetime.utcnow().isoformat(),
         )
     )
 
@@ -678,6 +805,105 @@ def record_reply(
         """
         UPDATE experiment_results
         SET replies = replies + 1
+        WHERE experiment_id = ?
+        AND variant = ?
+        """,
+        (
+            experiment_id,
+            variant,
+        )
+    )
+
+    connection.commit()
+    connection.close()
+
+    return variant
+
+
+# =========================================================
+# RECORD CONVERSION
+# =========================================================
+
+def record_conversion(
+    experiment_id,
+    subscriber_id
+):
+
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    exposure = cursor.execute(
+        """
+        SELECT variant
+        FROM experiment_events
+        WHERE experiment_id = ?
+        AND subscriber_id = ?
+        AND event_type = 'exposure'
+        ORDER BY id ASC
+        LIMIT 1
+        """,
+        (
+            experiment_id,
+            subscriber_id,
+        )
+    ).fetchone()
+
+    if not exposure:
+
+        connection.close()
+
+        return None
+
+    variant = exposure["variant"]
+
+    existing_conversion = cursor.execute(
+        """
+        SELECT id
+        FROM experiment_events
+        WHERE experiment_id = ?
+        AND subscriber_id = ?
+        AND event_type = 'conversion'
+        LIMIT 1
+        """,
+        (
+            experiment_id,
+            subscriber_id,
+        )
+    ).fetchone()
+
+    if existing_conversion:
+
+        connection.close()
+
+        return variant
+
+    from datetime import datetime
+
+    cursor.execute(
+        """
+        INSERT INTO experiment_events
+        (
+            experiment_id,
+            subscriber_id,
+            variant,
+            event_type,
+            created_at
+        )
+        VALUES (?, ?, ?, ?, ?)
+        """,
+        (
+            experiment_id,
+            subscriber_id,
+            variant,
+            "conversion",
+            datetime.utcnow().isoformat(),
+        )
+    )
+
+    cursor.execute(
+        """
+        UPDATE experiment_results
+        SET conversions = conversions + 1
         WHERE experiment_id = ?
         AND variant = ?
         """,
