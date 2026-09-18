@@ -1,3 +1,4 @@
+from sequences import analyze_sequences
 from fastapi import FastAPI, UploadFile, File, HTTPException
 import json
 
@@ -78,3 +79,11 @@ async def upload_file(file: UploadFile = File(...)):
             status_code=400,
             detail=f"Invalid JSON data: {str(error)}"
         )
+@app.post("/sequences")
+def sequences(payload: AnalyzeRequest):
+
+    return {
+        "sequences": analyze_sequences(
+            payload.conversations
+        )
+    }
