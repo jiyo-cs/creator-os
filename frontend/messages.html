@@ -242,7 +242,8 @@
 
 </div>
 
-
+<script src="config.js"></script>
+    
 <script>
 
 
@@ -258,7 +259,7 @@ async function loadMessages() {
 
         const response =
             await fetch(
-                "http://localhost:8000/api/dashboard"
+                `${API_URL}/api/dashboard`
             );
 
 
