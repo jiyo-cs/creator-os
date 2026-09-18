@@ -18,6 +18,7 @@ from experiment_store import (
     get_experiment,
     assign_variant,
     record_reply,
+    sync_experiment_results,
 )
 
 from insights import generate_insights
@@ -479,6 +480,13 @@ async def upload_file(
             )
 
         save_conversations(
+            conversations
+        )
+
+        save_conversations(
+            conversations
+        )
+        sync_experiment_results(
             conversations
         )
 
