@@ -131,7 +131,56 @@ body {
 <body>
 
 <div class="container">
+    <div
+    style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        gap:12px;
+        margin-bottom:25px;
+        flex-wrap:wrap;
+    "
+>
 
+    <div>
+        <h1 style="margin:0;">
+            Performance Report
+        </h1>
+
+        <p
+            style="
+                color:#777;
+                margin-top:6px;
+            "
+        >
+            DM performance and optimization report
+        </p>
+    </div>
+
+    <select
+        id="period"
+        style="
+            padding:11px 14px;
+            border:1px solid #ddd;
+            border-radius:10px;
+            background:white;
+            font-size:14px;
+        "
+    >
+        <option value="7d">
+            Last 7 days
+        </option>
+
+        <option value="30d">
+            Last 30 days
+        </option>
+
+        <option value="all_time">
+            All time
+        </option>
+    </select>
+
+</div>
     <div class="header">
 
         <div>
@@ -168,193 +217,211 @@ body {
 
 
 <script>
+const periodSelect =
+    document.getElementById("period");
+
+
+periodSelect.addEventListener(
+    "change",
+    loadReport
+);
+
 
 async function loadReport() {
 
-    const container =
-        document.getElementById(
-            "report"
-        );
-
+    const period =
+        periodSelect.value;
 
     try {
 
         const response =
             await fetch(
-                "http://localhost:8000/api/reports/latest"
+                `http://localhost:8000/api/reports/latest?period=${period}`
             );
-
 
         const data =
             await response.json();
 
+        if (!response.ok) {
+
+            throw new Error(
+                data.detail ||
+                "Could not load report"
+            );
+
+        }
 
         if (!data.report) {
 
-            container.innerHTML = `
-                <div class="empty">
-                    No report data available.
-                    Import conversation data first.
-                </div>
-            `;
+            showEmptyState();
 
             return;
         }
 
-
-        const report =
-            data.report;
-
-
-        const summary =
-            report.summary;
-
-
-        container.innerHTML = `
-
-            <div class="grid">
-
-                <div class="card">
-
-                    <div class="label">
-                        Conversations
-                    </div>
-
-                    <div class="value">
-                        ${summary.total_conversations}
-                    </div>
-
-                </div>
-
-
-                <div class="card">
-
-                    <div class="label">
-                        Reply Rate
-                    </div>
-
-                    <div class="value">
-                        ${summary.reply_rate_percent}%
-                    </div>
-
-                </div>
-
-
-                <div class="card">
-
-                    <div class="label">
-                        Avg Response
-                    </div>
-
-                    <div class="value">
-                        ${summary.average_response_time}
-                    </div>
-
-                </div>
-
-
-                <div class="card">
-
-                    <div class="label">
-                        Creator Messages
-                    </div>
-
-                    <div class="value">
-                        ${summary.creator_messages}
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="section">
-
-                <h2>
-                    Top Messages
-                </h2>
-
-                <div id="messages"></div>
-
-            </div>
-
-
-            <div class="section">
-
-                <h2>
-                    Key Insights
-                </h2>
-
-                <div id="insights"></div>
-
-            </div>
-
-
-            <div class="section">
-
-                <h2>
-                    Recommended Actions
-                </h2>
-
-                <div id="recommendations"></div>
-
-            </div>
-
-        `;
-
-
-        renderMessages(
-            report.top_messages
+        renderReport(
+            data.report
         );
-
-
-        renderInsights(
-            report.insights
-        );
-
-
-        renderRecommendations(
-            report.recommendations
-        );
-
 
     } catch (error) {
 
-        container.innerHTML = `
-            <div class="empty">
-                Could not connect to Creator OS API.
+        document.getElementById(
+            "report"
+        ).innerHTML = `
+
+            <div class="card">
+
+                <h3>
+                    Report unavailable
+                </h3>
+
+                <p>
+                    ${escapeHtml(
+                        error.message
+                    )}
+                </p>
+
             </div>
+
         `;
 
     }
+}
 
+
+function renderReport(report) {
+
+    const summary =
+        report.summary;
+
+    const reportContainer =
+        document.getElementById(
+            "report"
+        );
+
+    reportContainer.innerHTML = `
+
+        <div class="stats-grid">
+
+            <div class="card">
+                <span>
+                    Conversations
+                </span>
+
+                <strong>
+                    ${summary.total_conversations}
+                </strong>
+            </div>
+
+            <div class="card">
+                <span>
+                    Reply Rate
+                </span>
+
+                <strong>
+                    ${summary.reply_rate_percent}%
+                </strong>
+            </div>
+
+            <div class="card">
+                <span>
+                    Avg Response
+                </span>
+
+                <strong>
+                    ${escapeHtml(
+                        summary.average_response_time
+                    )}
+                </strong>
+            </div>
+
+            <div class="card">
+                <span>
+                    Creator Messages
+                </span>
+
+                <strong>
+                    ${summary.creator_messages}
+                </strong>
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h2>
+                Top Performing Messages
+            </h2>
+
+            ${renderMessages(
+                report.top_messages
+            )}
+
+        </div>
+
+
+        <div class="card">
+
+            <h2>
+                Biggest Drop-offs
+            </h2>
+
+            ${renderDropoffs(
+                report.biggest_dropoffs
+            )}
+
+        </div>
+
+
+        <div class="card">
+
+            <h2>
+                Key Insights
+            </h2>
+
+            ${renderInsights(
+                report.insights
+            )}
+
+        </div>
+
+
+        <div class="card">
+
+            <h2>
+                Recommended Actions
+            </h2>
+
+            ${renderRecommendations(
+                report.recommendations
+            )}
+
+        </div>
+
+    `;
 }
 
 
 function renderMessages(messages) {
 
-    const container =
-        document.getElementById(
-            "messages"
-        );
+    if (!messages.length) {
 
+        return `
+            <p>
+                No message data available.
+            </p>
+        `;
+    }
 
-    container.innerHTML = "";
+    return messages.map(
+        message => `
 
-
-    messages.forEach(
-        message => {
-
-            const element =
-                document.createElement(
-                    "div"
-                );
-
-            element.className =
-                "message";
-
-
-            element.innerHTML = `
+            <div
+                style="
+                    padding:14px 0;
+                    border-bottom:1px solid #eee;
+                "
+            >
 
                 <strong>
                     ${escapeHtml(
@@ -362,51 +429,102 @@ function renderMessages(messages) {
                     )}
                 </strong>
 
-                <p>
+                <div
+                    style="
+                        margin-top:7px;
+                        color:#777;
+                        font-size:14px;
+                    "
+                >
+
                     Sent:
                     ${message.times_sent}
+
                     &nbsp; • &nbsp;
-                    Reply Rate:
+
+                    Reply rate:
                     ${message.reply_rate_percent}%
-                </p>
 
-            `;
+                </div>
+
+            </div>
+
+        `
+    ).join("");
+}
 
 
-            container.appendChild(
-                element
-            );
+function renderDropoffs(dropoffs) {
 
-        }
-    );
+    if (!dropoffs.length) {
 
+        return `
+            <p>
+                No sequence drop-off data yet.
+            </p>
+        `;
+    }
+
+    return dropoffs.map(
+        item => `
+
+            <div
+                style="
+                    padding:14px 0;
+                    border-bottom:1px solid #eee;
+                "
+            >
+
+                <strong>
+                    ${escapeHtml(
+                        item.step
+                    )}
+                </strong>
+
+                <div
+                    style="
+                        margin-top:7px;
+                        color:#777;
+                    "
+                >
+
+                    Drop-off:
+                    ${item.dropoff_rate_percent}%
+
+                    &nbsp; • &nbsp;
+
+                    Entered:
+                    ${item.entered}
+
+                </div>
+
+            </div>
+
+        `
+    ).join("");
 }
 
 
 function renderInsights(insights) {
 
-    const container =
-        document.getElementById(
-            "insights"
-        );
+    if (!insights.length) {
 
+        return `
+            <p>
+                No insights available.
+            </p>
+        `;
+    }
 
-    container.innerHTML = "";
+    return insights.map(
+        insight => `
 
-
-    insights.forEach(
-        insight => {
-
-            const element =
-                document.createElement(
-                    "div"
-                );
-
-            element.className =
-                "insight";
-
-
-            element.innerHTML = `
+            <div
+                style="
+                    padding:14px 0;
+                    border-bottom:1px solid #eee;
+                "
+            >
 
                 <strong>
                     ${escapeHtml(
@@ -414,22 +532,21 @@ function renderInsights(insights) {
                     )}
                 </strong>
 
-                <p>
+                <p
+                    style="
+                        color:#777;
+                        margin-top:6px;
+                    "
+                >
                     ${escapeHtml(
                         insight.description
                     )}
                 </p>
 
-            `;
+            </div>
 
-
-            container.appendChild(
-                element
-            );
-
-        }
-    );
-
+        `
+    ).join("");
 }
 
 
@@ -437,28 +554,24 @@ function renderRecommendations(
     recommendations
 ) {
 
-    const container =
-        document.getElementById(
-            "recommendations"
-        );
+    if (!recommendations.length) {
 
+        return `
+            <p>
+                No recommendations yet.
+            </p>
+        `;
+    }
 
-    container.innerHTML = "";
+    return recommendations.map(
+        recommendation => `
 
-
-    recommendations.forEach(
-        recommendation => {
-
-            const element =
-                document.createElement(
-                    "div"
-                );
-
-            element.className =
-                "recommendation";
-
-
-            element.innerHTML = `
+            <div
+                style="
+                    padding:14px 0;
+                    border-bottom:1px solid #eee;
+                "
+            >
 
                 <strong>
                     ${escapeHtml(
@@ -466,22 +579,44 @@ function renderRecommendations(
                     )}
                 </strong>
 
-                <p>
+                <p
+                    style="
+                        color:#777;
+                        margin-top:6px;
+                    "
+                >
                     ${escapeHtml(
                         recommendation.description
                     )}
                 </p>
 
-            `;
+            </div>
+
+        `
+    ).join("");
+}
 
 
-            container.appendChild(
-                element
-            );
+function showEmptyState() {
 
-        }
-    );
+    document.getElementById(
+        "report"
+    ).innerHTML = `
 
+        <div class="card">
+
+            <h2>
+                No data yet
+            </h2>
+
+            <p>
+                Import conversations to
+                generate a performance report.
+            </p>
+
+        </div>
+
+    `;
 }
 
 
@@ -493,7 +628,6 @@ function escapeHtml(value) {
         .replaceAll(">", "&gt;")
         .replaceAll('"', "&quot;")
         .replaceAll("'", "&#039;");
-
 }
 
 
