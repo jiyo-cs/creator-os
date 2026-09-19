@@ -3,579 +3,1128 @@
 
 <head>
 
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-<title>Creator OS — Overview</title>
+    <title>Creator OS — Overview</title>
 
-<style>
+    <script src="config.js"></script>
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+    <style>
 
-body {
-    font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Inter",
-        sans-serif;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    background: #f5f5f7;
-    color: #111;
-}
+        body {
 
-.app {
-    min-height: 100vh;
-}
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Inter",
+                sans-serif;
 
-.sidebar {
-    width: 230px;
-    height: 100vh;
-    position: fixed;
-    left: 0;
-    top: 0;
-    background: #111;
-    color: white;
-    padding: 28px 16px;
-    z-index: 1000;
-}
+            background: #f5f5f7;
+            color: #111;
 
-.logo {
-    font-size: 20px;
-    font-weight: 700;
-    padding: 0 12px 30px;
-}
+        }
 
-.nav {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
 
-.nav a {
-    color: #aaa;
-    text-decoration: none;
-    padding: 11px 12px;
-    border-radius: 10px;
-    font-size: 14px;
-    transition: .2s;
-}
+        .app {
+            min-height: 100vh;
+        }
 
-.nav a:hover,
-.nav a.active {
-    background: #222;
-    color: white;
-}
 
-.main {
-    margin-left: 230px;
-    padding: 34px;
-    max-width: 1500px;
-}
+        /* =========================
+           SIDEBAR
+        ========================= */
 
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 28px;
-}
+        .sidebar {
 
-.header h1 {
-    font-size: 32px;
-    letter-spacing: -1px;
-}
+            width: 230px;
+            height: 100vh;
 
-.header p {
-    color: #777;
-    margin-top: 7px;
-}
+            position: fixed;
 
-.import-button {
-    background: #111;
-    color: white;
-    text-decoration: none;
-    padding: 11px 16px;
-    border-radius: 10px;
-    font-size: 14px;
-}
+            left: 0;
+            top: 0;
 
-.cards {
-    display: grid;
-    grid-template-columns:
-        repeat(4, 1fr);
-    gap: 14px;
-    margin-bottom: 20px;
-}
+            background: #111;
+            color: white;
 
-.card {
-    background: white;
-    border: 1px solid #e5e5e5;
-    border-radius: 16px;
-    padding: 21px;
-}
+            padding: 28px 16px;
 
-.card-label {
-    color: #777;
-    font-size: 13px;
-    margin-bottom: 12px;
-}
+            z-index: 1000;
 
-.card-value {
-    font-size: 30px;
-    font-weight: 700;
-    letter-spacing: -1px;
-}
+        }
 
-.card-description {
-    color: #999;
-    font-size: 12px;
-    margin-top: 8px;
-}
 
-.dashboard-grid {
-    display: grid;
-    grid-template-columns:
-        1.5fr 1fr;
-    gap: 18px;
-}
+        .logo {
 
-.panel {
-    background: white;
-    border: 1px solid #e5e5e5;
-    border-radius: 16px;
-    padding: 22px;
-}
+            font-size: 20px;
+            font-weight: 700;
 
-.panel h2 {
-    font-size: 18px;
-    margin-bottom: 18px;
-}
+            padding:
+                0
+                12px
+                30px;
 
-.message-row {
-    padding: 15px 0;
-    border-bottom: 1px solid #eee;
-}
+        }
 
-.message-row:last-child {
-    border-bottom: none;
-}
 
-.message-top {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-}
+        .nav {
 
-.message-text {
-    font-size: 14px;
-    line-height: 1.45;
-    max-width: 75%;
-}
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
 
-.message-rate {
-    font-weight: 700;
-    white-space: nowrap;
-}
+        }
 
-.message-meta {
-    color: #888;
-    font-size: 12px;
-    margin-top: 6px;
-}
 
-.insight {
-    padding: 14px;
-    border-radius: 12px;
-    background: #f7f7f7;
-    margin-bottom: 10px;
-}
+        .nav a {
 
-.insight:last-child {
-    margin-bottom: 0;
-}
+            color: #aaa;
 
-.insight-title {
-    font-weight: 600;
-    font-size: 14px;
-    margin-bottom: 5px;
-}
+            text-decoration: none;
 
-.insight-description {
-    color: #777;
-    font-size: 13px;
-    line-height: 1.5;
-}
+            padding:
+                11px
+                12px;
 
-.action {
-    padding: 14px 0;
-    border-bottom: 1px solid #eee;
-}
+            border-radius: 10px;
 
-.action:last-child {
-    border-bottom: none;
-}
+            font-size: 14px;
 
-.action-title {
-    font-size: 14px;
-    font-weight: 600;
-}
+            transition:
+                background .2s,
+                color .2s;
 
-.action-description {
-    color: #777;
-    font-size: 13px;
-    line-height: 1.5;
-    margin-top: 5px;
-}
+        }
 
-.priority {
-    display: inline-block;
-    margin-top: 8px;
-    font-size: 11px;
-    padding: 4px 7px;
-    border-radius: 6px;
-    background: #eee;
-}
 
-.empty {
-    color: #888;
-    font-size: 14px;
-    padding: 15px 0;
-}
+        .nav a:hover,
+        .nav a.active {
 
-.loading {
-    opacity: .6;
-}
+            background: #222;
+            color: white;
 
-.error {
-    color: #a33;
-}
+        }
 
-@media (max-width: 900px) {
 
-    .sidebar {
-        width: 100%;
-        height: auto;
-        position: fixed;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 10px;
-        overflow-x: auto;
-    }
+        /* =========================
+           MAIN
+        ========================= */
 
-    .logo {
-        padding: 0 6px;
-        flex-shrink: 0;
-    }
+        .main {
 
-    .nav {
-        flex-direction: row;
-        overflow-x: auto;
-    }
+            margin-left: 230px;
 
-    .nav a {
-        white-space: nowrap;
-        padding: 9px 11px;
-    }
+            padding: 34px;
 
-    .main {
-        margin-left: 0;
-        padding: 82px 20px 25px;
-    }
+            max-width: 1500px;
 
-    .cards {
-        grid-template-columns:
-            repeat(2, 1fr);
-    }
+        }
 
-    .dashboard-grid {
-        grid-template-columns: 1fr;
-    }
-}
 
-@media (max-width: 600px) {
+        .header {
 
-    .main {
-        padding: 78px 15px 20px;
-    }
+            display: flex;
 
-    .header {
-        flex-direction: column;
-        gap: 15px;
-    }
+            justify-content:
+                space-between;
 
-    .header h1 {
-        font-size: 27px;
-    }
+            align-items:
+                flex-start;
 
-    .import-button {
-        width: 100%;
-        text-align: center;
-    }
+            margin-bottom: 28px;
 
-    .cards {
-        gap: 9px;
-    }
+        }
 
-    .card {
-        padding: 16px;
-    }
 
-    .card-value {
-        font-size: 23px;
-    }
+        .header h1 {
 
-    .message-top {
-        flex-direction: column;
-        gap: 7px;
-    }
+            font-size: 32px;
 
-    .message-text {
-        max-width: 100%;
-    }
+            letter-spacing:
+                -1px;
 
-}
+        }
 
-</style>
+
+        .header p {
+
+            color: #777;
+
+            margin-top: 7px;
+
+        }
+
+
+        .import-button {
+
+            background: #111;
+
+            color: white;
+
+            text-decoration: none;
+
+            padding:
+                11px
+                16px;
+
+            border-radius: 10px;
+
+            font-size: 14px;
+
+        }
+
+
+        /* =========================
+           METRIC CARDS
+        ========================= */
+
+        .cards {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 14px;
+
+            margin-bottom: 20px;
+
+        }
+
+
+        .card {
+
+            background: white;
+
+            border:
+                1px solid
+                #e5e5e5;
+
+            border-radius: 16px;
+
+            padding: 21px;
+
+        }
+
+
+        .card-label {
+
+            color: #777;
+
+            font-size: 13px;
+
+            margin-bottom: 12px;
+
+        }
+
+
+        .card-value {
+
+            font-size: 30px;
+
+            font-weight: 700;
+
+            letter-spacing:
+                -1px;
+
+        }
+
+
+        .card-description {
+
+            color: #999;
+
+            font-size: 12px;
+
+            margin-top: 8px;
+
+        }
+
+
+        /* =========================
+           DASHBOARD
+        ========================= */
+
+        .dashboard-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                1.5fr 1fr;
+
+            gap: 18px;
+
+        }
+
+
+        .panel {
+
+            background: white;
+
+            border:
+                1px solid
+                #e5e5e5;
+
+            border-radius: 16px;
+
+            padding: 22px;
+
+        }
+
+
+        .panel h2 {
+
+            font-size: 18px;
+
+            margin-bottom: 18px;
+
+        }
+
+
+        /* =========================
+           MESSAGES
+        ========================= */
+
+        .message-row {
+
+            padding:
+                15px 0;
+
+            border-bottom:
+                1px solid
+                #eee;
+
+        }
+
+
+        .message-row:last-child {
+
+            border-bottom:
+                none;
+
+        }
+
+
+        .message-top {
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            gap: 20px;
+
+        }
+
+
+        .message-text {
+
+            font-size: 14px;
+
+            line-height:
+                1.45;
+
+            max-width: 75%;
+
+        }
+
+
+        .message-rate {
+
+            font-weight: 700;
+
+            white-space:
+                nowrap;
+
+        }
+
+
+        .message-meta {
+
+            color: #888;
+
+            font-size: 12px;
+
+            margin-top: 6px;
+
+        }
+
+
+        /* =========================
+           INSIGHTS
+        ========================= */
+
+        .insight {
+
+            padding: 14px;
+
+            border-radius: 12px;
+
+            background: #f7f7f7;
+
+            margin-bottom: 10px;
+
+        }
+
+
+        .insight:last-child {
+
+            margin-bottom: 0;
+
+        }
+
+
+        .insight-title {
+
+            font-weight: 600;
+
+            font-size: 14px;
+
+            margin-bottom: 5px;
+
+        }
+
+
+        .insight-description {
+
+            color: #777;
+
+            font-size: 13px;
+
+            line-height:
+                1.5;
+
+        }
+
+
+        /* =========================
+           ACTIONS
+        ========================= */
+
+        .action {
+
+            padding:
+                14px 0;
+
+            border-bottom:
+                1px solid
+                #eee;
+
+        }
+
+
+        .action:last-child {
+
+            border-bottom:
+                none;
+
+        }
+
+
+        .action-title {
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+        }
+
+
+        .action-description {
+
+            color: #777;
+
+            font-size: 13px;
+
+            line-height:
+                1.5;
+
+            margin-top: 5px;
+
+        }
+
+
+        .priority {
+
+            display: inline-block;
+
+            margin-top: 8px;
+
+            font-size: 11px;
+
+            padding:
+                4px 7px;
+
+            border-radius: 6px;
+
+            background: #eee;
+
+        }
+
+
+        /* =========================
+           STATES
+        ========================= */
+
+        .empty {
+
+            color: #888;
+
+            font-size: 14px;
+
+            padding:
+                15px 0;
+
+        }
+
+
+        .error {
+
+            color: #a33;
+
+        }
+
+
+        .loading {
+
+            opacity: .6;
+
+        }
+
+
+        .auth-loading {
+
+            position: fixed;
+
+            inset: 0;
+
+            background: #f5f5f7;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            z-index: 9999;
+
+            font-size: 14px;
+
+            color: #777;
+
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+
+                width: 100%;
+
+                height: auto;
+
+                position: fixed;
+
+                display: flex;
+
+                align-items: center;
+
+                gap: 12px;
+
+                padding: 10px;
+
+                overflow-x: auto;
+
+            }
+
+
+            .logo {
+
+                padding:
+                    0 6px;
+
+                flex-shrink: 0;
+
+            }
+
+
+            .nav {
+
+                flex-direction: row;
+
+                overflow-x: auto;
+
+            }
+
+
+            .nav a {
+
+                white-space:
+                    nowrap;
+
+                padding:
+                    9px 11px;
+
+            }
+
+
+            .main {
+
+                margin-left: 0;
+
+                padding:
+                    82px 20px 25px;
+
+            }
+
+
+            .cards {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
+            }
+
+
+            .dashboard-grid {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .main {
+
+                padding:
+                    78px
+                    15px
+                    20px;
+
+            }
+
+
+            .header {
+
+                flex-direction:
+                    column;
+
+                gap: 15px;
+
+            }
+
+
+            .header h1 {
+
+                font-size: 27px;
+
+            }
+
+
+            .import-button {
+
+                width: 100%;
+
+                text-align: center;
+
+            }
+
+
+            .cards {
+
+                gap: 9px;
+
+            }
+
+
+            .card {
+
+                padding: 16px;
+
+            }
+
+
+            .card-value {
+
+                font-size: 23px;
+
+            }
+
+
+            .message-top {
+
+                flex-direction:
+                    column;
+
+                gap: 7px;
+
+            }
+
+
+            .message-text {
+
+                max-width: 100%;
+
+            }
+
+        }
+
+    </style>
 
 </head>
 
+
 <body>
 
-<div class="app">
 
-<aside class="sidebar">
+<div
+    id="authLoading"
+    class="auth-loading"
+>
+    Checking session...
+</div>
 
-    <div class="logo">
-        Creator OS
-    </div>
 
-    <nav class="nav">
+<div
+    id="app"
+    class="app"
+    style="display:none;"
+>
 
-        <a href="index.html" class="active">
-            Overview
-        </a>
 
-        <a href="messages.html">
-            DM Analytics
-        </a>
+    <aside class="sidebar">
 
-        <a href="conversations.html">
-            Conversations
-        </a>
 
-        <a href="sequences.html">
-            Sequences
-        </a>
+        <div class="logo">
+            Creator OS
+        </div>
 
-        <a href="insights.html">
-            AI Insights
-        </a>
 
-        <a href="experiments.html">
-            Experiments
-        </a>
+        <nav class="nav">
 
-        <a href="reports.html">
-            Reports
-        </a>
 
-        <a href="import.html">
-            Import Data
-        </a>
-
-    </nav>
-
-</aside>
-
-<main class="main">
-
-    <header class="header">
-
-        <div>
-
-            <h1>
+            <a
+                href="index.html"
+                class="active"
+            >
                 Overview
-            </h1>
-
-            <p>
-                Creator performance at a glance.
-            </p>
-
-        </div>
-
-        <a
-            href="import.html"
-            class="import-button"
-        >
-            + Import Data
-        </a>
-
-    </header>
+            </a>
 
 
-    <!-- METRICS -->
+            <a href="messages.html">
+                DM Analytics
+            </a>
 
-    <section class="cards">
 
-        <div class="card">
-
-            <div class="card-label">
+            <a href="conversations.html">
                 Conversations
+            </a>
+
+
+            <a href="sequences.html">
+                Sequences
+            </a>
+
+
+            <a href="insights.html">
+                AI Insights
+            </a>
+
+
+            <a href="experiments.html">
+                Experiments
+            </a>
+
+
+            <a href="reports.html">
+                Reports
+            </a>
+
+
+            <a href="import.html">
+                Import Data
+            </a>
+
+
+        </nav>
+
+
+    </aside>
+
+
+    <main class="main">
+
+
+        <header class="header">
+
+
+            <div>
+
+
+                <h1>
+                    Overview
+                </h1>
+
+
+                <p>
+                    Creator performance at a glance.
+                </p>
+
+
             </div>
 
-            <div
-                id="totalConversations"
-                class="card-value"
+
+            <a
+                href="import.html"
+                class="import-button"
             >
-                —
+                + Import Data
+            </a>
+
+
+        </header>
+
+
+        <!-- METRICS -->
+
+
+        <section class="cards">
+
+
+            <div class="card">
+
+
+                <div class="card-label">
+                    Conversations
+                </div>
+
+
+                <div
+                    id="totalConversations"
+                    class="card-value"
+                >
+                    —
+                </div>
+
+
+                <div class="card-description">
+                    Imported conversations
+                </div>
+
+
             </div>
 
-            <div class="card-description">
-                Imported conversations
+
+            <div class="card">
+
+
+                <div class="card-label">
+                    Reply Rate
+                </div>
+
+
+                <div
+                    id="replyRate"
+                    class="card-value"
+                >
+                    —
+                </div>
+
+
+                <div class="card-description">
+                    Conversations with reply
+                </div>
+
+
             </div>
 
-        </div>
+
+            <div class="card">
 
 
-        <div class="card">
+                <div class="card-label">
+                    Avg Response
+                </div>
 
-            <div class="card-label">
-                Reply Rate
+
+                <div
+                    id="avgResponse"
+                    class="card-value"
+                >
+                    —
+                </div>
+
+
+                <div class="card-description">
+                    Subscriber response time
+                </div>
+
+
             </div>
 
-            <div
-                id="replyRate"
-                class="card-value"
-            >
-                —
+
+            <div class="card">
+
+
+                <div class="card-label">
+                    Drop-off
+                </div>
+
+
+                <div
+                    id="dropoff"
+                    class="card-value"
+                >
+                    —
+                </div>
+
+
+                <div class="card-description">
+                    Conversations without reply
+                </div>
+
+
             </div>
 
-            <div class="card-description">
-                Conversations with reply
+
+        </section>
+
+
+        <!-- MAIN DASHBOARD -->
+
+
+        <section class="dashboard-grid">
+
+
+            <div class="panel">
+
+
+                <h2>
+                    Top Performing Messages
+                </h2>
+
+
+                <div id="topMessages">
+
+
+                    <div class="empty loading">
+                        Loading...
+                    </div>
+
+
+                </div>
+
+
             </div>
 
-        </div>
+
+            <div class="panel">
 
 
-        <div class="card">
+                <h2>
+                    What Needs Attention
+                </h2>
 
-            <div class="card-label">
-                Avg Response
+
+                <div id="insights">
+
+
+                    <div class="empty loading">
+                        Loading...
+                    </div>
+
+
+                </div>
+
+
             </div>
 
-            <div
-                id="avgResponse"
-                class="card-value"
-            >
-                —
-            </div>
 
-            <div class="card-description">
-                Subscriber response time
-            </div>
-
-        </div>
+        </section>
 
 
-        <div class="card">
-
-            <div class="card-label">
-                Drop-off
-            </div>
-
-            <div
-                id="dropoff"
-                class="card-value"
-            >
-                —
-            </div>
-
-            <div class="card-description">
-                Conversations without reply
-            </div>
-
-        </div>
-
-    </section>
+        <!-- RECOMMENDATIONS -->
 
 
-    <!-- MAIN DASHBOARD -->
+        <section
+            class="panel"
+            style="margin-top:18px;"
+        >
 
-    <section class="dashboard-grid">
-
-
-        <div class="panel">
 
             <h2>
-                Top Performing Messages
+                Recommended Actions
             </h2>
 
-            <div id="topMessages">
 
-                <div class="empty">
+            <div id="recommendations">
+
+
+                <div class="empty loading">
                     Loading...
                 </div>
 
-            </div>
-
-        </div>
-
-
-        <div class="panel">
-
-            <h2>
-                What Needs Attention
-            </h2>
-
-            <div id="insights">
-
-                <div class="empty">
-                    Loading...
-                </div>
 
             </div>
 
-        </div>
+
+        </section>
 
 
-    </section>
+    </main>
 
-
-    <section
-        class="panel"
-        style="margin-top:18px;"
-    >
-
-        <h2>
-            Recommended Actions
-        </h2>
-
-        <div id="recommendations">
-
-            <div class="empty">
-                Loading...
-            </div>
-
-        </div>
-
-    </section>
-
-</main>
 
 </div>
 
 
-<script src="config.js"></script>
-
 <script>
+
+
+/* =========================================================
+   AUTHENTICATION
+========================================================= */
+
+
+async function checkAuthentication() {
+
+    try {
+
+        const response =
+            await apiFetch(
+                "/api/auth/me",
+                {
+                    method: "GET",
+                    cache: "no-store"
+                }
+            );
+
+
+        if (
+            response.ok
+        ) {
+
+            return true;
+
+        }
+
+
+        if (
+            response.status === 401
+        ) {
+
+            redirectToLogin();
+
+            return false;
+
+        }
+
+
+        throw new Error(
+            `Authentication failed (${response.status})`
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Authentication error:",
+            error
+        );
+
+
+        /*
+            Do not immediately redirect on
+            network/server errors.
+
+            Render can take a few seconds
+            to wake up.
+        */
+
+        return false;
+
+    }
+
+}
+
+
+/* =========================================================
+   LOGIN REDIRECT
+========================================================= */
+
+
+function redirectToLogin() {
+
+    const next =
+        "index.html";
+
+
+    window.location.replace(
+        `login.html?next=${encodeURIComponent(next)}`
+    );
+
+}
+
+
+/* =========================================================
+   SHOW APP
+========================================================= */
+
+
+function showApp() {
+
+    const loading =
+        document.getElementById(
+            "authLoading"
+        );
+
+
+    const app =
+        document.getElementById(
+            "app"
+        );
+
+
+    if (loading) {
+
+        loading.style.display =
+            "none";
+
+    }
+
+
+    if (app) {
+
+        app.style.display =
+            "block";
+
+    }
+
+}
+
+
+/* =========================================================
+   LOAD DASHBOARD
+========================================================= */
+
 
 async function loadDashboard() {
 
@@ -584,83 +1133,143 @@ async function loadDashboard() {
             "topMessages"
         );
 
+
     const insights =
         document.getElementById(
             "insights"
         );
+
 
     const recommendations =
         document.getElementById(
             "recommendations"
         );
 
+
     try {
 
+
         const dashboardResponse =
-            await fetch(
-                `${API_URL}/api/dashboard`
+            await apiFetch(
+                "/api/dashboard",
+                {
+                    method: "GET",
+                    cache: "no-store"
+                }
             );
 
-        if (!dashboardResponse.ok) {
-            throw new Error(
-                "Dashboard request failed"
-            );
+
+        if (
+            dashboardResponse.status === 401
+        ) {
+
+            redirectToLogin();
+
+            return;
+
         }
+
+
+        if (
+            !dashboardResponse.ok
+        ) {
+
+            throw new Error(
+                `Dashboard request failed (${dashboardResponse.status})`
+            );
+
+        }
+
 
         const dashboard =
             await dashboardResponse.json();
 
 
         const insightsResponse =
-            await fetch(
-                `${API_URL}/api/insights`
+            await apiFetch(
+                "/api/insights",
+                {
+                    method: "GET",
+                    cache: "no-store"
+                }
             );
 
-        const insightsData =
+
+        if (
+            insightsResponse.status === 401
+        ) {
+
+            redirectToLogin();
+
+            return;
+
+        }
+
+
+        let insightsData = {
+            insights: [],
+            recommendations: []
+        };
+
+
+        if (
             insightsResponse.ok
-            ? await insightsResponse.json()
-            : {
-                insights: [],
-                recommendations: []
-            };
+        ) {
+
+            insightsData =
+                await insightsResponse.json();
+
+        }
 
 
         renderMetrics(
             dashboard
         );
 
+
         renderMessages(
-            dashboard.message_performance || []
+            dashboard.message_performance ||
+            []
         );
+
 
         renderInsights(
-            insightsData.insights || []
+            insightsData.insights ||
+            []
         );
 
+
         renderRecommendations(
-            insightsData.recommendations || []
+            insightsData.recommendations ||
+            []
         );
 
 
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            "Dashboard loading error:",
+            error
+        );
+
 
         topMessages.innerHTML = `
             <div class="empty error">
-                Could not connect to Creator OS API.
+                Unable to load message performance.
             </div>
         `;
+
 
         insights.innerHTML = `
             <div class="empty error">
-                Insights unavailable.
+                Unable to load insights.
             </div>
         `;
 
+
         recommendations.innerHTML = `
             <div class="empty error">
-                Recommendations unavailable.
+                Unable to load recommendations.
             </div>
         `;
 
@@ -669,10 +1278,16 @@ async function loadDashboard() {
 }
 
 
+/* =========================================================
+   METRICS
+========================================================= */
+
+
 function renderMetrics(data) {
 
     const summary =
         data.summary || {};
+
 
     const responseTime =
         data.response_time || {};
@@ -681,29 +1296,31 @@ function renderMetrics(data) {
     const total =
         summary.total_conversations || 0;
 
+
     const replyRate =
         summary.reply_rate_percent || 0;
 
 
     document.getElementById(
         "totalConversations"
-    ).textContent = total;
+    ).textContent =
+        total;
 
 
     document.getElementById(
         "replyRate"
     ).textContent =
-        `${replyRate}%`;
+        `${Number(replyRate).toFixed(2)}%`;
 
 
     document.getElementById(
         "avgResponse"
     ).textContent =
         responseTime.average_seconds != null
-        ? formatTime(
-            responseTime.average_seconds
-        )
-        : "N/A";
+            ? formatTime(
+                responseTime.average_seconds
+            )
+            : "N/A";
 
 
     document.getElementById(
@@ -711,10 +1328,15 @@ function renderMetrics(data) {
     ).textContent =
         `${Math.max(
             0,
-            100 - replyRate
+            100 - Number(replyRate)
         ).toFixed(2)}%`;
 
 }
+
+
+/* =========================================================
+   TOP MESSAGES
+========================================================= */
 
 
 function renderMessages(messages) {
@@ -726,15 +1348,21 @@ function renderMessages(messages) {
 
 
     const usable =
-        messages
-            .filter(
-                message =>
-                    message.times_sent > 0
-            )
-            .slice(0, 5);
+        Array.isArray(messages)
+            ? messages
+                .filter(
+                    message =>
+                        Number(
+                            message.times_sent
+                        ) > 0
+                )
+                .slice(0, 5)
+            : [];
 
 
-    if (!usable.length) {
+    if (
+        !usable.length
+    ) {
 
         container.innerHTML = `
             <div class="empty">
@@ -748,39 +1376,57 @@ function renderMessages(messages) {
 
 
     container.innerHTML =
-        usable.map(
-            message => `
+        usable
+            .map(
+                message => `
 
-                <div class="message-row">
+                    <div class="message-row">
 
-                    <div class="message-top">
+                        <div class="message-top">
 
-                        <div class="message-text">
-                            ${escapeHtml(
-                                message.message
-                            )}
+                            <div class="message-text">
+                                ${escapeHtml(
+                                    message.message
+                                )}
+                            </div>
+
+                            <div class="message-rate">
+                                ${Number(
+                                    message.reply_rate_percent ||
+                                    0
+                                ).toFixed(2)}%
+                            </div>
+
                         </div>
 
-                        <div class="message-rate">
-                            ${message.reply_rate_percent}%
+                        <div class="message-meta">
+
+                            ${Number(
+                                message.times_sent ||
+                                0
+                            )} sends
+
+                            ·
+
+                            ${Number(
+                                message.replies ||
+                                0
+                            )} replies
+
                         </div>
 
                     </div>
 
-                    <div class="message-meta">
-
-                        ${message.times_sent} sends
-                        ·
-                        ${message.replies} replies
-
-                    </div>
-
-                </div>
-
-            `
-        ).join("");
+                `
+            )
+            .join("");
 
 }
+
+
+/* =========================================================
+   INSIGHTS
+========================================================= */
 
 
 function renderInsights(items) {
@@ -791,7 +1437,22 @@ function renderInsights(items) {
         );
 
 
-    if (!items.length) {
+    const usable =
+        Array.isArray(items)
+            ? items.filter(
+                item =>
+                    item &&
+                    (
+                        item.title ||
+                        item.description
+                    )
+            )
+            : [];
+
+
+    if (
+        !usable.length
+    ) {
 
         container.innerHTML = `
             <div class="empty">
@@ -805,7 +1466,7 @@ function renderInsights(items) {
 
 
     container.innerHTML =
-        items
+        usable
             .slice(0, 5)
             .map(
                 item => `
@@ -814,13 +1475,15 @@ function renderInsights(items) {
 
                         <div class="insight-title">
                             ${escapeHtml(
-                                item.title
+                                item.title ||
+                                "Insight"
                             )}
                         </div>
 
                         <div class="insight-description">
                             ${escapeHtml(
-                                item.description
+                                item.description ||
+                                ""
                             )}
                         </div>
 
@@ -833,6 +1496,11 @@ function renderInsights(items) {
 }
 
 
+/* =========================================================
+   RECOMMENDATIONS
+========================================================= */
+
+
 function renderRecommendations(items) {
 
     const container =
@@ -841,7 +1509,22 @@ function renderRecommendations(items) {
         );
 
 
-    if (!items.length) {
+    const usable =
+        Array.isArray(items)
+            ? items.filter(
+                item =>
+                    item &&
+                    (
+                        item.title ||
+                        item.description
+                    )
+            )
+            : [];
+
+
+    if (
+        !usable.length
+    ) {
 
         container.innerHTML = `
             <div class="empty">
@@ -855,7 +1538,7 @@ function renderRecommendations(items) {
 
 
     container.innerHTML =
-        items
+        usable
             .slice(0, 5)
             .map(
                 item => `
@@ -865,7 +1548,8 @@ function renderRecommendations(items) {
                         <div class="action-title">
 
                             ${escapeHtml(
-                                item.title
+                                item.title ||
+                                "Recommended action"
                             )}
 
                         </div>
@@ -873,7 +1557,8 @@ function renderRecommendations(items) {
                         <div class="action-description">
 
                             ${escapeHtml(
-                                item.description
+                                item.description ||
+                                ""
                             )}
 
                         </div>
@@ -896,49 +1581,156 @@ function renderRecommendations(items) {
 }
 
 
+/* =========================================================
+   TIME FORMAT
+========================================================= */
+
+
 function formatTime(seconds) {
 
-    seconds = Number(seconds);
+    seconds =
+        Number(seconds);
 
-    if (!Number.isFinite(seconds)) {
+
+    if (
+        !Number.isFinite(seconds)
+    ) {
+
         return "N/A";
+
     }
 
-    if (seconds < 60) {
+
+    if (
+        seconds < 60
+    ) {
+
         return `${Math.round(seconds)}s`;
+
     }
+
 
     const minutes =
-        Math.floor(seconds / 60);
+        Math.floor(
+            seconds / 60
+        );
+
 
     const remaining =
-        Math.round(seconds % 60);
+        Math.round(
+            seconds % 60
+        );
 
-    if (remaining === 0) {
+
+    if (
+        remaining === 0
+    ) {
+
         return `${minutes}m`;
+
     }
+
 
     return `${minutes}m ${remaining}s`;
 
 }
 
 
+/* =========================================================
+   HTML ESCAPING
+========================================================= */
+
+
 function escapeHtml(value) {
 
     const div =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     div.textContent =
         value ?? "";
+
 
     return div.innerHTML;
 
 }
 
 
-loadDashboard();
+/* =========================================================
+   START APPLICATION
+========================================================= */
+
+
+async function initialize() {
+
+    const authenticated =
+        await checkAuthentication();
+
+
+    if (!authenticated) {
+
+        /*
+            Network errors are handled here
+            without showing the dashboard.
+        */
+
+        const loading =
+            document.getElementById(
+                "authLoading"
+            );
+
+
+        if (loading) {
+
+            loading.textContent =
+                "Unable to connect to Creator OS. Retrying...";
+
+        }
+
+
+        /*
+            Retry once after Render has had
+            time to wake up.
+        */
+
+        await new Promise(
+            resolve =>
+                setTimeout(
+                    resolve,
+                    2000
+                )
+        );
+
+
+        const retry =
+            await checkAuthentication();
+
+
+        if (!retry) {
+
+            redirectToLogin();
+
+            return;
+
+        }
+
+    }
+
+
+    showApp();
+
+
+    await loadDashboard();
+
+}
+
+
+initialize();
 
 </script>
+
 
 </body>
 
