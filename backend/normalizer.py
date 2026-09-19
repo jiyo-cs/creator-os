@@ -1,8 +1,9 @@
 import csv
 import io
 import json
+import re
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 FIELD_ALIASES = {
@@ -14,62 +15,95 @@ FIELD_ALIASES = {
         "subscriber",
         "customer_id",
         "fan_id",
+        "member_id",
     ],
-
     "sender": [
         "sender",
         "from",
         "author",
         "role",
         "type",
+        "sender_type",
+        "message_sender",
     ],
-
     "text": [
         "text",
         "message",
         "content",
         "body",
+        "message_text",
     ],
-
     "timestamp": [
         "timestamp",
         "created_at",
+        "created",
         "date",
         "datetime",
         "time",
+        "sent_at",
+        "created_date",
     ],
 }
 
 
+def clean_string(value):
+
+    if value is None:
+        return None
+
+    value = str(value).strip()
+
+    if not value:
+        return None
+
+    return value
+
+
+def normalize_key(value):
+
+    if value is None:
+        return ""
+
+    value = str(value).strip().lower()
+
+    value = re.sub(
+        r"[\s\-]+",
+        "_",
+        value
+    )
+
+    return value
+
+
 def find_field(row, field_name):
 
-    aliases = FIELD_ALIASES[field_name]
-
-    normalized_row = {
-        str(key).strip().lower():
-        value
-        for key, value in row.items()
+    aliases = {
+        normalize_key(alias)
+        for alias in FIELD_ALIASES[field_name]
     }
 
-    for alias in aliases:
+    for key, value in row.items():
 
-        if alias in normalized_row:
+        normalized_key = normalize_key(key)
 
-            value = normalized_row[alias]
+        if normalized_key in aliases:
 
-            if value is not None and str(value).strip():
+            cleaned = clean_string(value)
 
-                return str(value).strip()
+            if cleaned is not None:
+                return cleaned
 
     return None
 
 
 def normalize_sender(value):
 
+    value = clean_string(value)
+
     if not value:
         return None
 
-    value = value.lower().strip()
+    value = value.lower()
 
     creator_values = {
         "creator",
@@ -79,6 +113,10 @@ def normalize_sender(value):
         "self",
         "model",
         "account",
+        "operator",
+        "staff",
+        "you",
+        "assistant",
     }
 
     subscriber_values = {
@@ -88,6 +126,10 @@ def normalize_sender(value):
         "customer",
         "member",
         "client",
+        "buyer",
+        "follower",
+        "them",
+        "other",
     }
 
     if value in creator_values:
@@ -101,6 +143,8 @@ def normalize_sender(value):
 
 def normalize_timestamp(value):
 
+    value = clean_string(value)
+
     if not value:
         return None
 
@@ -113,6 +157,10 @@ def normalize_timestamp(value):
         "%Y-%m-%d %H:%M",
         "%d/%m/%Y %H:%M:%S",
         "%d/%m/%Y %H:%M",
+        "%m/%d/%Y %H:%M:%S",
+        "%m/%d/%Y %H:%M",
+        "%Y/%m/%d %H:%M:%S",
+        "%Y/%m/%d %H:%M",
     ]
 
     for date_format in formats:
@@ -124,22 +172,57 @@ def normalize_timestamp(value):
                 date_format
             )
 
-            return parsed.isoformat()
+            return parsed.replace(
+                tzinfo=timezone.utc
+            ).isoformat()
 
         except ValueError:
             continue
 
     try:
 
-        parsed = datetime.fromisoformat(
-            value.replace("Z", "+00:00")
+        normalized = value.replace(
+            "Z",
+            "+00:00"
         )
+
+        parsed = datetime.fromisoformat(
+            normalized
+        )
+
+        if parsed.tzinfo is None:
+
+            parsed = parsed.replace(
+                tzinfo=timezone.utc
+            )
+
+        else:
+
+            parsed = parsed.astimezone(
+                timezone.utc
+            )
 
         return parsed.isoformat()
 
     except ValueError:
 
-        return value
+        return None
+
+
+def normalize_text(value):
+
+    value = clean_string(value)
+
+    if not value:
+        return None
+
+    value = re.sub(
+        r"\s+",
+        " ",
+        value
+    )
+
+    return value
 
 
 def normalize_message(row):
@@ -176,19 +259,50 @@ def normalize_message(row):
     if not timestamp:
         return None
 
+    normalized_sender = normalize_sender(
+        sender
+    )
+
+    normalized_text = normalize_text(
+        text
+    )
+
+    normalized_timestamp = normalize_timestamp(
+        timestamp
+    )
+
+    if not normalized_sender:
+        return None
+
+    if not normalized_text:
+        return None
+
+    if not normalized_timestamp:
+        return None
+
     return {
         "subscriber_id":
             subscriber_id,
 
         "sender":
-            normalize_sender(sender),
+            normalized_sender,
 
         "text":
-            text,
+            normalized_text,
 
         "timestamp":
-            normalize_timestamp(timestamp),
+            normalized_timestamp,
     }
+
+
+def message_fingerprint(message):
+
+    return (
+        message["subscriber_id"],
+        message["sender"],
+        message["text"].strip().lower(),
+        message["timestamp"],
+    )
 
 
 def group_messages(rows):
@@ -197,15 +311,34 @@ def group_messages(rows):
 
     skipped = 0
 
+    seen = set()
+
     for row in rows:
 
-        message = normalize_message(row)
+        if not isinstance(row, dict):
+
+            skipped += 1
+            continue
+
+        message = normalize_message(
+            row
+        )
 
         if not message:
 
             skipped += 1
-
             continue
+
+        fingerprint = message_fingerprint(
+            message
+        )
+
+        if fingerprint in seen:
+
+            skipped += 1
+            continue
+
+        seen.add(fingerprint)
 
         subscriber_id = message.pop(
             "subscriber_id"
@@ -234,24 +367,83 @@ def group_messages(rows):
             }
         )
 
+    result.sort(
+        key=lambda conversation:
+            conversation["subscriber_id"]
+    )
+
     return result, skipped
 
 
 def normalize_json(data):
 
-    # Already in Creator OS format
-
     if isinstance(data, dict):
 
         if "conversations" in data:
 
-            return data["conversations"], 0
+            raw_conversations = data[
+                "conversations"
+            ]
+
+            if not isinstance(
+                raw_conversations,
+                list
+            ):
+                raise ValueError(
+                    "'conversations' must be a list"
+                )
+
+            rows = []
+
+            for conversation in raw_conversations:
+
+                if not isinstance(
+                    conversation,
+                    dict
+                ):
+                    continue
+
+                subscriber_id = (
+                    conversation.get(
+                        "subscriber_id"
+                    )
+                    or conversation.get(
+                        "user_id"
+                    )
+                    or conversation.get(
+                        "username"
+                    )
+                )
+
+                messages = conversation.get(
+                    "messages",
+                    []
+                )
+
+                if not subscriber_id:
+                    continue
+
+                for message in messages:
+
+                    if not isinstance(
+                        message,
+                        dict
+                    ):
+                        continue
+
+                    rows.append(
+                        {
+                            **message,
+                            "subscriber_id":
+                                subscriber_id,
+                        }
+                    )
+
+            return group_messages(rows)
 
         if "messages" in data:
 
             data = data["messages"]
-
-    # Flat message list
 
     if isinstance(data, list):
 
@@ -264,15 +456,36 @@ def normalize_json(data):
 
 def normalize_csv(content):
 
-    text = content.decode(
-        "utf-8-sig"
-    )
+    try:
+
+        text = content.decode(
+            "utf-8-sig"
+        )
+
+    except UnicodeDecodeError:
+
+        text = content.decode(
+            "utf-8",
+            errors="replace"
+        )
 
     reader = csv.DictReader(
         io.StringIO(text)
     )
 
+    if not reader.fieldnames:
+
+        raise ValueError(
+            "CSV file has no header row"
+        )
+
     rows = list(reader)
+
+    if not rows:
+
+        raise ValueError(
+            "CSV file contains no data rows"
+        )
 
     return group_messages(rows)
 
@@ -282,7 +495,13 @@ def normalize_file(
     content
 ):
 
-    filename = filename.lower()
+    if not filename:
+
+        raise ValueError(
+            "Filename is required"
+        )
+
+    filename = filename.lower().strip()
 
     if filename.endswith(".csv"):
 
@@ -292,9 +511,25 @@ def normalize_file(
 
     if filename.endswith(".json"):
 
-        data = json.loads(
-            content.decode("utf-8")
-        )
+        try:
+
+            data = json.loads(
+                content.decode(
+                    "utf-8-sig"
+                )
+            )
+
+        except UnicodeDecodeError:
+
+            raise ValueError(
+                "JSON file must be UTF-8 encoded"
+            )
+
+        except json.JSONDecodeError:
+
+            raise ValueError(
+                "Invalid JSON file"
+            )
 
         return normalize_json(
             data
