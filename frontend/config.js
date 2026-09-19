@@ -1,20 +1,35 @@
+/* =========================
+   CREATOR OS API
+========================= */
+
 const API_URL =
     "https://creator-os-api-2bb9.onrender.com";
 
 
-const originalFetch =
-    window.fetch;
+/* =========================
+   AUTHENTICATED FETCH
+========================= */
 
-
-window.fetch = function (
-    input,
-    init = {}
+async function apiFetch(
+    path,
+    options = {}
 ) {
 
-    init.credentials = "include";
+    const requestOptions = {
+        ...options,
 
-    return originalFetch(
-        input,
-        init
+        credentials:
+            "include",
+
+        headers: {
+            ...(options.headers || {})
+        }
+    };
+
+
+    return fetch(
+        `${API_URL}${path}`,
+        requestOptions
     );
-};
+
+}
