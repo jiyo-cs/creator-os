@@ -379,6 +379,50 @@ def record_experiment_conversion(
         "subscriber_id": subscriber_id,
         "variant": variant,
     }
+@app.post("/api/webhooks/conversion")
+def conversion_webhook(data: dict):
+
+    subscriber_id = data.get("subscriber_id")
+
+    if not subscriber_id:
+
+        raise HTTPException(
+            status_code=400,
+            detail="subscriber_id is required",
+        )
+
+    experiments = get_experiments()
+
+    recorded = []
+
+    for experiment in experiments:
+
+        if experiment["status"] != "running":
+            continue
+
+        variant = record_conversion(
+            experiment["id"],
+            str(subscriber_id),
+        )
+
+        if variant:
+
+            recorded.append(
+                {
+                    "experiment_id":
+                        experiment["id"],
+                    "variant":
+                        variant,
+                }
+            )
+
+    return {
+        "status": "processed",
+        "subscriber_id":
+            subscriber_id,
+        "conversions":
+            recorded,
+    }
     
 @app.get("/api/status")
 def api_status():
