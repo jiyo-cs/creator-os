@@ -44,7 +44,9 @@
                 sans-serif;
 
             color: #111;
+
         }
+
 
         .login {
 
@@ -53,14 +55,18 @@
             max-width: 390px;
 
             padding: 24px;
+
         }
+
 
         .brand {
 
             text-align: center;
 
             margin-bottom: 32px;
+
         }
+
 
         .brand h1 {
 
@@ -69,7 +75,9 @@
             font-size: 28px;
 
             letter-spacing: -1px;
+
         }
+
 
         .brand p {
 
@@ -78,7 +86,9 @@
             color: #777;
 
             font-size: 14px;
+
         }
+
 
         .card {
 
@@ -93,7 +103,9 @@
             box-shadow:
                 0 12px 40px
                 rgba(0,0,0,0.06);
+
         }
+
 
         label {
 
@@ -104,7 +116,9 @@
             font-size: 13px;
 
             font-weight: 600;
+
         }
+
 
         input {
 
@@ -121,12 +135,16 @@
             font-size: 15px;
 
             margin-bottom: 18px;
+
         }
+
 
         input:focus {
 
             border-color: #111;
+
         }
+
 
         button {
 
@@ -147,14 +165,18 @@
             font-weight: 600;
 
             cursor: pointer;
+
         }
+
 
         button:disabled {
 
             opacity: 0.5;
 
             cursor: wait;
+
         }
+
 
         .error {
 
@@ -171,15 +193,21 @@
             color: #b00020;
 
             font-size: 13px;
+
+            line-height: 1.4;
+
         }
 
     </style>
 
 </head>
 
+
 <body>
 
+
     <main class="login">
+
 
         <div class="brand">
 
@@ -196,6 +224,7 @@
 
         <div class="card">
 
+
             <div
                 id="error"
                 class="error"
@@ -204,9 +233,11 @@
 
             <form id="loginForm">
 
-                <label>
+
+                <label for="email">
                     Email
                 </label>
+
 
                 <input
                     id="email"
@@ -216,9 +247,10 @@
                 >
 
 
-                <label>
+                <label for="password">
                     Password
                 </label>
+
 
                 <input
                     id="password"
@@ -235,29 +267,84 @@
                     Sign in
                 </button>
 
+
             </form>
 
+
         </div>
+
 
     </main>
 
 
     <script>
 
+
+        /* =========================
+           ELEMENTS
+        ========================= */
+
+
         const form =
             document.getElementById(
                 "loginForm"
             );
+
 
         const error =
             document.getElementById(
                 "error"
             );
 
+
         const button =
             document.getElementById(
                 "loginButton"
             );
+
+
+        const emailInput =
+            document.getElementById(
+                "email"
+            );
+
+
+        const passwordInput =
+            document.getElementById(
+                "password"
+            );
+
+
+        /* =========================
+           ERROR DISPLAY
+        ========================= */
+
+
+        function showError(message) {
+
+            error.textContent =
+                message;
+
+            error.style.display =
+                "block";
+
+        }
+
+
+        function hideError() {
+
+            error.textContent =
+                "";
+
+            error.style.display =
+                "none";
+
+        }
+
+
+        /* =========================
+           SESSION CHECK
+        ========================= */
 
 
         async function checkExistingSession() {
@@ -266,30 +353,45 @@
 
                 const response =
                     await fetch(
-                        `${API_URL}/api/auth/me`
+                        `${API_URL}/api/auth/me`,
+                        {
+                            method: "GET",
+                            credentials: "include"
+                        }
                     );
 
-                if (
-                    response.ok
-                ) {
 
-                    window.location.href =
-                        "index.html";
+                if (response.ok) {
+
+                    window.location.replace(
+                        "index.html"
+                    );
+
+                    return true;
 
                 }
 
-            } catch (error) {
+
+                return false;
+
+
+            } catch (sessionError) {
 
                 console.error(
-                    error
+                    "Session check failed:",
+                    sessionError
                 );
+
+                return false;
 
             }
 
         }
 
 
-        checkExistingSession();
+        /* =========================
+           LOGIN
+        ========================= */
 
 
         form.addEventListener(
@@ -298,22 +400,41 @@
 
                 event.preventDefault();
 
-                error.style.display =
-                    "none";
 
-                button.disabled = true;
+                hideError();
+
+
+                button.disabled =
+                    true;
 
                 button.textContent =
                     "Signing in...";
 
 
+                const email =
+                    emailInput.value.trim();
+
+
+                const password =
+                    passwordInput.value;
+
+
                 try {
+
+
+                    /* =====================
+                       LOGIN REQUEST
+                    ===================== */
+
 
                     const response =
                         await fetch(
                             `${API_URL}/api/auth/login`,
                             {
                                 method: "POST",
+
+                                credentials:
+                                    "include",
 
                                 headers: {
                                     "Content-Type":
@@ -323,60 +444,138 @@
                                 body:
                                     JSON.stringify({
                                         email:
-                                            document
-                                                .getElementById(
-                                                    "email"
-                                                )
-                                                .value,
+                                            email,
 
                                         password:
-                                            document
-                                                .getElementById(
-                                                    "password"
-                                                )
-                                                .value
+                                            password
                                     })
+
                             }
                         );
 
 
-                    const data =
-                        await response.json();
+                    let data = {};
+
+
+                    try {
+
+                        data =
+                            await response.json();
+
+                    } catch (jsonError) {
+
+                        data = {};
+
+                    }
 
 
                     if (!response.ok) {
 
                         throw new Error(
                             data.detail ||
-                            "Login failed"
+                            "Invalid email or password"
                         );
 
                     }
 
 
-                    window.location.href =
-                        "index.html";
+                    /* =====================
+                       VERIFY SESSION
+                    ===================== */
+
+
+                    button.textContent =
+                        "Verifying...";
+
+
+                    const sessionResponse =
+                        await fetch(
+                            `${API_URL}/api/auth/me`,
+                            {
+                                method: "GET",
+                                credentials:
+                                    "include"
+                            }
+                        );
+
+
+                    if (
+                        !sessionResponse.ok
+                    ) {
+
+                        throw new Error(
+                            "Login succeeded, but the session could not be verified."
+                        );
+
+                    }
+
+
+                    const sessionData =
+                        await sessionResponse.json();
+
+
+                    if (
+                        !sessionData.authenticated
+                    ) {
+
+                        throw new Error(
+                            "Session verification failed."
+                        );
+
+                    }
+
+
+                    /* =====================
+                       SUCCESS
+                    ===================== */
+
+
+                    button.textContent =
+                        "Success";
+
+
+                    window.location.replace(
+                        "index.html"
+                    );
 
 
                 } catch (loginError) {
 
-                    error.textContent =
-                        loginError.message;
 
-                    error.style.display =
-                        "block";
+                    console.error(
+                        "Login error:",
+                        loginError
+                    );
+
+
+                    showError(
+                        loginError.message ||
+                        "Unable to sign in."
+                    );
+
 
                     button.disabled =
                         false;
 
                     button.textContent =
                         "Sign in";
+
                 }
 
             }
         );
 
+
+        /* =========================
+           INITIAL SESSION CHECK
+        ========================= */
+
+
+        checkExistingSession();
+
+
     </script>
+
 
 </body>
 
