@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 
 def format_duration(seconds):
@@ -20,6 +20,14 @@ def format_duration(seconds):
     return f"{minutes}m {remaining}s"
 
 
+def make_utc_aware(timestamp):
+
+    if timestamp.tzinfo is None:
+        return timestamp.replace(tzinfo=timezone.utc)
+
+    return timestamp.astimezone(timezone.utc)
+
+
 def filter_conversations(
     conversations,
     days=None
@@ -29,7 +37,7 @@ def filter_conversations(
         return conversations
 
     cutoff = (
-        datetime.utcnow()
+        datetime.now(timezone.utc)
         - timedelta(days=days)
     )
 
@@ -41,7 +49,9 @@ def filter_conversations(
 
         for message in conversation.messages:
 
-            timestamp = message.timestamp
+            timestamp = make_utc_aware(
+                message.timestamp
+            )
 
             if timestamp >= cutoff:
                 recent_messages.append(
@@ -122,7 +132,9 @@ def generate_report(
         "report": {
 
             "generated_at":
-                datetime.utcnow().isoformat(),
+                datetime.now(
+                    timezone.utc
+                ).isoformat(),
 
             "period":
                 period,
