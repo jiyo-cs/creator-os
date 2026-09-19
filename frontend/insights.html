@@ -1,368 +1,359 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
 
-<meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
-
-<title>Creator OS — AI Insights</title>
-
-<style>
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-body {
-
-    font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Inter",
-        sans-serif;
-
-    background: #f5f5f7;
-
-    color: #111;
-
-}
-
-
-/* NAVIGATION */
-
-#appNav {
-    position: relative;
-    z-index: 100;
-}
-
-.sidebar {
-
-    width: 240px;
-
-    background: #111;
-
-    color: white;
-
-    padding: 24px 16px;
-
-    position: fixed;
-
-    height: 100vh;
-
-    top: 0;
-
-    left: 0;
-
-}
-
-.logo {
-
-    font-size: 22px;
-
-    font-weight: 700;
-
-    margin-bottom: 40px;
-
-    padding-left: 12px;
-
-}
-
-.nav {
-
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 6px;
-
-}
-
-.nav a {
-
-    text-decoration: none;
-
-    color: #aaa;
-
-    padding: 12px;
-
-    border-radius: 10px;
-
-    font-size: 14px;
-
-    display: block;
-
-}
-
-.nav a:hover,
-.nav a.active {
-
-    background: #222;
-
-    color: white;
-
-}
-
-
-/* MAIN */
-
-.container {
-
-    max-width: 1100px;
-
-    margin-left: 240px;
-
-    padding: 40px 20px;
-
-}
-
-
-/* HEADER */
-
-.header {
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    margin-bottom: 30px;
-
-}
-
-.header h1 {
-
-    margin: 0;
-
-    font-size: 30px;
-
-    letter-spacing: -0.5px;
-
-}
-
-.header p {
-
-    margin-top: 8px;
-
-    color: #777;
-
-}
-
-
-/* SECTIONS */
-
-.section {
-
-    margin-bottom: 35px;
-
-}
-
-.section h2 {
-
-    margin-bottom: 15px;
-
-    font-size: 20px;
-
-}
-
-
-/* CARDS */
-
-.card {
-
-    background: white;
-
-    border-radius: 16px;
-
-    padding: 22px;
-
-    margin-bottom: 14px;
-
-    border: 1px solid #e8e8e8;
-
-}
-
-.card h3 {
-
-    margin: 0 0 8px;
-
-    font-size: 17px;
-
-}
-
-.card p {
-
-    margin: 0;
-
-    color: #666;
-
-    line-height: 1.5;
-
-}
-
-.positive {
-
-    border-left: 5px solid #222;
-
-}
-
-.warning {
-
-    border-left: 5px solid #777;
-
-}
-
-.neutral {
-
-    border-left: 5px solid #aaa;
-
-}
-
-
-/* PRIORITY */
-
-.priority {
-
-    display: inline-block;
-
-    margin-bottom: 10px;
-
-    font-size: 12px;
-
-    font-weight: bold;
-
-    text-transform: uppercase;
-
-}
-
-
-/* EMPTY */
-
-.empty {
-
-    background: white;
-
-    padding: 30px;
-
-    border-radius: 16px;
-
-    color: #777;
-
-    border: 1px solid #e8e8e8;
-
-}
-
-
-/* TABLET */
-
-@media (max-width: 900px) {
-
-    .sidebar {
-
-        width: 100%;
-
-        height: auto;
-
-        padding: 12px;
-
-        display: flex;
-
-        align-items: center;
-
-        gap: 16px;
-
-        overflow-x: auto;
-
-    }
-
-    .logo {
-
-        font-size: 18px;
-
-        margin: 0;
-
-        padding: 0;
-
-        flex-shrink: 0;
-
-    }
-
-    .nav {
-
-        flex-direction: row;
-
-        gap: 6px;
-
-        overflow-x: auto;
-
-    }
-
-    .nav a {
-
-        white-space: nowrap;
-
-        padding: 9px 12px;
-
-    }
-
-    .container {
-
-        margin-left: 0;
-
-        padding: 100px 20px 30px;
-
-    }
-
-}
-
-
-/* PHONE */
-
-@media (max-width: 600px) {
-
-    .container {
-
-        padding: 85px 16px 20px;
-
-    }
-
-    .header {
-
-        align-items: flex-start;
-
-    }
-
-    .header h1 {
-
-        font-size: 27px;
-
-    }
-
-    .header p {
-
-        font-size: 14px;
-
-        line-height: 1.4;
-
-    }
-
-    .card {
-
-        padding: 18px;
-
-    }
-
-}
-
-</style>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Creator OS — AI Insights</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Inter",
+                sans-serif;
+
+            background: #f5f5f7;
+            color: #111;
+        }
+
+        .sidebar {
+            width: 230px;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background: #111;
+            color: white;
+            padding: 28px 16px;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            padding: 0 12px 30px;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .nav a {
+            color: #aaa;
+            text-decoration: none;
+            padding: 11px 12px;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: .2s;
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            background: #222;
+            color: white;
+        }
+
+        .main {
+            margin-left: 230px;
+            padding: 34px;
+            max-width: 1500px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 28px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            letter-spacing: -1px;
+        }
+
+        .header p {
+            color: #777;
+            margin-top: 7px;
+        }
+
+        .status {
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 10px;
+            padding: 9px 13px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .overview {
+            display: grid;
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 16px;
+            padding: 21px;
+        }
+
+        .label {
+            color: #777;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .value {
+            font-size: 27px;
+            font-weight: 700;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns:
+                1.4fr 1fr;
+
+            gap: 18px;
+        }
+
+        .panel {
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 16px;
+            padding: 22px;
+        }
+
+        .panel h2 {
+            font-size: 18px;
+            margin-bottom: 18px;
+        }
+
+        .insight {
+            border: 1px solid #eee;
+            border-radius: 13px;
+            padding: 16px;
+            margin-bottom: 11px;
+        }
+
+        .insight:last-child {
+            margin-bottom: 0;
+        }
+
+        .insight-title {
+            font-weight: 650;
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+
+        .insight-description {
+            color: #666;
+            font-size: 13px;
+            line-height: 1.55;
+        }
+
+        .type {
+            display: inline-block;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            padding: 4px 7px;
+            border-radius: 6px;
+            background: #f0f0f0;
+            color: #666;
+            margin-bottom: 9px;
+        }
+
+        .recommendation {
+            padding: 16px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .recommendation:first-child {
+            padding-top: 0;
+        }
+
+        .recommendation:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .recommendation-title {
+            font-size: 14px;
+            font-weight: 650;
+        }
+
+        .recommendation-description {
+            color: #666;
+            font-size: 13px;
+            line-height: 1.55;
+            margin-top: 6px;
+        }
+
+        .priority {
+            display: inline-block;
+            margin-top: 9px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            background: #f0f0f0;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+        }
+
+        .performance {
+            margin-top: 18px;
+        }
+
+        .performance-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .performance-card {
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 16px;
+            padding: 22px;
+        }
+
+        .performance-label {
+            color: #777;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .performance-message {
+            font-size: 15px;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .performance-stat {
+            font-size: 25px;
+            font-weight: 700;
+        }
+
+        .performance-meta {
+            color: #888;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .empty {
+            color: #888;
+            font-size: 14px;
+            padding: 12px 0;
+        }
+
+        .error {
+            color: #a33;
+        }
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: fixed;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 10px;
+                overflow-x: auto;
+            }
+
+            .logo {
+                padding: 0 6px;
+                flex-shrink: 0;
+            }
+
+            .nav {
+                flex-direction: row;
+                overflow-x: auto;
+            }
+
+            .nav a {
+                white-space: nowrap;
+                padding: 9px 11px;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 82px 20px 25px;
+            }
+
+            .overview {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .content {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            .main {
+                padding: 78px 15px 20px;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 14px;
+            }
+
+            .header h1 {
+                font-size: 27px;
+            }
+
+            .status {
+                width: 100%;
+            }
+
+            .overview {
+                grid-template-columns: 1fr 1fr;
+                gap: 9px;
+            }
+
+            .card {
+                padding: 16px;
+            }
+
+            .value {
+                font-size: 22px;
+            }
+
+            .performance-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
 
 </head>
 
@@ -370,17 +361,58 @@ body {
 <body>
 
 
-<!-- SHARED NAVIGATION -->
+<aside class="sidebar">
 
-<div id="appNav"></div>
+    <div class="logo">
+        Creator OS
+    </div>
+
+    <nav class="nav">
+
+        <a href="index.html">
+            Overview
+        </a>
+
+        <a href="messages.html">
+            DM Analytics
+        </a>
+
+        <a href="conversations.html">
+            Conversations
+        </a>
+
+        <a href="sequences.html">
+            Sequences
+        </a>
+
+        <a
+            href="insights.html"
+            class="active"
+        >
+            AI Insights
+        </a>
+
+        <a href="experiments.html">
+            Experiments
+        </a>
+
+        <a href="reports.html">
+            Reports
+        </a>
+
+        <a href="import.html">
+            Import Data
+        </a>
+
+    </nav>
+
+</aside>
 
 
-<!-- MAIN CONTENT -->
-
-<div class="container">
+<main class="main">
 
 
-    <div class="header">
+    <header class="header">
 
         <div>
 
@@ -389,83 +421,173 @@ body {
             </h1>
 
             <p>
-                DM performance analysis and recommendations
+                Data-driven analysis of creator conversations.
             </p>
 
         </div>
 
-    </div>
+        <div
+            id="status"
+            class="status"
+        >
+            Loading analysis...
+        </div>
+
+    </header>
 
 
-    <!-- INSIGHTS -->
+    <!-- OVERVIEW -->
 
-    <div class="section">
-
-        <h2>
-            Insights
-        </h2>
+    <section class="overview">
 
 
-        <div id="insights">
+        <div class="card">
 
-            <div class="empty">
-                Loading insights...
+            <div class="label">
+                Conversations Analyzed
+            </div>
+
+            <div
+                id="total"
+                class="value"
+            >
+                —
             </div>
 
         </div>
 
-    </div>
 
+        <div class="card">
 
-    <!-- RECOMMENDATIONS -->
+            <div class="label">
+                Reply Rate
+            </div>
 
-    <div class="section">
-
-        <h2>
-            Recommended Experiments
-        </h2>
-
-
-        <div id="recommendations">
-
-            <div class="empty">
-                Loading recommendations...
+            <div
+                id="replyRate"
+                class="value"
+            >
+                —
             </div>
 
         </div>
 
-    </div>
+
+        <div class="card">
+
+            <div class="label">
+                Avg Response Time
+            </div>
+
+            <div
+                id="responseTime"
+                class="value"
+            >
+                —
+            </div>
+
+        </div>
 
 
-</div>
+    </section>
 
 
-<!-- CONFIG -->
+    <!-- INSIGHTS + RECOMMENDATIONS -->
+
+    <section class="content">
+
+
+        <div class="panel">
+
+            <h2>
+                Detected Insights
+            </h2>
+
+            <div id="insights">
+
+                <div class="empty">
+                    Loading...
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="panel">
+
+            <h2>
+                Recommended Actions
+            </h2>
+
+            <div id="recommendations">
+
+                <div class="empty">
+                    Loading...
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- MESSAGE PERFORMANCE -->
+
+    <section class="performance">
+
+        <div class="performance-grid">
+
+
+            <div
+                id="bestMessage"
+                class="performance-card"
+            >
+
+                <div class="performance-label">
+                    BEST PERFORMING MESSAGE
+                </div>
+
+                <div class="empty">
+                    Loading...
+                </div>
+
+            </div>
+
+
+            <div
+                id="worstMessage"
+                class="performance-card"
+            >
+
+                <div class="performance-label">
+                    LOWEST PERFORMING MESSAGE
+                </div>
+
+                <div class="empty">
+                    Loading...
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+</main>
+
 
 <script src="config.js"></script>
 
 
-<!-- SHARED NAV -->
-
-<script src="nav.js"></script>
-
-
-<!-- PAGE SCRIPT -->
-
 <script>
 
+
 async function loadInsights() {
-
-    const insightsContainer =
-        document.getElementById(
-            "insights"
-        );
-
-    const recommendationsContainer =
-        document.getElementById(
-            "recommendations"
-        );
-
 
     try {
 
@@ -478,7 +600,7 @@ async function loadInsights() {
         if (!response.ok) {
 
             throw new Error(
-                "API request failed"
+                "Insights request failed"
             );
 
         }
@@ -488,178 +610,324 @@ async function loadInsights() {
             await response.json();
 
 
-        const insights =
-            data.insights || [];
-
-
-        const recommendations =
-            data.recommendations || [];
-
-
-        /* INSIGHTS */
-
-        if (!insights.length) {
-
-            insightsContainer.innerHTML = `
-
-                <div class="empty">
-
-                    No insights available yet.
-                    Import conversation data first.
-
-                </div>
-
-            `;
-
-        } else {
-
-            insightsContainer.innerHTML = "";
-
-
-            insights.forEach(insight => {
-
-                const card =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                card.className =
-                    `card ${insight.type || "neutral"}`;
-
-
-                card.innerHTML = `
-
-                    <h3>
-
-                        ${escapeHtml(
-                            insight.title
-                        )}
-
-                    </h3>
-
-
-                    <p>
-
-                        ${escapeHtml(
-                            insight.description
-                        )}
-
-                    </p>
-
-                `;
-
-
-                insightsContainer.appendChild(
-                    card
-                );
-
-            });
-
-        }
-
-
-        /* RECOMMENDATIONS */
-
-        if (!recommendations.length) {
-
-            recommendationsContainer.innerHTML = `
-
-                <div class="empty">
-
-                    No experiment recommendations
-                    available yet.
-
-                </div>
-
-            `;
-
-        } else {
-
-            recommendationsContainer.innerHTML =
-                "";
-
-
-            recommendations.forEach(
-                recommendation => {
-
-                    const card =
-                        document.createElement(
-                            "div"
-                        );
-
-
-                    card.className =
-                        "card";
-
-
-                    card.innerHTML = `
-
-                        <span class="priority">
-
-                            ${escapeHtml(
-                                recommendation.priority
-                            )}
-
-                        </span>
-
-
-                        <h3>
-
-                            ${escapeHtml(
-                                recommendation.title
-                            )}
-
-                        </h3>
-
-
-                        <p>
-
-                            ${escapeHtml(
-                                recommendation.description
-                            )}
-
-                        </p>
-
-                    `;
-
-
-                    recommendationsContainer.appendChild(
-                        card
-                    );
-
-                }
-            );
-
-        }
+        renderOverview(data);
+
+        renderInsights(
+            data.insights || []
+        );
+
+        renderRecommendations(
+            data.recommendations || []
+        );
+
+        renderPerformance(
+            data.insights || []
+        );
+
+
+        document.getElementById(
+            "status"
+        ).textContent =
+            data.overview?.status === "ready"
+            ? "Analysis ready"
+            : "No data";
 
 
     } catch (error) {
 
-        console.error(
-            "Could not load AI insights:",
-            error
+        console.error(error);
+
+        document.getElementById(
+            "status"
+        ).textContent =
+            "Connection error";
+
+
+        document.getElementById(
+            "insights"
+        ).innerHTML = `
+            <div class="empty error">
+                Could not load insights.
+            </div>
+        `;
+
+
+        document.getElementById(
+            "recommendations"
+        ).innerHTML = `
+            <div class="empty error">
+                Could not load recommendations.
+            </div>
+        `;
+
+    }
+
+}
+
+
+function renderOverview(data) {
+
+    const overview =
+        data.overview || {};
+
+
+    document.getElementById(
+        "total"
+    ).textContent =
+        overview.total_conversations ?? 0;
+
+
+    document.getElementById(
+        "replyRate"
+    ).textContent =
+        `${overview.reply_rate_percent ?? 0}%`;
+
+
+    document.getElementById(
+        "responseTime"
+    ).textContent =
+        overview.average_response_time ||
+        "N/A";
+
+}
+
+
+function renderInsights(items) {
+
+    const container =
+        document.getElementById(
+            "insights"
         );
 
 
-        insightsContainer.innerHTML = `
+    if (!items.length) {
 
+        container.innerHTML = `
             <div class="empty">
+                No insights available yet.
+                Import more conversation data.
+            </div>
+        `;
 
-                Could not connect to
-                Creator OS API.
+        return;
+
+    }
+
+
+    container.innerHTML =
+        items.map(
+            item => `
+
+                <div class="insight">
+
+                    <div class="type">
+                        ${escapeHtml(
+                            item.type || "insight"
+                        )}
+                    </div>
+
+                    <div class="insight-title">
+
+                        ${escapeHtml(
+                            item.title
+                        )}
+
+                    </div>
+
+                    <div class="insight-description">
+
+                        ${escapeHtml(
+                            item.description
+                        )}
+
+                    </div>
+
+                </div>
+
+            `
+        ).join("");
+
+}
+
+
+function renderRecommendations(items) {
+
+    const container =
+        document.getElementById(
+            "recommendations"
+        );
+
+
+    if (!items.length) {
+
+        container.innerHTML = `
+            <div class="empty">
+                No recommendations available.
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        items.map(
+            item => `
+
+                <div class="recommendation">
+
+                    <div class="recommendation-title">
+
+                        ${escapeHtml(
+                            item.title
+                        )}
+
+                    </div>
+
+                    <div class="recommendation-description">
+
+                        ${escapeHtml(
+                            item.description
+                        )}
+
+                    </div>
+
+                    <span class="priority">
+
+                        ${escapeHtml(
+                            item.priority ||
+                            "medium"
+                        )}
+
+                    </span>
+
+                </div>
+
+            `
+        ).join("");
+
+}
+
+
+function renderPerformance(items) {
+
+    const best =
+        items.find(
+            item =>
+                item.title ===
+                "Best-performing message"
+        );
+
+
+    const worst =
+        items.find(
+            item =>
+                item.title ===
+                "Lowest-performing message"
+        );
+
+
+    const bestContainer =
+        document.getElementById(
+            "bestMessage"
+        );
+
+    const worstContainer =
+        document.getElementById(
+            "worstMessage"
+        );
+
+
+    if (best && best.data) {
+
+        bestContainer.innerHTML = `
+
+            <div class="performance-label">
+                BEST PERFORMING MESSAGE
+            </div>
+
+            <div class="performance-message">
+
+                "${escapeHtml(
+                    best.data.message
+                )}"
+
+            </div>
+
+            <div class="performance-stat">
+
+                ${best.data.reply_rate_percent}%
+
+            </div>
+
+            <div class="performance-meta">
+
+                Reply rate ·
+                ${best.data.times_sent} sends
 
             </div>
 
         `;
 
+    } else {
 
-        recommendationsContainer.innerHTML = `
+        bestContainer.innerHTML = `
+
+            <div class="performance-label">
+                BEST PERFORMING MESSAGE
+            </div>
 
             <div class="empty">
+                Not enough message data yet.
+            </div>
 
-                Could not load recommendations.
+        `;
 
+    }
+
+
+    if (worst && worst.data) {
+
+        worstContainer.innerHTML = `
+
+            <div class="performance-label">
+                LOWEST PERFORMING MESSAGE
+            </div>
+
+            <div class="performance-message">
+
+                "${escapeHtml(
+                    worst.data.message
+                )}"
+
+            </div>
+
+            <div class="performance-stat">
+
+                ${worst.data.reply_rate_percent}%
+
+            </div>
+
+            <div class="performance-meta">
+
+                Reply rate ·
+                ${worst.data.times_sent} sends
+
+            </div>
+
+        `;
+
+    } else {
+
+        worstContainer.innerHTML = `
+
+            <div class="performance-label">
+                LOWEST PERFORMING MESSAGE
+            </div>
+
+            <div class="empty">
+                Not enough message data yet.
             </div>
 
         `;
@@ -668,8 +936,6 @@ async function loadInsights() {
 
 }
 
-
-/* SECURITY */
 
 function escapeHtml(value) {
 
@@ -683,8 +949,6 @@ function escapeHtml(value) {
 
 }
 
-
-/* LOAD */
 
 loadInsights();
 
