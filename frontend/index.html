@@ -3,721 +3,673 @@
 
 <head>
 
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>Creator OS</title>
-
-    <style>
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family:
-                -apple-system,
-                BlinkMacSystemFont,
-                "Inter",
-                sans-serif;
-
-            background: #f5f5f7;
-            color: #111;
-        }
-
-
-        /* APP */
-
-        .app {
-            display: flex;
-            min-height: 100vh;
-        }
-
-
-        /* SIDEBAR */
-
-        .sidebar {
-            width: 240px;
-            background: #111;
-            color: white;
-            padding: 24px 16px;
-            position: fixed;
-            height: 100vh;
-            z-index: 10;
-        }
-
-
-        .logo {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 40px;
-            padding-left: 12px;
-        }
-
-
-        .nav {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-
-        .nav a {
-            text-decoration: none;
-        }
-
-
-        .nav button {
-            width: 100%;
-            border: none;
-            background: transparent;
-            color: #aaa;
-            text-align: left;
-            padding: 12px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 14px;
-            font-family: inherit;
-        }
-
-
-        .nav button:hover,
-        .nav button.active {
-            background: #222;
-            color: white;
-        }
-
-
-        /* MAIN */
-
-        .main {
-            margin-left: 240px;
-            width: calc(100% - 240px);
-            padding: 32px;
-        }
-
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 32px;
-        }
-
-
-        .header h1 {
-            font-size: 32px;
-            letter-spacing: -1px;
-        }
-
-
-        .header p {
-            color: #777;
-            margin-top: 6px;
-        }
-
-
-        .creator {
-            background: white;
-            padding: 10px 16px;
-            border-radius: 12px;
-            font-size: 14px;
-            border: 1px solid #ddd;
-        }
-
-
-        /* CARDS */
-
-        .cards {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-
-
-        .card {
-            background: white;
-            border: 1px solid #e5e5e5;
-            border-radius: 18px;
-            padding: 22px;
-        }
-
-
-        .card-title {
-            color: #777;
-            font-size: 13px;
-            margin-bottom: 12px;
-        }
-
-
-        .card-value {
-            font-size: 30px;
-            font-weight: 700;
-        }
-
-
-        .card-change {
-            margin-top: 8px;
-            font-size: 12px;
-            color: #777;
-        }
-
-
-        /* GRID */
-
-        .grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 20px;
-        }
-
-
-        .panel {
-            background: white;
-            border: 1px solid #e5e5e5;
-            border-radius: 18px;
-            padding: 24px;
-        }
-
-
-        .panel h2 {
-            font-size: 18px;
-            margin-bottom: 20px;
-        }
-
-
-        /* MESSAGES */
-
-        .message {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px 0;
-            border-bottom: 1px solid #eee;
-        }
-
-
-        .message:last-child {
-            border-bottom: none;
-        }
-
-
-        .message-text {
-            font-size: 14px;
-        }
-
-
-        .message-rate {
-            font-weight: 600;
-        }
-
-
-        /* INSIGHTS */
-
-        .insight {
-            padding: 15px;
-            border-radius: 12px;
-            background: #f6f6f6;
-            margin-bottom: 10px;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-
-        .insight strong {
-            display: block;
-            margin-bottom: 5px;
-        }
-
-
-        /* TABLET */
-
-        @media (max-width: 900px) {
-
-            .sidebar {
-                width: 100%;
-                height: auto;
-                position: fixed;
-                top: 0;
-                left: 0;
-
-                padding: 12px;
-
-                display: flex;
-                align-items: center;
-                gap: 16px;
-
-                overflow-x: auto;
-            }
-
-
-            .logo {
-                font-size: 18px;
-                margin: 0;
-                padding: 0;
-                flex-shrink: 0;
-            }
-
-
-            .nav {
-                flex-direction: row;
-                gap: 6px;
-                overflow-x: auto;
-                flex-shrink: 0;
-            }
-
-
-            .nav button {
-                width: auto;
-                white-space: nowrap;
-                padding: 9px 12px;
-            }
-
-
-            .main {
-                margin-left: 0;
-                width: 100%;
-                padding: 90px 20px 20px;
-            }
-
-
-            .cards {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-
-            .grid {
-                grid-template-columns: 1fr;
-            }
-
-        }
-
-
-        /* PHONE */
-
-        @media (max-width: 600px) {
-
-            .sidebar {
-                padding: 10px;
-                gap: 12px;
-            }
-
-
-            .logo {
-                font-size: 17px;
-            }
-
-
-            .nav button {
-                font-size: 13px;
-                padding: 8px 10px;
-            }
-
-
-            .main {
-                padding: 82px 16px 20px;
-            }
-
-
-            .header {
-                align-items: flex-start;
-            }
-
-
-            .header h1 {
-                font-size: 26px;
-            }
-
-
-            .header p {
-                font-size: 14px;
-            }
-
-
-            .creator {
-                display: none;
-            }
-
-
-            .cards {
-                grid-template-columns: 1fr 1fr;
-                gap: 10px;
-            }
-
-
-            .card {
-                padding: 16px;
-            }
-
-
-            .card-value {
-                font-size: 23px;
-            }
-
-
-            .card-title {
-                font-size: 12px;
-            }
-
-
-            .grid {
-                gap: 14px;
-            }
-
-
-            .panel {
-                padding: 18px;
-            }
-
-        }
-
-    </style>
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>Creator OS — Overview</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Inter",
+        sans-serif;
+
+    background: #f5f5f7;
+    color: #111;
+}
+
+.app {
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 230px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background: #111;
+    color: white;
+    padding: 28px 16px;
+    z-index: 1000;
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: 700;
+    padding: 0 12px 30px;
+}
+
+.nav {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.nav a {
+    color: #aaa;
+    text-decoration: none;
+    padding: 11px 12px;
+    border-radius: 10px;
+    font-size: 14px;
+    transition: .2s;
+}
+
+.nav a:hover,
+.nav a.active {
+    background: #222;
+    color: white;
+}
+
+.main {
+    margin-left: 230px;
+    padding: 34px;
+    max-width: 1500px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 28px;
+}
+
+.header h1 {
+    font-size: 32px;
+    letter-spacing: -1px;
+}
+
+.header p {
+    color: #777;
+    margin-top: 7px;
+}
+
+.import-button {
+    background: #111;
+    color: white;
+    text-decoration: none;
+    padding: 11px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns:
+        repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.card {
+    background: white;
+    border: 1px solid #e5e5e5;
+    border-radius: 16px;
+    padding: 21px;
+}
+
+.card-label {
+    color: #777;
+    font-size: 13px;
+    margin-bottom: 12px;
+}
+
+.card-value {
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -1px;
+}
+
+.card-description {
+    color: #999;
+    font-size: 12px;
+    margin-top: 8px;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns:
+        1.5fr 1fr;
+    gap: 18px;
+}
+
+.panel {
+    background: white;
+    border: 1px solid #e5e5e5;
+    border-radius: 16px;
+    padding: 22px;
+}
+
+.panel h2 {
+    font-size: 18px;
+    margin-bottom: 18px;
+}
+
+.message-row {
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.message-row:last-child {
+    border-bottom: none;
+}
+
+.message-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.message-text {
+    font-size: 14px;
+    line-height: 1.45;
+    max-width: 75%;
+}
+
+.message-rate {
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.message-meta {
+    color: #888;
+    font-size: 12px;
+    margin-top: 6px;
+}
+
+.insight {
+    padding: 14px;
+    border-radius: 12px;
+    background: #f7f7f7;
+    margin-bottom: 10px;
+}
+
+.insight:last-child {
+    margin-bottom: 0;
+}
+
+.insight-title {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.insight-description {
+    color: #777;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.action {
+    padding: 14px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.action:last-child {
+    border-bottom: none;
+}
+
+.action-title {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.action-description {
+    color: #777;
+    font-size: 13px;
+    line-height: 1.5;
+    margin-top: 5px;
+}
+
+.priority {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 11px;
+    padding: 4px 7px;
+    border-radius: 6px;
+    background: #eee;
+}
+
+.empty {
+    color: #888;
+    font-size: 14px;
+    padding: 15px 0;
+}
+
+.loading {
+    opacity: .6;
+}
+
+.error {
+    color: #a33;
+}
+
+@media (max-width: 900px) {
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: fixed;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px;
+        overflow-x: auto;
+    }
+
+    .logo {
+        padding: 0 6px;
+        flex-shrink: 0;
+    }
+
+    .nav {
+        flex-direction: row;
+        overflow-x: auto;
+    }
+
+    .nav a {
+        white-space: nowrap;
+        padding: 9px 11px;
+    }
+
+    .main {
+        margin-left: 0;
+        padding: 82px 20px 25px;
+    }
+
+    .cards {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+
+    .main {
+        padding: 78px 15px 20px;
+    }
+
+    .header {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .header h1 {
+        font-size: 27px;
+    }
+
+    .import-button {
+        width: 100%;
+        text-align: center;
+    }
+
+    .cards {
+        gap: 9px;
+    }
+
+    .card {
+        padding: 16px;
+    }
+
+    .card-value {
+        font-size: 23px;
+    }
+
+    .message-top {
+        flex-direction: column;
+        gap: 7px;
+    }
+
+    .message-text {
+        max-width: 100%;
+    }
+
+}
+
+</style>
 
 </head>
-
 
 <body>
 
 <div class="app">
 
+<aside class="sidebar">
 
-    <!-- SIDEBAR -->
+    <div class="logo">
+        Creator OS
+    </div>
 
-    <aside class="sidebar">
+    <nav class="nav">
 
+        <a href="index.html" class="active">
+            Overview
+        </a>
 
-        <div class="logo">
-            Creator OS
+        <a href="messages.html">
+            DM Analytics
+        </a>
+
+        <a href="conversations.html">
+            Conversations
+        </a>
+
+        <a href="sequences.html">
+            Sequences
+        </a>
+
+        <a href="insights.html">
+            AI Insights
+        </a>
+
+        <a href="experiments.html">
+            Experiments
+        </a>
+
+        <a href="reports.html">
+            Reports
+        </a>
+
+        <a href="import.html">
+            Import Data
+        </a>
+
+    </nav>
+
+</aside>
+
+<main class="main">
+
+    <header class="header">
+
+        <div>
+
+            <h1>
+                Overview
+            </h1>
+
+            <p>
+                Creator performance at a glance.
+            </p>
+
         </div>
 
+        <a
+            href="import.html"
+            class="import-button"
+        >
+            + Import Data
+        </a>
 
-        <nav class="nav">
-
-
-            <button class="active">
-                Overview
-            </button>
-
-
-            <a href="messages.html">
-                <button>
-                    DM Analytics
-                </button>
-            </a>
+    </header>
 
 
-            <a href="conversations.html">
-    <button>
-        Conversations
-    </button>
-</a>
+    <!-- METRICS -->
 
+    <section class="cards">
 
-            <a href="sequences.html">
-                <button>
-                    Sequences
-                </button>
-            </a>
+        <div class="card">
 
-
-            <a href="insights.html">
-                <button>
-                    AI Insights
-                </button>
-            </a>
-
-
-            <a href="experiments.html">
-                <button>
-                    Experiments
-                </button>
-            </a>
-
-
-            <a href="reports.html">
-                <button>
-                    Reports
-                </button>
-            </a>
-
-
-        </nav>
-
-    </aside>
-
-
-    <!-- MAIN -->
-
-    <main class="main">
-
-
-        <div class="header">
-
-
-            <div>
-
-                <h1>
-                    Overview
-                </h1>
-
-                <p>
-                    Your creator performance at a glance.
-                </p>
-
+            <div class="card-label">
+                Conversations
             </div>
-
 
             <div
-                style="
-                    display:flex;
-                    gap:10px;
-                    align-items:center;
-                "
+                id="totalConversations"
+                class="card-value"
             >
-
-
-                <a
-                    href="import.html"
-                    style="
-                        background:#111;
-                        color:white;
-                        padding:10px 16px;
-                        border-radius:10px;
-                        text-decoration:none;
-                        font-size:14px;
-                    "
-                >
-                    + Import Data
-                </a>
-
-
-                <div class="creator">
-                    Creator Account
-                </div>
-
-
+                —
             </div>
 
+            <div class="card-description">
+                Imported conversations
+            </div>
 
         </div>
 
 
-        <!-- METRICS -->
+        <div class="card">
 
-        <section class="cards">
+            <div class="card-label">
+                Reply Rate
+            </div>
+
+            <div
+                id="replyRate"
+                class="card-value"
+            >
+                —
+            </div>
+
+            <div class="card-description">
+                Conversations with reply
+            </div>
+
+        </div>
 
 
-            <div class="card">
+        <div class="card">
 
-                <div class="card-title">
-                    Conversations
-                </div>
+            <div class="card-label">
+                Avg Response
+            </div>
 
-                <div class="card-value">
-                    0
-                </div>
+            <div
+                id="avgResponse"
+                class="card-value"
+            >
+                —
+            </div>
 
-                <div class="card-change">
-                    Current data
+            <div class="card-description">
+                Subscriber response time
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-label">
+                Drop-off
+            </div>
+
+            <div
+                id="dropoff"
+                class="card-value"
+            >
+                —
+            </div>
+
+            <div class="card-description">
+                Conversations without reply
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- MAIN DASHBOARD -->
+
+    <section class="dashboard-grid">
+
+
+        <div class="panel">
+
+            <h2>
+                Top Performing Messages
+            </h2>
+
+            <div id="topMessages">
+
+                <div class="empty">
+                    Loading...
                 </div>
 
             </div>
 
-
-            <div class="card">
-
-                <div class="card-title">
-                    Reply Rate
-                </div>
-
-                <div class="card-value">
-                    0%
-                </div>
-
-                <div class="card-change">
-                    Subscriber replies
-                </div>
-
-            </div>
+        </div>
 
 
-            <div class="card">
+        <div class="panel">
 
-                <div class="card-title">
-                    Avg Response
-                </div>
+            <h2>
+                What Needs Attention
+            </h2>
 
-                <div class="card-value">
-                    N/A
-                </div>
+            <div id="insights">
 
-                <div class="card-change">
-                    Subscriber response
+                <div class="empty">
+                    Loading...
                 </div>
 
             </div>
 
+        </div>
 
-            <div class="card">
 
-                <div class="card-title">
-                    Drop-off
-                </div>
+    </section>
 
-                <div class="card-value">
-                    —
-                </div>
 
-                <div class="card-change">
-                    Conversation drop-off
-                </div>
+    <section
+        class="panel"
+        style="margin-top:18px;"
+    >
 
+        <h2>
+            Recommended Actions
+        </h2>
+
+        <div id="recommendations">
+
+            <div class="empty">
+                Loading...
             </div>
 
+        </div>
 
-        </section>
+    </section>
 
-
-        <!-- CONTENT -->
-
-        <section class="grid">
-
-
-            <div class="panel">
-
-                <h2>
-                    Top Performing Messages
-                </h2>
-
-
-                <div class="message">
-
-                    <div class="message-text">
-                        View DM Analytics
-                    </div>
-
-                    <div class="message-rate">
-                        →
-                    </div>
-
-                </div>
-
-
-                <div class="message">
-
-                    <div class="message-text">
-                        Analyze your imported conversations
-                    </div>
-
-                    <div class="message-rate">
-                        →
-                    </div>
-
-                </div>
-
-
-            </div>
-
-
-            <div class="panel">
-
-                <h2>
-                    AI Insights
-                </h2>
-
-
-                <div class="insight">
-
-                    <strong>
-                        ⚡ Ready for analysis
-                    </strong>
-
-                    Import DM data to generate
-                    performance insights.
-
-                </div>
-
-
-                <div class="insight">
-
-                    <strong>
-                        💡 Optimization
-                    </strong>
-
-                    Creator OS will identify
-                    high-performing messages and
-                    conversation drop-offs.
-
-                </div>
-
-
-            </div>
-
-
-        </section>
-
-
-    </main>
+</main>
 
 </div>
 
 
 <script src="config.js"></script>
 
-
 <script>
 
 async function loadDashboard() {
 
+    const topMessages =
+        document.getElementById(
+            "topMessages"
+        );
+
+    const insights =
+        document.getElementById(
+            "insights"
+        );
+
+    const recommendations =
+        document.getElementById(
+            "recommendations"
+        );
+
     try {
 
-        const response = await fetch(
-            `${API_URL}/api/dashboard`
-        );
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                "API request failed"
+        const dashboardResponse =
+            await fetch(
+                `${API_URL}/api/dashboard`
             );
 
+        if (!dashboardResponse.ok) {
+            throw new Error(
+                "Dashboard request failed"
+            );
         }
 
+        const dashboard =
+            await dashboardResponse.json();
 
-        const data =
-            await response.json();
+
+        const insightsResponse =
+            await fetch(
+                `${API_URL}/api/insights`
+            );
+
+        const insightsData =
+            insightsResponse.ok
+            ? await insightsResponse.json()
+            : {
+                insights: [],
+                recommendations: []
+            };
 
 
-        console.log(
-            "Creator OS analytics:",
-            data
+        renderMetrics(
+            dashboard
         );
 
+        renderMessages(
+            dashboard.message_performance || []
+        );
 
-        updateDashboard(data);
+        renderInsights(
+            insightsData.insights || []
+        );
+
+        renderRecommendations(
+            insightsData.recommendations || []
+        );
 
 
     } catch (error) {
 
-        console.error(
-            "Could not connect to Creator OS API:",
-            error
-        );
+        console.error(error);
+
+        topMessages.innerHTML = `
+            <div class="empty error">
+                Could not connect to Creator OS API.
+            </div>
+        `;
+
+        insights.innerHTML = `
+            <div class="empty error">
+                Insights unavailable.
+            </div>
+        `;
+
+        recommendations.innerHTML = `
+            <div class="empty error">
+                Recommendations unavailable.
+            </div>
+        `;
 
     }
 
 }
 
 
-function updateDashboard(data) {
+function renderMetrics(data) {
 
     const summary =
         data.summary || {};
@@ -726,67 +678,260 @@ function updateDashboard(data) {
         data.response_time || {};
 
 
-    const cards =
-        document.querySelectorAll(
-            ".card-value"
+    const total =
+        summary.total_conversations || 0;
+
+    const replyRate =
+        summary.reply_rate_percent || 0;
+
+
+    document.getElementById(
+        "totalConversations"
+    ).textContent = total;
+
+
+    document.getElementById(
+        "replyRate"
+    ).textContent =
+        `${replyRate}%`;
+
+
+    document.getElementById(
+        "avgResponse"
+    ).textContent =
+        responseTime.average_seconds != null
+        ? formatTime(
+            responseTime.average_seconds
+        )
+        : "N/A";
+
+
+    document.getElementById(
+        "dropoff"
+    ).textContent =
+        `${Math.max(
+            0,
+            100 - replyRate
+        ).toFixed(2)}%`;
+
+}
+
+
+function renderMessages(messages) {
+
+    const container =
+        document.getElementById(
+            "topMessages"
         );
 
 
-    if (cards.length >= 4) {
+    const usable =
+        messages
+            .filter(
+                message =>
+                    message.times_sent > 0
+            )
+            .slice(0, 5);
 
 
-        cards[0].textContent =
-            summary.total_conversations || 0;
+    if (!usable.length) {
 
+        container.innerHTML = `
+            <div class="empty">
+                No message data available yet.
+            </div>
+        `;
 
-        cards[1].textContent =
-            (summary.reply_rate_percent || 0) + "%";
-
-
-        if (
-            responseTime.average_seconds !== null &&
-            responseTime.average_seconds !== undefined
-        ) {
-
-            cards[2].textContent =
-                formatTime(
-                    responseTime.average_seconds
-                );
-
-        } else {
-
-            cards[2].textContent =
-                "N/A";
-
-        }
-
-
-        cards[3].textContent =
-            "—";
+        return;
 
     }
+
+
+    container.innerHTML =
+        usable.map(
+            message => `
+
+                <div class="message-row">
+
+                    <div class="message-top">
+
+                        <div class="message-text">
+                            ${escapeHtml(
+                                message.message
+                            )}
+                        </div>
+
+                        <div class="message-rate">
+                            ${message.reply_rate_percent}%
+                        </div>
+
+                    </div>
+
+                    <div class="message-meta">
+
+                        ${message.times_sent} sends
+                        ·
+                        ${message.replies} replies
+
+                    </div>
+
+                </div>
+
+            `
+        ).join("");
+
+}
+
+
+function renderInsights(items) {
+
+    const container =
+        document.getElementById(
+            "insights"
+        );
+
+
+    if (!items.length) {
+
+        container.innerHTML = `
+            <div class="empty">
+                Import DM data to generate insights.
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        items
+            .slice(0, 5)
+            .map(
+                item => `
+
+                    <div class="insight">
+
+                        <div class="insight-title">
+                            ${escapeHtml(
+                                item.title
+                            )}
+                        </div>
+
+                        <div class="insight-description">
+                            ${escapeHtml(
+                                item.description
+                            )}
+                        </div>
+
+                    </div>
+
+                `
+            )
+            .join("");
+
+}
+
+
+function renderRecommendations(items) {
+
+    const container =
+        document.getElementById(
+            "recommendations"
+        );
+
+
+    if (!items.length) {
+
+        container.innerHTML = `
+            <div class="empty">
+                No recommendations yet.
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        items
+            .slice(0, 5)
+            .map(
+                item => `
+
+                    <div class="action">
+
+                        <div class="action-title">
+
+                            ${escapeHtml(
+                                item.title
+                            )}
+
+                        </div>
+
+                        <div class="action-description">
+
+                            ${escapeHtml(
+                                item.description
+                            )}
+
+                        </div>
+
+                        <span class="priority">
+
+                            ${escapeHtml(
+                                item.priority ||
+                                "medium"
+                            )}
+
+                        </span>
+
+                    </div>
+
+                `
+            )
+            .join("");
 
 }
 
 
 function formatTime(seconds) {
 
-    if (seconds < 60) {
+    seconds = Number(seconds);
 
-        return Math.round(seconds) + "s";
-
+    if (!Number.isFinite(seconds)) {
+        return "N/A";
     }
 
+    if (seconds < 60) {
+        return `${Math.round(seconds)}s`;
+    }
 
     const minutes =
         Math.floor(seconds / 60);
 
-
-    const remainingSeconds =
+    const remaining =
         Math.round(seconds % 60);
 
+    if (remaining === 0) {
+        return `${minutes}m`;
+    }
 
-    return `${minutes}m ${remainingSeconds}s`;
+    return `${minutes}m ${remaining}s`;
+
+}
+
+
+function escapeHtml(value) {
+
+    const div =
+        document.createElement("div");
+
+    div.textContent =
+        value ?? "";
+
+    return div.innerHTML;
 
 }
 
@@ -794,7 +939,6 @@ function formatTime(seconds) {
 loadDashboard();
 
 </script>
-
 
 </body>
 
