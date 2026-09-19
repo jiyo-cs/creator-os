@@ -3,11 +3,20 @@ from fastapi import (
     UploadFile,
     File,
     HTTPException,
+    Request,
+    Response,
 )
 
 from fastapi.middleware.cors import CORSMiddleware
 
 import json
+
+from auth import (
+    SESSION_COOKIE,
+    authenticate,
+    create_session,
+    verify_session,
+)
 
 from experiments import compare_variants
 
@@ -47,7 +56,11 @@ app.add_middleware(
 
     CORSMiddleware,
 
-    allow_origins=["*"],
+    allow_origins=[
+        "https://creator-os-l30s.onrender.com",
+        "http://localhost:3000",
+        "http://localhost:5500",
+    ],
 
     allow_credentials=True,
 
@@ -61,7 +74,68 @@ initialize_database()
 
 initialize_experiments()
 
+PUBLIC_PATHS = {
+    "/",
+    "/health",
+    "/docs",
+    "/openapi.json",
+    "/redoc",
+    "/api/auth/login",
+    "/api/auth/me",
+}
 
+
+@app.middleware("http")
+async def authentication_middleware(
+    request: Request,
+    call_next,
+):
+
+    path = request.url.path
+
+    if (
+        request.method == "OPTIONS"
+        or path in PUBLIC_PATHS
+    ):
+
+        return await call_next(
+            request
+        )
+
+    protected = (
+        path.startswith("/api/")
+        or path == "/upload"
+        or path == "/sequences"
+        or path == "/data"
+    )
+
+    if not protected:
+
+        return await call_next(
+            request
+        )
+
+    token = request.cookies.get(
+        SESSION_COOKIE
+    )
+
+    session = verify_session(
+        token
+    )
+
+    if not session:
+
+        return Response(
+            content='{"detail":"Authentication required"}',
+            status_code=401,
+            media_type="application/json",
+        )
+
+    request.state.auth = session
+
+    return await call_next(
+        request
+    )
 # =========================
 # ROOT
 # =========================
@@ -88,6 +162,122 @@ def health():
 # =========================
 # ANALYTICS
 # =========================
+# =========================
+# AUTHENTICATION
+# =========================
+
+@app.post("/api/auth/login")
+async def login(
+    request: Request,
+    response: Response,
+):
+
+    try:
+
+        data = await request.json()
+
+    except Exception:
+
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid JSON",
+        )
+
+    email = str(
+        data.get("email", "")
+    ).strip()
+
+    password = str(
+        data.get("password", "")
+    )
+
+    if not email or not password:
+
+        raise HTTPException(
+            status_code=400,
+            detail="Email and password are required",
+        )
+
+    user = authenticate(
+        email,
+        password,
+    )
+
+    if not user:
+
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid email or password",
+        )
+
+    token = create_session(
+        user["email"]
+    )
+
+    response.set_cookie(
+        key=SESSION_COOKIE,
+        value=token,
+        max_age=60 * 60 * 12,
+        httponly=True,
+        secure=True,
+        samesite="none",
+        path="/",
+    )
+
+    return {
+        "status": "authenticated",
+        "user": user,
+    }
+
+
+@app.get("/api/auth/me")
+def current_user(
+    request: Request,
+):
+
+    session = getattr(
+        request.state,
+        "auth",
+        None,
+    )
+
+    if not session:
+
+        raise HTTPException(
+            status_code=401,
+            detail="Not authenticated",
+        )
+
+    return {
+        "authenticated": True,
+        "user": {
+            "email":
+                session["email"],
+
+            "workspace_id":
+                session["workspace_id"],
+
+            "creator_id":
+                session["creator_id"],
+        },
+    }
+
+
+@app.post("/api/auth/logout")
+def logout(
+    response: Response,
+):
+
+    response.delete_cookie(
+        key=SESSION_COOKIE,
+        path="/",
+        secure=True,
+        samesite="none",
+    )
+
+    return {
+        "status": "logged_out"
+    }
 
 @app.get("/api/dashboard")
 def dashboard():
