@@ -1,5 +1,6 @@
 import sqlite3
 import json
+from datetime import datetime, timezone
 
 
 DATABASE = "creator_os.db"
@@ -19,27 +20,71 @@ def get_connection():
     return connection
 
 
-def column_exists(
-    cursor,
-    table_name,
-    column_name
-):
-
-    columns = cursor.execute(
-        f"PRAGMA table_info({table_name})"
-    ).fetchall()
-
-    return any(
-        column["name"] == column_name
-        for column in columns
-    )
-
-
 def initialize_database():
 
     connection = get_connection()
 
     cursor = connection.cursor()
+
+    # =========================
+    # WORKSPACES
+    # =========================
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS workspaces (
+            id TEXT PRIMARY KEY,
+            name TEXT NOT NULL,
+            created_at TEXT NOT NULL
+        )
+    """)
+
+    # =========================
+    # CREATORS
+    # =========================
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS creators (
+            id TEXT PRIMARY KEY,
+            workspace_id TEXT NOT NULL,
+            name TEXT NOT NULL,
+            platform TEXT NOT NULL DEFAULT 'instagram',
+            username TEXT,
+            created_at TEXT NOT NULL
+        )
+    """)
+
+    # =========================
+    # USERS
+    # =========================
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            id TEXT PRIMARY KEY,
+            email TEXT NOT NULL UNIQUE,
+            name TEXT,
+            created_at TEXT NOT NULL
+        )
+    """)
+
+    # =========================
+    # MEMBERSHIPS
+    # =========================
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS memberships (
+            user_id TEXT NOT NULL,
+            workspace_id TEXT NOT NULL,
+            role TEXT NOT NULL DEFAULT 'member',
+            PRIMARY KEY (
+                user_id,
+                workspace_id
+            )
+        )
+    """)
+
+    # =========================
+    # CONVERSATIONS
+    # =========================
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS conversations (
@@ -52,14 +97,20 @@ def initialize_database():
         )
     """)
 
-    # Safe migration for databases
-    # created by the previous version.
+    # =========================
+    # MIGRATE OLD DATABASE
+    # =========================
 
-    if not column_exists(
-        cursor,
-        "conversations",
-        "workspace_id"
-    ):
+    columns = cursor.execute(
+        "PRAGMA table_info(conversations)"
+    ).fetchall()
+
+    column_names = {
+        column["name"]
+        for column in columns
+    }
+
+    if "workspace_id" not in column_names:
 
         cursor.execute("""
             ALTER TABLE conversations
@@ -68,11 +119,7 @@ def initialize_database():
             DEFAULT 'default_workspace'
         """)
 
-    if not column_exists(
-        cursor,
-        "conversations",
-        "creator_id"
-    ):
+    if "creator_id" not in column_names:
 
         cursor.execute("""
             ALTER TABLE conversations
@@ -80,6 +127,58 @@ def initialize_database():
             NOT NULL
             DEFAULT 'default_creator'
         """)
+
+    # =========================
+    # DEFAULT WORKSPACE
+    # =========================
+
+    now = datetime.now(
+        timezone.utc
+    ).isoformat()
+
+    cursor.execute(
+        """
+        INSERT OR IGNORE INTO workspaces
+        (id, name, created_at)
+        VALUES (?, ?, ?)
+        """,
+        (
+            DEFAULT_WORKSPACE_ID,
+            "Default Workspace",
+            now,
+        )
+    )
+
+    # =========================
+    # DEFAULT CREATOR
+    # =========================
+
+    cursor.execute(
+        """
+        INSERT OR IGNORE INTO creators
+        (
+            id,
+            workspace_id,
+            name,
+            platform,
+            username,
+            created_at
+        )
+        VALUES (?, ?, ?, ?, ?, ?)
+        """,
+        (
+            DEFAULT_CREATOR_ID,
+            DEFAULT_WORKSPACE_ID,
+            "Default Creator",
+            "instagram",
+            None,
+            now,
+        )
+    )
+
+    # =========================
+    # INDEXES
+    # =========================
 
     cursor.execute("""
         CREATE INDEX IF NOT EXISTS
@@ -99,10 +198,74 @@ def initialize_database():
         ON conversations(subscriber_id)
     """)
 
+    cursor.execute("""
+        CREATE INDEX IF NOT EXISTS
+        idx_creators_workspace
+        ON creators(workspace_id)
+    """)
+
     connection.commit()
 
     connection.close()
 
+
+# =========================
+# WORKSPACE
+# =========================
+
+def get_workspace(
+    workspace_id=DEFAULT_WORKSPACE_ID
+):
+
+    connection = get_connection()
+
+    row = connection.execute(
+        """
+        SELECT *
+        FROM workspaces
+        WHERE id = ?
+        """,
+        (workspace_id,)
+    ).fetchone()
+
+    connection.close()
+
+    if not row:
+        return None
+
+    return dict(row)
+
+
+# =========================
+# CREATOR
+# =========================
+
+def get_creator(
+    creator_id=DEFAULT_CREATOR_ID
+):
+
+    connection = get_connection()
+
+    row = connection.execute(
+        """
+        SELECT *
+        FROM creators
+        WHERE id = ?
+        """,
+        (creator_id,)
+    ).fetchone()
+
+    connection.close()
+
+    if not row:
+        return None
+
+    return dict(row)
+
+
+# =========================
+# CONVERSATIONS
+# =========================
 
 def save_conversations(
     conversations,
@@ -117,8 +280,11 @@ def save_conversations(
     for conversation in conversations:
 
         messages = [
-            message.model_dump(mode="json")
-            for message in conversation.messages
+            message.model_dump(
+                mode="json"
+            )
+            for message
+            in conversation.messages
         ]
 
         cursor.execute(
@@ -152,9 +318,7 @@ def get_conversations(
 
     connection = get_connection()
 
-    cursor = connection.cursor()
-
-    rows = cursor.execute(
+    rows = connection.execute(
         """
         SELECT
             subscriber_id,
@@ -198,9 +362,7 @@ def get_conversation_count(
 
     connection = get_connection()
 
-    cursor = connection.cursor()
-
-    result = cursor.execute(
+    result = connection.execute(
         """
         SELECT COUNT(*)
         FROM conversations
@@ -225,9 +387,7 @@ def clear_database(
 
     connection = get_connection()
 
-    cursor = connection.cursor()
-
-    cursor.execute(
+    connection.execute(
         """
         DELETE FROM conversations
         WHERE workspace_id = ?
