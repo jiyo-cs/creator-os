@@ -565,10 +565,6 @@ async def upload_file(
         save_conversations(
             conversations
         )
-
-        save_conversations(
-            conversations
-        )
         sync_experiment_results(
             conversations
         )
