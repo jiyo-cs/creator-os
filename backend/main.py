@@ -81,7 +81,7 @@ PUBLIC_PATHS = {
     "/openapi.json",
     "/redoc",
     "/api/auth/login",
-    "/api/auth/me",
+    "/api/auth/logout",
 }
 
 
